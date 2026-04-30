@@ -3,50 +3,125 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Novahikariastral Profile</title>
+    <title>Genshin Topup - Trang Chủ</title>
     <style>
         body {
-            background-color: #0f172a;
-            color: white;
+            background-color: #f4f4f4; /* Màu nền xám sáng của Genshin */
+            color: #393b40;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            text-align: center;
-            padding: 50px;
+            margin: 0;
+            padding: 0;
         }
-        .profile-card {
-            background: #1e293b;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            max-width: 400px;
-            margin: 0 auto;
+        /* Thanh menu phía trên giống web shop */
+        .header {
+            background-color: #393b40;
+            color: #ece5d8; /* Màu vàng nhạt Genshin */
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
         }
-        h1 { color: #38bdf8; }
-        .links a {
-            display: block;
-            background: #38bdf8;
-            color: #0f172a;
-            text-decoration: none;
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 5px;
+        .header h1 {
+            margin: 0;
+            font-size: 22px;
+            letter-spacing: 1px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+        /* Banner ngụy trang */
+        .banner {
+            width: 100%;
+            height: 250px;
+            background-image: url('https://upload-os-bbs.hoyolab.com/upload/2021/08/30/8410228/1d2ce3edbf9fa2f33f3801f95a4947ba_4938637016579979728.jpg'); 
+            background-size: cover;
+            background-position: center;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border: 2px solid #d3bc8e; /* Viền vàng */
+        }
+        .section-title {
+            font-size: 22px;
             font-weight: bold;
-            transition: 0.3s;
+            margin-bottom: 20px;
+            border-left: 5px solid #d3bc8e;
+            padding-left: 15px;
+            color: #393b40;
         }
-        .links a:hover { transform: scale(1.05); background: #7dd3fc; }
-        .game-tag { color: #94a3b8; font-style: italic; }
+        /* Các nút bấm ngụy trang thành gói nạp */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: 0.3s;
+            text-decoration: none;
+            color: #393b40;
+            border: 1px solid #e0e0e0;
+        }
+        .card:hover {
+            border-color: #d3bc8e;
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(211, 188, 142, 0.4);
+        }
+        .icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+        .card-title {
+            font-weight: bold;
+            font-size: 18px;
+            margin: 10px 0;
+            color: #c9933c;
+        }
+        .card-desc {
+            font-size: 14px;
+            color: #888;
+        }
     </style>
 </head>
 <body>
-    <div class="profile-card">
-        <h1>Novahikariastral</h1>
-        <p class="game-tag">Game Player | Content Creator</p>
-        <p>Chào mừng bạn đến với trang web của tôi!</p>
+    <div class="header">
+        <h1>Nova Store</h1>
+        <span style="font-size: 14px; cursor: pointer;">👤 Đăng nhập</span>
+    </div>
+    
+    <div class="container">
+        <!-- Ảnh Banner Genshin mờ mờ cho giống thật -->
+        <div class="banner"></div>
         
-        <div class="links">
-            <!-- Thay link của bạn vào đây -->
-            <a href="https://www.tiktok.com/" target="_blank">My TikTok</a>
-            <a href="https://www.youtube.com/" target="_blank">My YouTube</a>
-            <a href="#">My Roblox Profile</a>
+        <div class="section-title">🔥 Flash Sale - Giờ Vàng</div>
+        
+        <div class="card-grid">
+            <!-- Nút ngụy trang TikTok -->
+            <a href="https://www.tiktok.com/" target="_blank" class="card">
+                <div class="icon">💎</div>
+                <div class="card-title">6480 Đá Sáng Thế</div>
+                <div class="card-desc">Click để nhận ưu đãi x2</div>
+            </a>
+            
+            <!-- Nút ngụy trang YouTube -->
+            <a href="https://www.youtube.com/" target="_blank" class="card">
+                <div class="icon">🌙</div>
+                <div class="card-title">Không Nguyệt Chúc Phúc</div>
+                <div class="card-desc">Nhận ngay 90 Nguyên Thạch/ngày</div>
+            </a>
+
+            <!-- Nút ngụy trang game khác (Roblox chẳng hạn) -->
+            <a href="#" target="_blank" class="card">
+                <div class="icon">🎫</div>
+                <div class="card-title">Nhật Ký Hành Trình</div>
+                <div class="card-desc">Mở khóa Battle Pass VIP</div>
+            </a>
         </div>
     </div>
 </body>
