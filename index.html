@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TNQuangStore - Dịch Vụ Roblox & Túi Mù</title>
+    <title>TNQuangStore - Roblox Service & Luck</title>
     <style>
-        :root { --main-color: #00a2ff; --pink-lucky: #ff00ff; --bg-dark: #191b1d; }
+        :root { --main-color: #00a2ff; --pink-lucky: #ff00ff; --orange-spin: #ff9800; --bg-dark: #191b1d; }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; margin: 0; padding: 0; }
         
         #banner { width: 100%; height: 220px; background: var(--bg-dark); background-size: cover; background-position: center; transition: 1s; display: flex; align-items: center; justify-content: center; color: white; text-shadow: 2px 2px 15px rgba(0,0,0,0.8); font-size: 32px; font-weight: 900; }
@@ -19,15 +19,15 @@
         
         .btn-mua { background: var(--main-color); color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 85%; }
 
-        /* Popup Styles */
-        #popupPayment, #popupTuiMu { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:9999; justify-content:center; align-items:center; }
+        #popupPayment, #popupTuiMu, #popupVongQuay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:9999; justify-content:center; align-items:center; }
         .popup-content { background:white; width:90%; max-width:380px; padding:25px; border-radius:20px; text-align:center; position: relative; }
         .input-style { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; }
         .hidden { display: none; }
 
-        /* Mệnh giá Túi Mù */
-        .price-btn { width: 100%; padding: 12px; margin: 5px 0; border: 1px solid #ff00ff; border-radius: 8px; background: #fff0ff; color: #ff00ff; font-weight: bold; cursor: pointer; transition: 0.2s; }
-        .price-btn:hover { background: #ff00ff; color: white; }
+        .price-btn { width: 100%; padding: 12px; margin: 5px 0; border: 1px solid #ddd; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .price-btn.bf { border-color: var(--pink-lucky); background: #fff0ff; color: var(--pink-lucky); }
+        .price-btn.rb { border-color: var(--orange-spin); background: #fff3e0; color: var(--orange-spin); }
+        .price-btn:hover { background: #333; color: white; }
         .note-box { background: #fff3e0; border: 1px solid #ff9800; padding: 10px; border-radius: 8px; font-size: 13px; color: #e65100; margin-bottom: 15px; line-height: 1.5; }
     </style>
 </head>
@@ -39,26 +39,31 @@
         <!-- NHẬN HÀNG TỰ ĐỘNG -->
         <div style="background: #e1f5fe; border: 2px solid var(--main-color); padding: 20px; border-radius: 15px; margin-bottom: 30px; text-align: center;">
             <h3 style="margin-top:0; color: #01579b;">📦 NHẬN HÀNG TỰ ĐỘNG</h3>
-            <input type="text" id="inputMaDon" class="input-style" placeholder="Nhập mã đơn hàng từ Admin...">
+            <input type="text" id="inputMaDon" class="input-style" placeholder="Nhập mã đơn từ Admin...">
             <button onclick="layAcc()" style="width:100%; background:#01579b;" class="btn-mua">KIỂM TRA NGAY</button>
             <div id="ketQuaAcc" class="hidden" style="margin-top:15px; padding:15px; background:white; border: 1px solid #4caf50; border-radius:10px; text-align: left;">
                 <span id="thongTinChiTiet" style="font-family: monospace;"></span>
             </div>
         </div>
 
-        <!-- TÚI MÙ MAY MẮN -->
-        <div class="section-title" style="color: var(--pink-lucky); border-color: var(--pink-lucky);">🎲 Túi Mù Nhân Phẩm</div>
-        <div style="text-align: center; margin-bottom: 40px;">
-            <div class="acc-card" style="max-width: 400px; margin: auto; border: 3px solid var(--pink-lucky);">
-                <img src="https://i.ytimg.com/vi/Sndq0xS1mQY/maxresdefault.jpg" style="height: 200px;">
-                <h3 style="color: var(--pink-lucky);">Túi Mù Blox Fruit & Robux</h3>
-                <p>Nhiều mệnh giá - Cơ hội trúng Acc VIP cực cao</p>
-                <button class="btn-mua" style="background: var(--pink-lucky); font-size: 18px; padding: 15px;" onclick="moPopupTuiMu()">MỞ TÚI MÙ NGAY</button>
+        <!-- 2 PHẦN NHÂN PHẨM -->
+        <div class="grid-acc">
+            <!-- TÚI MÙ -->
+            <div class="acc-card" style="border: 2px solid var(--pink-lucky);">
+                <img src="https://i.ytimg.com/vi/Sndq0xS1mQY/maxresdefault.jpg">
+                <h4 style="color: var(--pink-lucky);">Túi Mù Blox Fruit</h4>
+                <button class="btn-mua" style="background: var(--pink-lucky);" onclick="moPopupTuiMu()">MỞ NGAY</button>
+            </div>
+            <!-- VÒNG QUAY -->
+            <div class="acc-card" style="border: 2px solid var(--orange-spin);">
+                <img src="https://i.ytimg.com/vi/v5j7n6n8p7k/maxresdefault.jpg">
+                <h4 style="color: var(--orange-spin);">Vòng Quay Robux</h4>
+                <button class="btn-mua" style="background: var(--orange-spin);" onclick="moPopupVongQuay()">QUAY NGAY</button>
             </div>
         </div>
 
         <!-- DỊCH VỤ HOT -->
-        <div class="section-title">🔥 Dịch Vụ Hot</div>
+        <div class="section-title">🔥 Dịch Vụ Cày Thuê & Acc</div>
         <div class="grid-acc">
             <div class="acc-card">
                 <img src="https://wallpapers.com/images/featured/blox-fruits-pictures-7u55p4n509015c7j.jpg">
@@ -75,18 +80,25 @@
         </div>
     </div>
 
-    <!-- POPUP CHỌN TÚI MÙ -->
+    <!-- POPUP TÚI MÙ -->
     <div id="popupTuiMu">
         <div class="popup-content">
-            <span onclick="dongPopup()" style="position:absolute; top:10px; right:15px; cursor:pointer; font-size:20px;">&times;</span>
-            <h3 style="color: var(--pink-lucky);">Chọn Mệnh Giá Túi Mù</h3>
-            <div class="note-box">
-                <b>⚠️ Lưu ý:</b> Túi mù là hoàn toàn ngẫu nhiên, không có sự sắp đặt từ trước. Nếu có bất kỳ vấn đề gì, hãy liên hệ ngay với shop để được hỗ trợ!
-            </div>
-            <button class="price-btn" onclick="moThanhToan('20000', 'TÚI MÙ 20K')">Túi Mù Nhân Phẩm - 20.000đ</button>
-            <button class="price-btn" onclick="moThanhToan('40000', 'TÚI MÙ 40K')">Túi Mù Xịn Xò - 40.000đ</button>
-            <button class="price-btn" onclick="moThanhToan('80000', 'TÚI MÙ 80K')">Túi Mù Siêu Cấp - 80.000đ</button>
-            <button class="price-btn" onclick="moThanhToan('100000', 'TÚI MÙ 100K')">Túi Mù Thần Thánh - 100.000đ</button>
+            <span onclick="dongPopup()" style="position:absolute; top:10px; right:15px; cursor:pointer;">&times;</span>
+            <h3 style="color: var(--pink-lucky);">Túi Mù Blox Fruit</h3>
+            <div class="note-box"><b>⚠️ Lưu ý:</b> Túi mù là ngẫu nhiên, không có sự sắp đặt. Nếu gặp lỗi hãy liên hệ shop!</div>
+            <button class="price-btn bf" onclick="moThanhToan('20000', 'TÚI MÙ BF 20K')">Mở Túi - 20.000đ</button>
+            <button class="price-btn bf" onclick="moThanhToan('50000', 'TÚI MÙ BF 50K')">Mở Túi - 50.000đ</button>
+        </div>
+    </div>
+
+    <!-- POPUP VÒNG QUAY -->
+    <div id="popupVongQuay">
+        <div class="popup-content">
+            <span onclick="dongPopup()" style="position:absolute; top:10px; right:15px; cursor:pointer;">&times;</span>
+            <h3 style="color: var(--orange-spin);">Vòng Quay Robux May Mắn</h3>
+            <div class="note-box"><b>⚠️ Lưu ý:</b> Vòng quay ngẫu nhiên 100%. Admin sẽ gửi Robux sau khi bạn nạp thành công!</div>
+            <button class="price-btn rb" onclick="moThanhToan('20000', 'VQ ROBUX 20K')">Quay 1 Lần - 20.000đ</button>
+            <button class="price-btn rb" onclick="moThanhToan('100000', 'VQ ROBUX 100K')">Quay 6 Lần - 100.000đ</button>
         </div>
     </div>
 
@@ -97,11 +109,10 @@
             <div id="step1">
                 <button onclick="hienBank()" style="width:100%; padding:12px; margin-bottom:10px; background:#28a745; color:white; border:none; border-radius:8px; font-weight:bold;">🏦 Ngân hàng (QR)</button>
                 <button onclick="hienThe()" style="width:100%; padding:12px; background:#f39c12; color:white; border:none; border-radius:8px; font-weight:bold;">💳 Thẻ Cào</button>
-                <button onclick="quayLaiChonTui()" style="background:none; border:none; color:blue; margin-top:10px; cursor:pointer;">Quay lại chọn túi</button>
+                <button onclick="dongPopup()" style="background:none; border:none; color:blue; margin-top:10px; cursor:pointer;">Đóng</button>
             </div>
             <div id="stepBank" class="hidden">
                 <img id="hinhQR" src="" style="width:100%; border-radius:10px;">
-                <p style="font-size:12px; color:red;">Quét mã để thanh toán đơn hàng</p>
                 <button onclick="quayLaiThanhToan()">Quay lại</button>
             </div>
             <div id="stepThe" class="hidden">
@@ -115,18 +126,19 @@
     </div>
 
     <script>
-        // Cài đặt Webhook và Ngân hàng
         const MY_WEBHOOK = "DÁN_LINK_DISCORD_VÀO_ĐÂY";
         const MY_STK = "STK_CỦA_BẠN";
         const MY_BANK = "MB";
         const MY_NAME = "TEN_CUA_BAN";
 
         function moPopupTuiMu() { document.getElementById('popupTuiMu').style.display = 'flex'; }
+        function moPopupVongQuay() { document.getElementById('popupVongQuay').style.display = 'flex'; }
         
         let g_gia = ""; let g_ma = "";
         function moThanhToan(gia, ma) {
             g_gia = gia; g_ma = ma;
             document.getElementById('popupTuiMu').style.display = 'none';
+            document.getElementById('popupVongQuay').style.display = 'none';
             document.getElementById('txtMaAcc').innerText = "Thanh toán: " + ma;
             document.getElementById('popupPayment').style.display = 'flex';
             quayLaiThanhToan();
@@ -149,14 +161,10 @@
             document.getElementById('stepThe').classList.add('hidden');
         }
 
-        function quayLaiChonTui() {
-            document.getElementById('popupPayment').style.display = 'none';
-            document.getElementById('popupTuiMu').style.display = 'flex';
-        }
-
         function dongPopup() {
             document.getElementById('popupPayment').style.display = 'none';
             document.getElementById('popupTuiMu').style.display = 'none';
+            document.getElementById('popupVongQuay').style.display = 'none';
         }
 
         function guiThe() {
@@ -168,8 +176,8 @@
             fetch(MY_WEBHOOK, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({content: `🚀 **TNQuangStore - ĐƠN TÚI MÙ!**\nSản phẩm: ${g_ma}\nThẻ: ${loai}\nMã: \`${ma}\`\nSeri: \`${seri}\``})
-            }).then(() => { alert("Đã gửi! Admin sẽ gửi mã túi mù cho bạn qua Zalo/Discord nhé."); dongPopup(); });
+                body: JSON.stringify({content: `🚀 **TNQuangStore - ĐƠN MỚI!**\nLoại: ${g_ma}\nThẻ: ${loai}\nMã: \`${ma}\`\nSeri: \`${seri}\``})
+            }).then(() => { alert("Đã gửi! Admin sẽ gửi mã quà cho bạn sau khi check xong."); dongPopup(); });
         }
 
         const KHO_ACC = { "LUCKY-TNQ": "Chúc mừng! Bạn trúng Acc Blox Fruit Max Level!" };
