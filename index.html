@@ -7,7 +7,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
     <style>
-        :root { --main: #00a2ff; --dark: #111; --pink: #ff00ff; }
+        :root { --main: #00a2ff; --dark: #111; --pink: #ff00ff; --red: #ff4d4d; }
         body { font-family: 'Segoe UI', sans-serif; background: #f4f7f8; margin: 0; padding-bottom: 50px; }
         header { background: var(--dark); padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; color: white; position: sticky; top: 0; z-index: 100; }
         .btn-user { background: var(--main); color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-weight: bold; }
@@ -15,12 +15,13 @@
         .container { max-width: 800px; margin: auto; padding: 15px; }
         .card { background: white; border-radius: 12px; padding: 15px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .item-card { background: white; border-radius: 10px; overflow: hidden; border: 1px solid #ddd; text-align: center; }
+        .item-card { background: white; border-radius: 10px; overflow: hidden; border: 1px solid #ddd; text-align: center; padding-bottom: 10px; }
         .item-card img { width: 100%; height: 120px; object-fit: cover; }
-        .btn-mua { background: var(--main); color: white; border: none; padding: 10px; width: 90%; margin: 10px 0; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        .btn-mua { background: var(--main); color: white; border: none; padding: 10px; width: 90%; margin-top: 10px; border-radius: 5px; cursor: pointer; font-weight: bold; }
         .modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:1000; justify-content:center; align-items:center; }
         .modal-content { background:white; width:90%; max-width:350px; padding:20px; border-radius:15px; text-align:center; position: relative; }
         input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+        h3 { border-left: 5px solid var(--main); padding-left: 10px; margin-bottom: 15px; }
     </style>
 </head>
 <body>
@@ -37,42 +38,63 @@
 <div class="container">
     <div id="user-info" class="card" style="display: none; border-left: 5px solid var(--main);">
         <p style="margin: 0;">Chào mừng, <b id="display-name">Người dùng</b>!</p>
-        <p style="font-size: 12px; color: #666; margin: 5px 0 0 0;">Bạn đã có thể tham gia các trò chơi nhân phẩm.</p>
     </div>
 
+    <!-- MỤC 1: NHẬN HÀNG -->
     <div class="card">
-        <h4 style="margin-top: 0;">📦 NHẬN HÀNG TỰ ĐỘNG</h4>
+        <h3>📦 NHẬN HÀNG TỰ ĐỘNG</h3>
         <input type="text" id="orderId" placeholder="Nhập mã đơn hàng từ Admin...">
         <button class="btn-mua" onclick="checkOrder()">KIỂM TRA NGAY</button>
     </div>
 
-    <div class="grid">
-        <div class="item-card" style="border-top: 4px solid var(--pink);">
-            <img src="https://i.ytimg.com/vi/Sndq0xS1mQY/maxresdefault.jpg">
-            <p><b>Túi Mù Blox Fruit</b></p>
-            <button class="btn-mua" style="background: var(--pink);" onclick="alert('Hãy đăng nhập để mở túi!')">MỞ TÚI</button>
+    <!-- MỤC 2: ACC GAME HOT -->
+    <div class="card">
+        <h3 style="border-color: var(--red);">🔥 ACC GAME HOT</h3>
+        <div class="grid">
+            <div class="item-card">
+                <img src="https://i.ytimg.com/vi/Sndq0xS1mQY/maxresdefault.jpg">
+                <p><b>Blox Fruit Max Level</b></p>
+                <button class="btn-mua" style="background: var(--red);" onclick="xuLyHanhDong('Mua Acc Blox Fruit')">MUA NGAY</button>
+            </div>
+            <div class="item-card">
+                <img src="https://i.ytimg.com/vi/v5j7n6n8p7k/maxresdefault.jpg">
+                <p><b>Acc Pet Sim 99</b></p>
+                <button class="btn-mua" style="background: var(--red);" onclick="xuLyHanhDong('Mua Acc Pet Sim')">MUA NGAY</button>
+            </div>
         </div>
-        <div class="item-card" style="border-top: 4px solid orange;">
-            <img src="https://i.ytimg.com/vi/v5j7n6n8p7k/maxresdefault.jpg">
-            <p><b>Vòng Quay Robux</b></p>
-            <button class="btn-mua" style="background: orange;" onclick="alert('Hãy đăng nhập để quay!')">QUAY NGAY</button>
+    </div>
+
+    <!-- MỤC 3: TÚI MÙ & VÒNG QUAY -->
+    <div class="card">
+        <h3 style="border-color: var(--pink);">🎁 TRÒ CHƠI NHÂN PHẨM</h3>
+        <div class="grid">
+            <div class="item-card">
+                <img src="https://i.ytimg.com/vi/Sndq0xS1mQY/maxresdefault.jpg">
+                <p><b>Túi Mù Blox Fruit</b></p>
+                <button class="btn-mua" style="background: var(--pink);" onclick="xuLyHanhDong('Mở Túi Mù')">MỞ TÚI</button>
+            </div>
+            <div class="item-card">
+                <img src="https://i.ytimg.com/vi/v5j7n6n8p7k/maxresdefault.jpg">
+                <p><b>Vòng Quay Robux</b></p>
+                <button class="btn-mua" style="background: orange;" onclick="xuLyHanhDong('Quay Robux')">QUAY NGAY</button>
+            </div>
         </div>
     </div>
 </div>
 
 <div id="authModal" class="modal">
     <div class="modal-content">
-        <h3 id="authTitle">Đăng Nhập</h3>
-        <input type="email" id="email" placeholder="Email của bạn">
+        <h3 id="authTitle" style="border:none">Đăng Nhập</h3>
+        <input type="email" id="email" placeholder="Email">
         <input type="password" id="password" placeholder="Mật khẩu">
         <button class="btn-mua" onclick="handleAuth()">XÁC NHẬN</button>
-        <p style="font-size: 13px; color: blue; cursor: pointer;" onclick="switchAuth()" id="switchBtn">Chưa có tài khoản? Đăng ký ngay</p>
-        <button onclick="toggleModal('authModal')" style="background:none; border:none; color:red; cursor:pointer;">Đóng</button>
+        <p style="font-size: 13px; color: blue; cursor: pointer;" onclick="switchAuth()" id="switchBtn">Chưa có tài khoản? Đăng ký</p>
+        <button onclick="toggleModal('authModal', false)" style="background:none; border:none; color:red; cursor:pointer; margin-top:10px;">Đóng</button>
     </div>
 </div>
 
 <script>
-    // DÁN MÃ FIREBASE CỦA ÔNG VÀO ĐÂY
+    // Dán lại thông tin Firebase của ông vào đây
     const firebaseConfig = {
       apiKey: "AIzaSyBfFejnht7HCJqjw95JFCpOMPR1HB3GSGU",
       authDomain: "tnquangstore.firebaseapp.com",
@@ -84,12 +106,11 @@
     
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
-    let isLogin = true;
 
-    // Kiểm tra trạng thái đăng nhập
+    // Fix lỗi: Kiểm tra trạng thái đăng nhập thật
     auth.onAuthStateChanged(user => {
         if (user) {
-            document.getElementById('user-nav').innerHTML = `<button class="btn-user" style="background:#444" onclick="logout()">Thoát</button>`;
+            document.getElementById('user-nav').innerHTML = `<button class="btn-user" style="background:#444" onclick="auth.signOut()">Thoát</button>`;
             document.getElementById('user-info').style.display = 'block';
             document.getElementById('display-name').innerText = user.email.split('@')[0];
             toggleModal('authModal', false);
@@ -99,34 +120,36 @@
         }
     });
 
-    function toggleModal(id, show = true) {
-        document.getElementById(id).style.display = show ? 'flex' : 'none';
-    }
-
-    function switchAuth() {
-        isLogin = !isLogin;
-        document.getElementById('authTitle').innerText = isLogin ? 'Đăng Nhập' : 'Đăng Ký';
-        document.getElementById('switchBtn').innerText = isLogin ? 'Chưa có tài khoản? Đăng ký ngay' : 'Đã có tài khoản? Đăng nhập';
-    }
-
-    function handleAuth() {
-        const email = document.getElementById('email').value;
-        const pass = document.getElementById('password').value;
-        if(isLogin) {
-            auth.signInWithEmailAndPassword(email, pass).catch(e => alert("Lỗi: " + e.message));
+    function xuLyHanhDong(ten) {
+        if (auth.currentUser) {
+            alert("Đã nhận đơn: " + ten + ". Liên hệ Admin để lấy hàng!");
         } else {
-            auth.createUserWithEmailAndPassword(email, pass).then(() => alert("Đăng ký thành công!")).catch(e => alert("Lỗi: " + e.message));
+            alert("Bạn phải đăng nhập trước!");
+            toggleModal('authModal', true);
         }
     }
 
-    function logout() { auth.signOut(); }
+    function toggleModal(id, show) { document.getElementById(id).style.display = show ? 'flex' : 'none'; }
     
+    let isLogin = true;
+    function switchAuth() {
+        isLogin = !isLogin;
+        document.getElementById('authTitle').innerText = isLogin ? 'Đăng Nhập' : 'Đăng Ký';
+        document.getElementById('switchBtn').innerText = isLogin ? 'Chưa có tài khoản? Đăng ký' : 'Đã có tài khoản? Đăng nhập';
+    }
+
+    function handleAuth() {
+        const e = document.getElementById('email').value;
+        const p = document.getElementById('password').value;
+        if(isLogin) auth.signInWithEmailAndPassword(e, p).catch(err => alert("Lỗi: " + err.message));
+        else auth.createUserWithEmailAndPassword(e, p).then(() => alert("Đăng ký xong!")).catch(err => alert("Lỗi: " + err.message));
+    }
+
     function checkOrder() {
-        const id = document.getElementById('orderId').value;
-        if(id === "TNQ123") alert("Đơn hàng đang chờ xử lý!");
-        else alert("Mã đơn không tồn tại!");
+        const code = document.getElementById('orderId').value;
+        if(code === "TEST") alert("Tài khoản: admin / MK: 123456");
+        else alert("Mã đơn không đúng!");
     }
 </script>
-
 </body>
 </html>
