@@ -3,126 +3,163 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Genshin Topup - Trang Chủ</title>
+    <title>Novahikariastral - Shop Acc Uy Tín</title>
     <style>
-        body {
-            background-color: #f4f4f4; /* Màu nền xám sáng của Genshin */
-            color: #393b40;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-        /* Thanh menu phía trên giống web shop */
-        .header {
-            background-color: #393b40;
-            color: #ece5d8; /* Màu vàng nhạt Genshin */
-            padding: 15px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-        }
-        .header h1 {
-            margin: 0;
-            font-size: 22px;
-            letter-spacing: 1px;
-        }
-        .container {
-            max-width: 900px;
-            margin: 20px auto;
-            padding: 0 20px;
-        }
-        /* Banner ngụy trang */
-        .banner {
-            width: 100%;
-            height: 250px;
-            background-image: url('https://upload-os-bbs.hoyolab.com/upload/2021/08/30/8410228/1d2ce3edbf9fa2f33f3801f95a4947ba_4938637016579979728.jpg'); 
-            background-size: cover;
-            background-position: center;
-            border-radius: 12px;
-            margin-bottom: 30px;
-            border: 2px solid #d3bc8e; /* Viền vàng */
-        }
-        .section-title {
-            font-size: 22px;
-            font-weight: bold;
-            margin-bottom: 20px;
-            border-left: 5px solid #d3bc8e;
-            padding-left: 15px;
-            color: #393b40;
-        }
-        /* Các nút bấm ngụy trang thành gói nạp */
-        .card-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-        }
-        .card {
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            text-align: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            transition: 0.3s;
-            text-decoration: none;
-            color: #393b40;
-            border: 1px solid #e0e0e0;
-        }
-        .card:hover {
-            border-color: #d3bc8e;
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(211, 188, 142, 0.4);
-        }
-        .icon {
-            font-size: 40px;
-            margin-bottom: 10px;
-        }
-        .card-title {
-            font-weight: bold;
-            font-size: 18px;
-            margin: 10px 0;
-            color: #c9933c;
-        }
-        .card-desc {
-            font-size: 14px;
-            color: #888;
-        }
+        :root { --main-color: #d3bc8e; --bg-dark: #393b40; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f4f4; margin: 0; padding: 0; }
+        
+        /* Banner đổi ảnh */
+        #banner { width: 100%; height: 250px; background-size: cover; background-position: center; transition: 1s; display: flex; align-items: center; justify-content: center; color: white; text-shadow: 2px 2px 10px rgba(0,0,0,0.5); font-size: 24px; font-weight: bold; }
+
+        .container { max-width: 800px; margin: 20px auto; padding: 15px; }
+        .section-title { border-left: 5px solid var(--main-color); padding-left: 10px; margin: 20px 0; font-size: 20px; color: var(--bg-dark); }
+
+        /* Danh sách Acc */
+        .grid-acc { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .acc-card { background: white; border-radius: 10px; overflow: hidden; border: 1px solid #ddd; text-align: center; padding-bottom: 10px; }
+        .acc-card img { width: 100%; height: 150px; object-fit: cover; }
+        .btn-mua { background: var(--main-color); color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+
+        /* Popup thanh toán */
+        #popupPayment { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:9999; justify-content:center; align-items:center; }
+        .popup-content { background:white; width:90%; max-width:350px; padding:20px; border-radius:15px; position:relative; text-align:center; }
+        .input-style { width: 100%; padding: 10px; margin: 5px 0; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
+        
+        .hidden { display: none; }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>Nova Store</h1>
-        <span style="font-size: 14px; cursor: pointer;">👤 Đăng nhập</span>
-    </div>
-    
-    <div class="container">
-        <!-- Ảnh Banner Genshin mờ mờ cho giống thật -->
-        <div class="banner"></div>
-        
-        <div class="section-title">🔥 Flash Sale - Giờ Vàng</div>
-        
-        <div class="card-grid">
-            <!-- Nút ngụy trang TikTok -->
-            <a href="https://www.tiktok.com/" target="_blank" class="card">
-                <div class="icon">💎</div>
-                <div class="card-title">6480 Đá Sáng Thế</div>
-                <div class="card-desc">Click để nhận ưu đãi x2</div>
-            </a>
-            
-            <!-- Nút ngụy trang YouTube -->
-            <a href="https://www.youtube.com/" target="_blank" class="card">
-                <div class="icon">🌙</div>
-                <div class="card-title">Không Nguyệt Chúc Phúc</div>
-                <div class="card-desc">Nhận ngay 90 Nguyên Thạch/ngày</div>
-            </a>
 
-            <!-- Nút ngụy trang game khác (Roblox chẳng hạn) -->
-            <a href="#" target="_blank" class="card">
-                <div class="icon">🎫</div>
-                <div class="card-title">Nhật Ký Hành Trình</div>
-                <div class="card-desc">Mở khóa Battle Pass VIP</div>
-            </a>
+    <div id="banner">SHOP ACC NOVAHIKARIASTRAL</div>
+
+    <div class="container">
+        <div style="background: #fffcf5; border: 2px dashed var(--main-color); padding: 15px; border-radius: 15px; margin-bottom: 30px;">
+            <h3 style="margin-top:0; color: var(--main-color);">🎁 NHẬN ACC ĐÃ MUA</h3>
+            <input type="text" id="inputMaDon" class="input-style" placeholder="Dán mã đơn hàng vào đây...">
+            <button onclick="layAcc()" style="width:100%;" class="btn-mua">KIỂM TRA & LẤY ACC</button>
+            <div id="ketQuaAcc" class="hidden" style="margin-top:15px; padding:10px; background:#e8f5e9; border-radius:5px; word-break:break-all;">
+                <b>Thông tin Acc:</b> <span id="thongTinChiTiet"></span>
+            </div>
+        </div>
+
+        <div class="section-title">DANH SÁCH ACC CÓ SẴN</div>
+        <div class="grid-acc">
+            <div class="acc-card">
+                <img src="https://via.placeholder.com/400x225" alt="Acc 1">
+                <h4>Acc Genshin #001</h4>
+                <p>Giá: 200.000đ</p>
+                <button class="btn-mua" onclick="moThanhToan('200000', 'ACC001')">MUA NGAY</button>
+            </div>
+            <div class="acc-card">
+                <img src="https://via.placeholder.com/400x225" alt="Acc 2">
+                <h4>Acc Honkai #002</h4>
+                <p>Giá: 500.000đ</p>
+                <button class="btn-mua" onclick="moThanhToan('500000', 'ACC002')">MUA NGAY</button>
+            </div>
         </div>
     </div>
+
+    <div id="popupPayment">
+        <div class="popup-content">
+            <span onclick="dongPopup()" style="position:absolute; top:10px; right:15px; cursor:pointer; font-size:20px;">&times;</span>
+            <h3 id="txtMaAcc">Thanh toán</h3>
+            
+            <div id="step1">
+                <button onclick="hienBank()" style="width:100%; padding:12px; margin-bottom:10px; background:#0056b3; color:white; border:none; border-radius:8px; cursor:pointer;">🏦 Chuyển khoản (QR)</button>
+                <button onclick="hienThe()" style="width:100%; padding:12px; background:#ff9800; color:white; border:none; border-radius:8px; cursor:pointer;">💳 Nạp Thẻ cào</button>
+            </div>
+
+            <div id="stepBank" class="hidden">
+                <img id="hinhQR" src="" style="width:100%; border-radius:10px;">
+                <p style="font-size:12px; color:red;">Quét mã để thanh toán tự động</p>
+                <button onclick="quayLai()">Quay lại</button>
+            </div>
+
+            <div id="stepThe" class="hidden">
+                <select id="loaiThe" class="input-style"><option>Viettel</option><option>Zing</option></select>
+                <input type="text" id="maThe" class="input-style" placeholder="Mã thẻ">
+                <input type="text" id="seriThe" class="input-style" placeholder="Seri">
+                <button onclick="guiThe()" style="background:#4caf50;" class="btn-mua">GỬI THẺ</button>
+                <button onclick="quayLai()">Quay lại</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 1. CÀI ĐẶT BANNER
+        const images = [
+            'https://via.placeholder.com/800x250/333',
+            'https://via.placeholder.com/800x250/666',
+            'https://via.placeholder.com/800x250/999'
+        ];
+        let currentIndex = 0;
+        function changeImage() {
+            document.getElementById('banner').style.backgroundImage = `url('${images[currentIndex]}')`;
+            currentIndex = (currentIndex + 1) % images.length;
+        }
+        setInterval(changeImage, 5000); // 5 giây đổi một lần
+        changeImage();
+
+        // 2. CÀI ĐẶT THANH TOÁN
+        let giaHienTai = ""; let maAccHienTai = "";
+        function moThanhToan(gia, ma) {
+            giaHienTai = gia; maAccHienTai = ma;
+            document.getElementById('txtMaAcc').innerText = "Mua: " + ma;
+            document.getElementById('popupPayment').style.display = 'flex';
+            quayLai();
+        }
+
+        function hienBank() {
+            const stk = "STK_CUA_BAN"; const nganHang = "MB"; const ten = "TEN_CUA_BAN";
+            document.getElementById('hinhQR').src = `https://img.vietqr.io/image/${nganHang}-${stk}-compact2.png?amount=${giaHienTai}&addInfo=Mua%20${maAccHienTai}&accountName=${ten}`;
+            document.getElementById('step1').classList.add('hidden');
+            document.getElementById('stepBank').classList.remove('hidden');
+        }
+
+        function hienThe() {
+            document.getElementById('step1').classList.add('hidden');
+            document.getElementById('stepThe').classList.remove('hidden');
+        }
+
+        function quayLai() {
+            document.getElementById('step1').classList.remove('hidden');
+            document.getElementById('stepBank').classList.add('hidden');
+            document.getElementById('stepThe').classList.add('hidden');
+        }
+
+        function dongPopup() { document.getElementById('popupPayment').style.display = 'none'; }
+
+        function guiThe() {
+            const webhook = "LINK_WEBHOOK_DISCORD_CUA_BAN";
+            const loai = document.getElementById('loaiThe').value;
+            const ma = document.getElementById('maThe').value;
+            const seri = document.getElementById('seriThe').value;
+            if(!ma || !seri) return alert("Nhập đủ mã/seri!");
+
+            fetch(webhook, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({content: `🔥 **THẺ MỚI:**\nAcc: ${maAccHienTai}\nLoại: ${loai}\nMã: ${ma}\nSeri: ${seri}`})
+            }).then(() => {
+                alert("Gửi thành công! Chờ Admin duyệt thẻ.");
+                dongPopup();
+            });
+        }
+
+        // 3. CÀI ĐẶT NHẬN ACC (KHO HÀNG)
+        const khoAcc = {
+            "MA-DOC-QUYEN-1": "TK: user1 | MK: pass1",
+            "NOVAASTRAL-999": "TK: user2 | MK: pass2"
+        };
+        function layAcc() {
+            const ma = document.getElementById('inputMaDon').value.trim();
+            if(khoAcc[ma]) {
+                document.getElementById('thongTinChiTiet').innerText = khoAcc[ma];
+                document.getElementById('ketQuaAcc').classList.remove('hidden');
+            } else {
+                alert("Mã đơn không đúng!");
+            }
+        }
+    </script>
 </body>
 </html>
