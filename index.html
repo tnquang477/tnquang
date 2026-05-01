@@ -1,108 +1,115 @@
-<!DOCTYPE html>
+v<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TN QUANG STORE - SHOP ROBUX</title>
-    <!-- Firebase SDKs -->
+    <title>TN QUANG STORE - Dịch vụ Game Uy Tín</title>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        /* GIỮ NGUYÊN STYLE ĐẸP CỦA ÔNG */
-        :root { --primary: #ff4757; --secondary: #2f3542; --gold: #f1c40f; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #1e272e; color: white; margin: 0; padding: 20px; }
-        .container { max-width: 1000px; margin: auto; }
-        header { display: flex; justify-content: space-between; align-items: center; background: var(--secondary); padding: 15px 25px; border-radius: 15px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
-        .user-info { display: flex; gap: 15px; align-items: center; }
-        .btn { padding: 10px 18px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s; }
-        .btn-login { background: var(--primary); color: white; }
-        .btn-nap { background: var(--gold); color: #000; }
-        .btn-admin { background: #e67e22; color: white; display: none; }
+        :root { --main-color: #0066cc; --bg-body: #f4f6f8; --text-color: #333; }
+        body { font-family: 'Roboto', sans-serif; background: var(--bg-body); margin: 0; color: var(--text-color); }
         
-        /* Grid Sản phẩm cho đẹp lại */
-        .grid-games { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
-        .card { background: var(--secondary); padding: 20px; border-radius: 15px; text-align: center; border: 1px solid #3d4451; box-shadow: 0 5px 10px rgba(0,0,0,0.2); }
-        .card img { width: 100%; border-radius: 10px; margin-bottom: 15px; border: 2px solid #444; }
+        /* Header chuyên nghiệp */
+        header { background: #fff; padding: 10px 0; border-bottom: 1px solid #ddd; position: sticky; top: 0; z-index: 100; }
+        .header-container { max-width: 1200px; margin: auto; display: flex; justify-content: space-between; align-items: center; padding: 0 15px; }
+        .logo { font-size: 22px; font-weight: bold; color: var(--main-color); text-decoration: none; }
+        .search-bar { flex: 1; margin: 0 30px; position: relative; }
+        .search-bar input { width: 100%; padding: 10px 15px; border-radius: 20px; border: 1px solid #ddd; outline: none; }
         
-        /* Modal Style */
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); }
-        .modal-content { background: #2f3542; margin: 8% auto; padding: 30px; border-radius: 20px; width: 380px; text-align: center; border: 1px solid var(--primary); }
-        .modal-content input, .modal-content select { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #444; background: #1e272e; color: white; box-sizing: border-box; }
+        /* Banner & Grid */
+        .container { max-width: 1200px; margin: 20px auto; padding: 0 15px; }
+        .banner { width: 100%; border-radius: 15px; overflow: hidden; margin-bottom: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .banner img { width: 100%; display: block; }
         
-        /* Admin Panel */
-        #admin-panel { display: none; background: #f4f4f4; color: #333; padding: 25px; border-radius: 15px; margin-top: 30px; text-align: left; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; background: white; }
-        th, td { border: 1px solid #ddd; padding: 12px; text-align: center; }
-        th { background: var(--primary); color: white; }
+        .section-title { font-size: 20px; font-weight: bold; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; border-left: 5px solid var(--main-color); padding-left: 10px; }
+        
+        .grid-products { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
+        .product-card { background: #fff; border-radius: 12px; padding: 15px; text-align: center; transition: 0.3s; box-shadow: 0 2px 8px rgba(0,0,0,0.05); position: relative; }
+        .product-card:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .product-card img { width: 100%; border-radius: 10px; margin-bottom: 10px; }
+        .price { color: #e74c3c; font-weight: bold; font-size: 18px; margin: 10px 0; }
+        
+        .btn-buy { background: var(--main-color); color: #fff; border: none; padding: 8px 20px; border-radius: 5px; cursor: pointer; width: 100%; font-weight: bold; }
+        
+        /* Modals */
+        .modal { display: none; position: fixed; z-index: 1001; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); }
+        .modal-content { background: #fff; margin: 10% auto; padding: 25px; border-radius: 15px; width: 350px; position: relative; }
+        .close { position: absolute; right: 15px; top: 10px; cursor: pointer; font-size: 20px; }
+        input, select { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
+        
+        /* Footer */
+        footer { background: #fff; padding: 40px 0; border-top: 1px solid #ddd; margin-top: 50px; }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; max-width: 1200px; margin: auto; padding: 0 15px; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <header>
-        <h1 style="color: var(--primary); margin: 0; font-size: 24px;">💎 TN QUANG STORE</h1>
-        <div class="user-info" id="user-area">
-            <button class="btn btn-login" onclick="openModal('authModal')">ĐĂNG NHẬP</button>
+<header>
+    <div class="header-container">
+        <a href="#" class="logo">TN QUANG STORE</a>
+        <div class="search-bar">
+            <input type="text" placeholder="Tìm game, sản phẩm...">
         </div>
-    </header>
-
-    <div class="grid-games">
-        <div class="card">
-            <img src="https://img.freepik.com/free-vector/lucky-spin-banner-with-glowing-light-effect_1017-31038.jpg" alt="Vòng quay">
-            <h3>Vòng Quay Robux</h3>
-            <p style="color: #ccc;">Giá: 10.000 VNĐ</p>
-            <button class="btn btn-nap" style="width: 100%" onclick="quayRobux()">QUAY NGAY</button>
-        </div>
-        
-        <div class="card">
-            <img src="https://trungtamdaotaonauan.com/wp-content/uploads/2023/11/cach-lam-tui-mu-giay.jpg" alt="Túi mù">
-            <h3>Túi Mù May Mắn</h3>
-            <p style="color: #ccc;">Giá: 20.000 VNĐ</p>
-            <button class="btn btn-nap" style="width: 100%" onclick="alert('Chức năng đang cập nhật!')">MUA NGAY</button>
+        <div id="user-area">
+            <button class="btn-buy" style="background:#eee; color:#333" onclick="openModal('authModal')">Đăng nhập</button>
         </div>
     </div>
+</header>
 
-    <!-- Admin Panel -->
-    <div id="admin-panel">
-        <h2 style="color: #e67e22; margin-top:0;">⚙️ QUẢN TRỊ VIÊN</h2>
-        <div style="overflow-x: auto;">
-            <h3>📋 Duyệt Thẻ Nạp</h3>
-            <table>
-                <thead><tr><th>User</th><th>Loại</th><th>Mệnh giá</th><th>Mã/Seri</th><th>Duyệt</th></tr></thead>
-                <tbody id="list-nap-the"></tbody>
-            </table>
+<div class="container">
+    <!-- Banner giống nguyenanhstore -->
+    <div class="banner">
+        <img src="https://cdn.divineshop.vn/image/catalog/Anh/Banner/Google%20One.png" alt="Banner">
+    </div>
+
+    <div class="section-title">⚡ FLASH SALE</div>
+    <div class="grid-products">
+        <div class="product-card">
+            <img src="https://img.freepik.com/free-vector/lucky-spin-banner-with-glowing-light-effect_1017-31038.jpg" alt="Vòng quay">
+            <h3>Vòng Quay Robux</h3>
+            <div class="price">10.000 VNĐ</div>
+            <button class="btn-buy" onclick="quayRobux()">QUAY NGAY</button>
         </div>
+        <div class="product-card">
+            <img src="https://trungtamdaotaonauan.com/wp-content/uploads/2023/11/cach-lam-tui-mu-giay.jpg" alt="Túi mù">
+            <h3>Túi Mù May Mắn</h3>
+            <div class="price">20.000 VNĐ</div>
+            <button class="btn-buy" onclick="alert('Đang cập nhật!')">MUA NGAY</button>
+        </div>
+        <!-- Thêm sản phẩm khác ở đây -->
     </div>
 </div>
 
 <!-- Modal Nạp Thẻ -->
 <div id="napTheModal" class="modal">
     <div class="modal-content">
-        <h3 style="color: var(--gold);">🎫 NẠP THẺ CÀO</h3>
-        <select id="loaiThe"><option>Viettel</option><option>Vinaphone</option><option>Mobifone</option><option>Zing</option></select>
-        <select id="menhGia"><option value="10000">10.000đ</option><option value="20000">20.000đ</option><option value="50000">50.000đ</option><option value="100000">100.000đ</option></select>
-        <input type="text" id="maThe" placeholder="Mã số sau lớp cào">
-        <input type="text" id="seriThe" placeholder="Số Seri">
-        <button class="btn btn-nap" style="width: 100%; margin-top: 10px;" onclick="guiDonNapThe()">GỬI THẺ</button>
-        <button class="btn" style="width: 100%; background: none; color: #aaa;" onclick="closeModal('napTheModal')">Đóng</button>
+        <span class="close" onclick="closeModal('napTheModal')">&times;</span>
+        <h3>🎫 NẠP THẺ CÀO</h3>
+        <select id="loaiThe"><option>Viettel</option><option>Zing</option></select>
+        <select id="menhGia"><option value="10000">10.000đ</option><option value="50000">50.000đ</option></select>
+        <input type="text" id="maThe" placeholder="Mã thẻ">
+        <input type="text" id="seriThe" placeholder="Số seri">
+        <button class="btn-buy" onclick="guiDonNapThe()">GỬI THẺ</button>
     </div>
 </div>
 
 <!-- Modal Đăng Nhập -->
 <div id="authModal" class="modal">
     <div class="modal-content">
-        <h3 id="authTitle">🔐 ĐĂNG NHẬP / ĐĂNG KÝ</h3>
+        <span class="close" onclick="closeModal('authModal')">&times;</span>
+        <h3>ĐĂNG NHẬP / ĐĂNG KÝ</h3>
         <input type="email" id="email" placeholder="Email">
         <input type="password" id="pass" placeholder="Mật khẩu">
-        <button class="btn btn-nap" style="width: 100%; margin-top: 10px;" onclick="handleAuth()">XÁC NHẬN</button>
-        <button class="btn" style="width: 100%; background: none; color: #aaa;" onclick="closeModal('authModal')">Hủy</button>
+        <button class="btn-buy" onclick="handleAuth()">XÁC NHẬN</button>
     </div>
 </div>
 
 <script>
-// --- CẤU HÌNH FIREBASE XỊN CỦA ÔNG ---
+// --- GIỮ LẠI CẤU HÌNH FIREBASE XỊN CỦA ÔNG ---
 const firebaseConfig = {
   apiKey: "AIzaSyBfFejnht7HCJqjw95JFCpOMPR1HB3GSGU",
   authDomain: "tnquangstore.firebaseapp.com",
@@ -115,98 +122,64 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
-const adminEmail = "tnquang477@gmail.com";
 
 function openModal(id) { document.getElementById(id).style.display='block'; }
 function closeModal(id) { document.getElementById(id).style.display='none'; }
 
-// Xử lý Login
+// Logic Đăng nhập & Theo dõi User
+auth.onAuthStateChanged(user => {
+    const area = document.getElementById('user-area');
+    if(user) {
+        db.collection("users").doc(user.email).onSnapshot(doc => {
+            const d = doc.data() || {vnd:0, robux:0};
+            area.innerHTML = `
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <div style="text-align:right; font-size:13px">
+                        <b>${user.email.split('@')[0]}</b><br>
+                        <span style="color:green">${d.vnd.toLocaleString()}đ</span> | <span style="color:orange">${d.robux} R$</span>
+                    </div>
+                    <button class="btn-buy" style="padding:5px 10px; font-size:12px" onclick="openModal('napTheModal')">Nạp thẻ</button>
+                    <button onclick="auth.signOut()" style="border:none; background:none; cursor:pointer"><i class="fa fa-sign-out"></i></button>
+                </div>
+            `;
+        });
+    }
+});
+
 async function handleAuth() {
     const e = document.getElementById('email').value;
     const p = document.getElementById('pass').value;
     try {
         await auth.signInWithEmailAndPassword(e, p);
-    } catch(err) {
-        try {
-            await auth.createUserWithEmailAndPassword(e, p);
-            await db.collection("users").doc(e).set({ vnd: 0, robux: 0 });
-        } catch(e2) { alert("Lỗi: " + e2.message); }
+    } catch {
+        await auth.createUserWithEmailAndPassword(e, p);
+        await db.collection("users").doc(e).set({ vnd: 0, robux: 0 });
     }
     closeModal('authModal');
 }
 
-// Theo dõi User
-auth.onAuthStateChanged(user => {
-    const area = document.getElementById('user-area');
-    if(user) {
-        db.collection("users").doc(user.email).onSnapshot(doc => {
-            const d = doc.data() || {vnd: 0, robux: 0};
-            area.innerHTML = `
-                <div style="text-align:right">
-                    <div style="font-size:14px; margin-bottom:5px;">💰 ${d.vnd.toLocaleString()}đ | 💎 ${d.robux} R$</div>
-                    <button class="btn btn-nap" style="padding:5px 10px; font-size:12px" onclick="openModal('napTheModal')">NẠP THẺ</button>
-                    ${user.email === adminEmail ? '<button class="btn btn-admin" style="display:inline-block; padding:5px 10px; font-size:12px" onclick="toggleAdmin()">⚙️ ADMIN</button>' : ''}
-                    <button class="btn" style="padding:5px 10px; font-size:12px; background:#444; color:white" onclick="auth.signOut()">Thoát</button>
-                </div>
-            `;
-        });
-        if(user.email === adminEmail) loadAdmin();
-    } else {
-        area.innerHTML = `<button class="btn btn-login" onclick="openModal('authModal')">ĐĂNG NHẬP</button>`;
-    }
-});
-
-function toggleAdmin() {
-    const p = document.getElementById('admin-panel');
-    p.style.display = p.style.display === 'none' ? 'block' : 'none';
-}
-
 async function guiDonNapThe() {
-    const ma = document.getElementById('maThe').value;
-    const seri = document.getElementById('seriThe').value;
-    if(!ma || !seri) return alert("Vui lòng nhập đủ mã và seri!");
-    
     await db.collection("napthe").add({
         email: auth.currentUser.email,
         loaiThe: document.getElementById('loaiThe').value,
         menhGia: parseInt(document.getElementById('menhGia').value),
-        maThe: ma, seriThe: seri,
+        maThe: document.getElementById('maThe').value,
+        seriThe: document.getElementById('seriThe').value,
         status: "Chờ duyệt"
     });
-    alert("Đã gửi đơn nạp! Chờ Admin check.");
+    alert("Gửi thẻ thành công!");
     closeModal('napTheModal');
 }
 
 async function quayRobux() {
     const ref = db.collection("users").doc(auth.currentUser.email);
     const d = (await ref.get()).data();
-    if(!d || d.vnd < 10000) return alert("Số dư không đủ 10.000đ!");
-    
-    const r = [20, 50, 100, 200, 500][Math.floor(Math.random()*5)];
+    if(!d || d.vnd < 10000) return alert("Không đủ tiền!");
+    const r = [20, 50, 100][Math.floor(Math.random()*3)];
     await ref.update({ vnd: d.vnd - 10000, robux: d.robux + r });
-    alert("🎉 Chúc mừng! Bạn trúng " + r + " Robux!");
-}
-
-function loadAdmin() {
-    db.collection("napthe").where("status","==","Chờ duyệt").onSnapshot(s => {
-        let h = "";
-        s.forEach(doc => {
-            const d = doc.data();
-            h += `<tr><td>${d.email}</td><td>${d.loaiThe}</td><td>${d.menhGia}đ</td>
-            <td>${d.maThe}<br><small>${d.seriThe}</small></td>
-            <td><button onclick="duyetThe('${doc.id}','${d.email}',${d.menhGia})" style="background:green;color:white;border:none;padding:5px;border-radius:5px;cursor:pointer">Duyệt</button></td></tr>`;
-        });
-        document.getElementById('list-nap-the').innerHTML = h;
-    });
-}
-
-async function duyetThe(id, email, tien) {
-    const ref = db.collection("users").doc(email);
-    const d = (await ref.get()).data();
-    await ref.update({ vnd: d.vnd + tien });
-    await db.collection("napthe").doc(id).update({ status: "Thành công" });
-    alert("Đã cộng tiền cho " + email);
+    alert("Trúng " + r + " Robux!");
 }
 </script>
+
 </body>
 </html>
