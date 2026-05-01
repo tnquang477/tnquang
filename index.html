@@ -105,13 +105,17 @@
 <script>
 // --- CẤU HÌNH FIREBASE --- (Ông dán thông số của ông vào đây)
 const firebaseConfig = {
-  apiKey: "AIzaSy...",
+// --- CẤU HÌNH FIREBASE XỊN CỦA TNQUANGSTORE ---
+const firebaseConfig = {
+  apiKey: "AIzaSyBfFejnht7HCJqjw95JFCpOMPR1HB3GSGU",
   authDomain: "tnquangstore.firebaseapp.com",
   projectId: "tnquangstore",
-  storageBucket: "tnquangstore.appspot.com",
-  messagingSenderId: "...",
-  appId: "..."
+  storageBucket: "tnquangstore.firebasestorage.app",
+  messagingSenderId: "683180615667",
+  appId: "1:683180615667:web:8baece012df95a0bb35486"
 };
+
+// Đảm bảo bên dưới nó có 3 dòng này để khởi tạo:
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
