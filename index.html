@@ -29,25 +29,27 @@
 <header>
     <div style="font-size: 18px; font-weight: bold;">TNQuangStore</div>
     <div id="user-nav">
-        <button class="btn-user" onclick="toggleModal('authModal')">Đăng nhập</button>
+        <!-- Nút đăng nhập sẽ tự thay đổi ở đây khi vào tài khoản -->
+        <button class="btn-user" onclick="toggleModal('authModal', true)">Đăng nhập</button>
     </div>
 </header>
 
 <div id="banner">TNQUANG STORE</div>
 
 <div class="container">
+    <!-- THÔNG TIN TÀI KHOẢN -->
     <div id="user-info" class="card" style="display: none; border-left: 5px solid var(--main);">
         <p style="margin: 0;">Chào mừng, <b id="display-name">Người dùng</b>!</p>
     </div>
 
-    <!-- MỤC 1: NHẬN HÀNG -->
+    <!-- 1. NHẬN HÀNG TỰ ĐỘNG -->
     <div class="card">
         <h3>📦 NHẬN HÀNG TỰ ĐỘNG</h3>
         <input type="text" id="orderId" placeholder="Nhập mã đơn hàng từ Admin...">
         <button class="btn-mua" onclick="checkOrder()">KIỂM TRA NGAY</button>
     </div>
 
-    <!-- MỤC 2: ACC GAME HOT -->
+    <!-- 2. ACC GAME HOT -->
     <div class="card">
         <h3 style="border-color: var(--red);">🔥 ACC GAME HOT</h3>
         <div class="grid">
@@ -64,7 +66,7 @@
         </div>
     </div>
 
-    <!-- MỤC 3: TÚI MÙ & VÒNG QUAY -->
+    <!-- 3. TÚI MÙ & VÒNG QUAY -->
     <div class="card">
         <h3 style="border-color: var(--pink);">🎁 TRÒ CHƠI NHÂN PHẨM</h3>
         <div class="grid">
@@ -82,6 +84,7 @@
     </div>
 </div>
 
+<!-- MODAL ĐĂNG NHẬP -->
 <div id="authModal" class="modal">
     <div class="modal-content">
         <h3 id="authTitle" style="border:none">Đăng Nhập</h3>
@@ -94,7 +97,6 @@
 </div>
 
 <script>
-    // Dán lại thông tin Firebase của ông vào đây
     const firebaseConfig = {
       apiKey: "AIzaSyBfFejnht7HCJqjw95JFCpOMPR1HB3GSGU",
       authDomain: "tnquangstore.firebaseapp.com",
@@ -107,24 +109,27 @@
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
 
-    // Fix lỗi: Kiểm tra trạng thái đăng nhập thật
+    // KIỂM TRA TRẠNG THÁI ĐĂNG NHẬP THẬT
     auth.onAuthStateChanged(user => {
+        const userNav = document.getElementById('user-nav');
+        const userInfo = document.getElementById('user-info');
         if (user) {
-            document.getElementById('user-nav').innerHTML = `<button class="btn-user" style="background:#444" onclick="auth.signOut()">Thoát</button>`;
-            document.getElementById('user-info').style.display = 'block';
+            userNav.innerHTML = `<button class="btn-user" style="background:#444" onclick="auth.signOut()">Thoát</button>`;
+            userInfo.style.display = 'block';
             document.getElementById('display-name').innerText = user.email.split('@')[0];
             toggleModal('authModal', false);
         } else {
-            document.getElementById('user-nav').innerHTML = `<button class="btn-user" onclick="toggleModal('authModal', true)">Đăng nhập</button>`;
-            document.getElementById('user-info').style.display = 'none';
+            userNav.innerHTML = `<button class="btn-user" onclick="toggleModal('authModal', true)">Đăng nhập</button>`;
+            userInfo.style.display = 'none';
         }
     });
 
-    function xuLyHanhDong(ten) {
+    // FIX LỖI: Chỉ cho phép thực hiện khi đã vào tài khoản
+    function xuLyHanhDong(tenDichVu) {
         if (auth.currentUser) {
-            alert("Đã nhận đơn: " + ten + ". Liên hệ Admin để lấy hàng!");
+            alert("Đã ghi nhận yêu cầu: " + tenDichVu + ". Vui lòng nạp tiền hoặc đợi Admin xử lý!");
         } else {
-            alert("Bạn phải đăng nhập trước!");
+            alert("Ông chưa đăng nhập mà, vào tài khoản đi đã!");
             toggleModal('authModal', true);
         }
     }
@@ -141,14 +146,17 @@
     function handleAuth() {
         const e = document.getElementById('email').value;
         const p = document.getElementById('password').value;
-        if(isLogin) auth.signInWithEmailAndPassword(e, p).catch(err => alert("Lỗi: " + err.message));
-        else auth.createUserWithEmailAndPassword(e, p).then(() => alert("Đăng ký xong!")).catch(err => alert("Lỗi: " + err.message));
+        if(isLogin) {
+            auth.signInWithEmailAndPassword(e, p).catch(err => alert("Lỗi đăng nhập: " + err.message));
+        } else {
+            auth.createUserWithEmailAndPassword(e, p).then(() => alert("Đăng ký thành công!")).catch(err => alert("Lỗi đăng ký: " + err.message));
+        }
     }
 
     function checkOrder() {
         const code = document.getElementById('orderId').value;
-        if(code === "TEST") alert("Tài khoản: admin / MK: 123456");
-        else alert("Mã đơn không đúng!");
+        if(code === "TEST") alert("Hàng của ông đây: Acc: admin / Pass: 123456");
+        else alert("Mã đơn không tồn tại hoặc chưa được duyệt!");
     }
 </script>
 </body>
