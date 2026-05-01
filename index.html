@@ -3,115 +3,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Novahikariastral - Shop Acc Uy Tín</title>
+    <title>TNQuangStore - Dịch Vụ Roblox Số 1</title>
     <style>
-        :root { --main-color: #d3bc8e; --bg-dark: #393b40; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f4f4; margin: 0; padding: 0; }
+        :root { --main-color: #00a2ff; --bg-dark: #191b1d; --text-white: #ffffff; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; margin: 0; padding: 0; }
         
-        /* Banner đổi ảnh */
-        #banner { width: 100%; height: 250px; background-size: cover; background-position: center; transition: 1s; display: flex; align-items: center; justify-content: center; color: white; text-shadow: 2px 2px 10px rgba(0,0,0,0.5); font-size: 24px; font-weight: bold; }
+        /* Banner Shop */
+        #banner { width: 100%; height: 250px; background: var(--bg-dark); background-size: cover; background-position: center; transition: 1s; display: flex; align-items: center; justify-content: center; color: var(--text-white); text-shadow: 2px 2px 15px rgba(0,0,0,0.8); font-size: 35px; font-weight: 900; letter-spacing: 2px; }
 
         .container { max-width: 800px; margin: 20px auto; padding: 15px; }
-        .section-title { border-left: 5px solid var(--main-color); padding-left: 10px; margin: 20px 0; font-size: 20px; color: var(--bg-dark); }
+        .section-title { border-left: 5px solid var(--main-color); padding-left: 12px; margin: 25px 0; font-size: 22px; color: var(--bg-dark); font-weight: bold; text-transform: uppercase; }
 
-        /* Danh sách Acc */
+        /* Kho hàng Roblox */
         .grid-acc { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .acc-card { background: white; border-radius: 10px; overflow: hidden; border: 1px solid #ddd; text-align: center; padding-bottom: 10px; }
-        .acc-card img { width: 100%; height: 150px; object-fit: cover; }
-        .btn-mua { background: var(--main-color); color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        .acc-card { background: white; border-radius: 12px; overflow: hidden; border: 1px solid #ddd; text-align: center; padding-bottom: 15px; transition: 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .acc-card:hover { transform: translateY(-5px); box-shadow: 0 6px 15px rgba(0,162,255,0.3); }
+        .acc-card img { width: 100%; height: 160px; object-fit: cover; }
+        .btn-mua { background: var(--main-color); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 80%; transition: 0.2s; }
+        .btn-mua:hover { background: #0088d6; }
 
-        /* Popup thanh toán */
-        #popupPayment { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:9999; justify-content:center; align-items:center; }
-        .popup-content { background:white; width:90%; max-width:350px; padding:20px; border-radius:15px; position:relative; text-align:center; }
-        .input-style { width: 100%; padding: 10px; margin: 5px 0; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
+        /* Popup */
+        #popupPayment { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:9999; justify-content:center; align-items:center; }
+        .popup-content { background:white; width:90%; max-width:360px; padding:25px; border-radius:20px; position:relative; text-align:center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .input-style { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; font-size: 14px; }
         
         .hidden { display: none; }
+        .close-btn { position:absolute; top:15px; right:20px; cursor:pointer; font-size:24px; color: #666; }
     </style>
 </head>
 <body>
 
-    <div id="banner">SHOP ACC NOVAHIKARIASTRAL</div>
+    <!-- Banner tự đổi ảnh (Bạn có thể thay link ảnh Roblox vào đây) -->
+    <div id="banner">TNQUANG STORE</div>
 
     <div class="container">
-        <div style="background: #fffcf5; border: 2px dashed var(--main-color); padding: 15px; border-radius: 15px; margin-bottom: 30px;">
-            <h3 style="margin-top:0; color: var(--main-color);">🎁 NHẬN ACC ĐÃ MUA</h3>
-            <input type="text" id="inputMaDon" class="input-style" placeholder="Dán mã đơn hàng vào đây...">
-            <button onclick="layAcc()" style="width:100%;" class="btn-mua">KIỂM TRA & LẤY ACC</button>
-            <div id="ketQuaAcc" class="hidden" style="margin-top:15px; padding:10px; background:#e8f5e9; border-radius:5px; word-break:break-all;">
-                <b>Thông tin Acc:</b> <span id="thongTinChiTiet"></span>
+        <!-- Khu vực Tra cứu Acc -->
+        <div style="background: #e1f5fe; border: 2px solid var(--main-color); padding: 20px; border-radius: 15px; margin-bottom: 30px; text-align: center;">
+            <h3 style="margin-top:0; color: #01579b;">📦 NHẬN HÀNG TỰ ĐỘNG</h3>
+            <p style="font-size: 13px; color: #555;">Nhập mã đơn hàng Admin gửi để lấy thông tin dịch vụ/acc</p>
+            <input type="text" id="inputMaDon" class="input-style" placeholder="Ví dụ: TNQ-XXXX-YYYY">
+            <button onclick="layAcc()" style="width:100%; margin-top: 10px;" class="btn-mua">KIỂM TRA NGAY</button>
+            <div id="ketQuaAcc" class="hidden" style="margin-top:20px; padding:15px; background:#fff; border: 1px solid #4caf50; border-radius:10px; text-align: left;">
+                <b style="color: #2e7d32;">Kết quả:</b> <br><span id="thongTinChiTiet" style="font-family: monospace; font-size: 15px;"></span>
             </div>
         </div>
 
-        <div class="section-title">DANH SÁCH ACC CÓ SẴN</div>
+        <div class="section-title">Dịch Vụ & Acc Hot</div>
         <div class="grid-acc">
+            <!-- Sản phẩm 1 -->
             <div class="acc-card">
-                <img src="https://via.placeholder.com/400x225" alt="Acc 1">
-                <h4>Acc Genshin #001</h4>
-                <p>Giá: 200.000đ</p>
-                <button class="btn-mua" onclick="moThanhToan('200000', 'ACC001')">MUA NGAY</button>
+                <img src="https://i.ytimg.com/vi/v5j7n6n8p7k/maxresdefault.jpg" alt="Robux">
+                <h4>Gói Robux Chính Hãng</h4>
+                <p style="color: #ff5722; font-weight: bold;">Từ 20.000đ</p>
+                <button class="btn-mua" onclick="moThanhToan('20000', 'ROBUX-GÓI')">THANH TOÁN</button>
             </div>
+            <!-- Sản phẩm 2 -->
             <div class="acc-card">
-                <img src="https://via.placeholder.com/400x225" alt="Acc 2">
-                <h4>Acc Honkai #002</h4>
-                <p>Giá: 500.000đ</p>
-                <button class="btn-mua" onclick="moThanhToan('500000', 'ACC002')">MUA NGAY</button>
+                <img src="https://wallpapers.com/images/featured/blox-fruits-pictures-7u55p4n509015c7j.jpg" alt="Blox Fruit">
+                <h4>Acc Blox Fruit Rank Cao</h4>
+                <p style="color: #ff5722; font-weight: bold;">100.000đ</p>
+                <button class="btn-mua" onclick="moThanhToan('100000', 'BF-ACC-01')">THANH TOÁN</button>
             </div>
         </div>
     </div>
 
+    <!-- Popup Thanh Toán -->
     <div id="popupPayment">
         <div class="popup-content">
-            <span onclick="dongPopup()" style="position:absolute; top:10px; right:15px; cursor:pointer; font-size:20px;">&times;</span>
-            <h3 id="txtMaAcc">Thanh toán</h3>
+            <span onclick="dongPopup()" class="close-btn">&times;</span>
+            <h3 id="txtMaAcc" style="color: var(--main-color);">Thanh toán</h3>
             
             <div id="step1">
-                <button onclick="hienBank()" style="width:100%; padding:12px; margin-bottom:10px; background:#0056b3; color:white; border:none; border-radius:8px; cursor:pointer;">🏦 Chuyển khoản (QR)</button>
-                <button onclick="hienThe()" style="width:100%; padding:12px; background:#ff9800; color:white; border:none; border-radius:8px; cursor:pointer;">💳 Nạp Thẻ cào</button>
+                <p style="color: #666; font-size: 14px;">Vui lòng chọn hình thức gửi tiền:</p>
+                <button onclick="hienBank()" style="width:100%; padding:14px; margin-bottom:12px; background:#28a745; color:white; border:none; border-radius:10px; font-weight:bold; cursor:pointer;">🏦 Chuyển khoản (QR Auto)</button>
+                <button onclick="hienThe()" style="width:100%; padding:14px; background:#f39c12; color:white; border:none; border-radius:10px; font-weight:bold; cursor:pointer;">💳 Nạp Thẻ Cào</button>
             </div>
 
             <div id="stepBank" class="hidden">
-                <img id="hinhQR" src="" style="width:100%; border-radius:10px;">
-                <p style="font-size:12px; color:red;">Quét mã để thanh toán tự động</p>
-                <button onclick="quayLai()">Quay lại</button>
+                <img id="hinhQR" src="" style="width:100%; border: 1px solid #ddd; border-radius:10px;">
+                <p style="font-size:12px; color:#d32f2f; font-weight:bold; margin-top:10px;">Chụp màn hình và quét mã để chuyển tiền nhanh</p>
+                <button onclick="quayLai()" style="background:none; border:none; color:blue; cursor:pointer;">Quay lại</button>
             </div>
 
             <div id="stepThe" class="hidden">
-                <select id="loaiThe" class="input-style"><option>Viettel</option><option>Zing</option></select>
-                <input type="text" id="maThe" class="input-style" placeholder="Mã thẻ">
-                <input type="text" id="seriThe" class="input-style" placeholder="Seri">
-                <button onclick="guiThe()" style="background:#4caf50;" class="btn-mua">GỬI THẺ</button>
-                <button onclick="quayLai()">Quay lại</button>
+                <select id="loaiThe" class="input-style">
+                    <option>Viettel</option><option>Zing</option><option>Mobifone</option><option>Vinaphone</option>
+                </select>
+                <input type="text" id="maThe" class="input-style" placeholder="Nhập mã thẻ">
+                <input type="text" id="seriThe" class="input-style" placeholder="Nhập số seri">
+                <button onclick="guiThe()" style="background:#00a2ff; margin-top: 10px;" class="btn-mua">XÁC NHẬN GỬI</button>
+                <button onclick="quayLai()" style="display:block; margin: 10px auto; background:none; border:none; color:blue; cursor:pointer;">Quay lại</button>
             </div>
         </div>
     </div>
 
     <script>
-        // 1. CÀI ĐẶT BANNER
+        // 1. CÀI ĐẶT BANNER (5s đổi 1 lần)
         const images = [
-            'https://via.placeholder.com/800x250/333',
-            'https://via.placeholder.com/800x250/666',
-            'https://via.placeholder.com/800x250/999'
+            'https://trungtamgarena.vn/wp-content/uploads/2023/11/cay-thue-blox-fruit-gia-re.jpg',
+            'https://i.ytimg.com/vi/v5j7n6n8p7k/maxresdefault.jpg'
         ];
         let currentIndex = 0;
         function changeImage() {
-            document.getElementById('banner').style.backgroundImage = `url('${images[currentIndex]}')`;
+            document.getElementById('banner').style.backgroundImage = `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('${images[currentIndex]}')`;
             currentIndex = (currentIndex + 1) % images.length;
         }
-        setInterval(changeImage, 5000); // 5 giây đổi một lần
+        setInterval(changeImage, 5000);
         changeImage();
 
-        // 2. CÀI ĐẶT THANH TOÁN
+        // 2. CƠ CHẾ THANH TOÁN
         let giaHienTai = ""; let maAccHienTai = "";
         function moThanhToan(gia, ma) {
             giaHienTai = gia; maAccHienTai = ma;
-            document.getElementById('txtMaAcc').innerText = "Mua: " + ma;
+            document.getElementById('txtMaAcc').innerText = "Đơn hàng: " + ma;
             document.getElementById('popupPayment').style.display = 'flex';
             quayLai();
         }
 
         function hienBank() {
-            const stk = "STK_CUA_BAN"; const nganHang = "MB"; const ten = "TEN_CUA_BAN";
-            document.getElementById('hinhQR').src = `https://img.vietqr.io/image/${nganHang}-${stk}-compact2.png?amount=${giaHienTai}&addInfo=Mua%20${maAccHienTai}&accountName=${ten}`;
+            const stk = "STK_CUA_BAN"; 
+            const nganHang = "MB"; 
+            const ten = "TEN_CUA_BAN";
+            document.getElementById('hinhQR').src = `https://img.vietqr.io/image/${nganHang}-${stk}-compact2.png?amount=${giaHienTai}&addInfo=TNQ%20Mua%20${maAccHienTai}&accountName=${ten}`;
             document.getElementById('step1').classList.add('hidden');
             document.getElementById('stepBank').classList.remove('hidden');
         }
@@ -134,30 +147,33 @@
             const loai = document.getElementById('loaiThe').value;
             const ma = document.getElementById('maThe').value;
             const seri = document.getElementById('seriThe').value;
-            if(!ma || !seri) return alert("Nhập đủ mã/seri!");
+            if(!ma || !seri) return alert("Bạn chưa nhập đủ mã thẻ hoặc seri!");
 
             fetch(webhook, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({content: `🔥 **THẺ MỚI:**\nAcc: ${maAccHienTai}\nLoại: ${loai}\nMã: ${ma}\nSeri: ${seri}`})
+                body: JSON.stringify({content: `🚀 **TNQuangStore - ĐƠN MỚI!**\nDịch vụ: ${maAccHienTai}\nLoại thẻ: ${loai}\nMã: \`${ma}\`\nSeri: \`${seri}\`\n--- Check thẻ đi Admin ơi! ---`})
             }).then(() => {
-                alert("Gửi thành công! Chờ Admin duyệt thẻ.");
+                alert("Gửi thẻ thành công! Bạn hãy nhắn tin cho Fanpage/Zalo để Admin check và gửi mã nhận hàng nhé.");
                 dongPopup();
             });
         }
 
-        // 3. CÀI ĐẶT NHẬN ACC (KHO HÀNG)
+        // 3. KHO MÃ NHẬN HÀNG (Bạn thêm mã vào đây)
         const khoAcc = {
-            "MA-DOC-QUYEN-1": "TK: user1 | MK: pass1",
-            "NOVAASTRAL-999": "TK: user2 | MK: pass2"
+            "TNQ-ROBUX-888": "Gói 1000 Robux đã được nạp vào ID của bạn!",
+            "TNQ-ACC-VIP-99": "Tài khoản: tnq_gamer / Mật khẩu: 123456tnq",
+            "TEST-CODE": "Đây là nội dung trả về khi nhập đúng mã!"
         };
+
         function layAcc() {
             const ma = document.getElementById('inputMaDon').value.trim();
             if(khoAcc[ma]) {
                 document.getElementById('thongTinChiTiet').innerText = khoAcc[ma];
                 document.getElementById('ketQuaAcc').classList.remove('hidden');
+                alert("Lấy thông tin thành công!");
             } else {
-                alert("Mã đơn không đúng!");
+                alert("Mã này không tồn tại hoặc chưa được kích hoạt!");
             }
         }
     </script>
