@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TNQuangStore - Shop Roblox Chính Chủ</title>
-    <!-- THÊM DATABASE ĐỂ LƯU ROBUX VÀ ADMIN -->
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
@@ -19,7 +18,9 @@
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .item-card { background: white; border-radius: 10px; overflow: hidden; border: 1px solid #ddd; text-align: center; padding-bottom: 10px; }
         .item-card img { width: 100%; height: 120px; object-fit: cover; }
-        .btn-mua { background: var(--main); color: white; border: none; padding: 10px; width: 90%; margin-top: 10px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        .btn-mua { background: var(--main); color: white; border: none; padding: 10px; width: 90%; margin-top: 10px; border-radius: 5px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        .btn-mua:hover { opacity: 0.8; }
+        .btn-mua:disabled { background: #ccc !important; cursor: not-allowed; }
         .btn-admin { background: #e74c3c; display: none; }
         .modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:1000; justify-content:center; align-items:center; }
         .modal-content { background:white; width:90%; max-width:400px; padding:20px; border-radius:15px; text-align:center; position: relative; }
@@ -30,9 +31,21 @@
         /* Box Vòng quay */
         .spin-box { font-size: 40px; font-weight: bold; color: var(--gold); background: #222; padding: 20px; border-radius: 10px; margin: 20px 0; border: 3px solid var(--gold); }
         .note-text { font-size: 13px; color: red; text-align: left; background: #ffe6e6; padding: 10px; border-radius: 5px; border-left: 3px solid red; }
+
+        /* HỆ THỐNG THÔNG BÁO XỊN (Toast) */
+        #toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
+        .toast { background: white; min-width: 250px; padding: 15px 20px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); animation: slideIn 0.3s forwards; font-weight: 600; color: #333; display: flex; align-items: center; justify-content: space-between; }
+        .toast.thong-tin { border-left: 5px solid var(--main); }
+        .toast.thanh-cong { border-left: 5px solid #2ecc71; }
+        .toast.loi { border-left: 5px solid #e74c3c; }
+        @keyframes slideIn { from { transform: translateX(120%); } to { transform: translateX(0); } }
+        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
     </style>
 </head>
 <body>
+
+<!-- KHU VỰC CHỨA THÔNG BÁO -->
+<div id="toast-container"></div>
 
 <header>
     <div style="font-size: 18px; font-weight: bold; cursor: pointer;" onclick="chuyenTrang('trang-chu')">TNQuangStore</div>
@@ -51,7 +64,8 @@
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <div>
                     <p style="margin: 0;">Chào, <b id="display-name">Khách</b>!</p>
-                    <p style="margin: 5px 0 0 0; color: green; font-weight: bold;">Robux hiện có: <span id="so-robux">0</span> R$</p>
+                    <p style="margin: 5px 0 0 0; color: var(--main); font-weight: bold;">Số dư: <span id="so-vnd">0</span>đ</p>
+                    <p style="margin: 5px 0 0 0; color: green; font-weight: bold;">Robux: <span id="so-robux">0</span> R$</p>
                 </div>
                 <button class="btn-user" style="background:#444" onclick="logout()">Thoát</button>
             </div>
@@ -74,22 +88,21 @@
             </div>
         </div>
 
-        <!-- ACC GAME HOT (Cho Admin dễ ném Acc lên) -->
+        <!-- ACC GAME HOT -->
         <div class="card">
             <h3 style="border-color: var(--red);">🔥 ACC GAME HOT</h3>
             <div class="grid" id="kho-acc">
-                <!-- Mẫu Acc, Admin chỉ cần copy cục div này dán xuống dưới để thêm acc -->
                 <div class="item-card">
                     <img src="https://i.ytimg.com/vi/Sndq0xS1mQY/maxresdefault.jpg">
                     <p><b>Blox Fruit Max Lv - Mochi V2</b></p>
                     <p style="color: red; font-weight: bold; margin: 0;">Giá: 50.000đ</p>
-                    <button class="btn-mua" style="background: var(--red);" onclick="muaAcc('Blox Fruit Max Lv')">MUA NGAY</button>
+                    <button class="btn-mua" style="background: var(--red);" onclick="muaAcc('Blox Fruit Max Lv', 50000)">MUA NGAY</button>
                 </div>
                 <div class="item-card">
                     <img src="https://i.ytimg.com/vi/v5j7n6n8p7k/maxresdefault.jpg">
                     <p><b>Acc Pet Sim 99 Cực VIP</b></p>
                     <p style="color: red; font-weight: bold; margin: 0;">Giá: 100.000đ</p>
-                    <button class="btn-mua" style="background: var(--red);" onclick="muaAcc('Pet Sim 99 VIP')">MUA NGAY</button>
+                    <button class="btn-mua" style="background: var(--red);" onclick="muaAcc('Pet Sim 99 VIP', 100000)">MUA NGAY</button>
                 </div>
             </div>
         </div>
@@ -103,17 +116,30 @@
         <div class="card">
             <h3 style="border-color: var(--pink);">🛍️ CHỌN TÚI MÙ ĐỂ MỞ</h3>
             <div class="grid">
+                <!-- 4 TÚI MÙ THEO YÊU CẦU -->
                 <div class="item-card">
                     <img src="https://i.ytimg.com/vi/Sndq0xS1mQY/maxresdefault.jpg">
                     <p><b>Túi Mù Tân Thủ</b></p>
-                    <p style="color: var(--pink); font-weight: bold;">Giá: 10.000đ</p>
-                    <button class="btn-mua" style="background: var(--pink);" onclick="xuLyMuaTui('Túi Tân Thủ', 10000)">MUA & MỞ</button>
+                    <p style="color: var(--pink); font-weight: bold;">Giá: 20.000đ</p>
+                    <button class="btn-mua" style="background: var(--pink);" onclick="xuLyMuaTui('Túi Tân Thủ', 20000)">MUA & MỞ</button>
+                </div>
+                <div class="item-card">
+                    <img src="https://i.ytimg.com/vi/v5j7n6n8p7k/maxresdefault.jpg">
+                    <p><b>Túi Mù Cao Thủ</b></p>
+                    <p style="color: var(--pink); font-weight: bold;">Giá: 40.000đ</p>
+                    <button class="btn-mua" style="background: var(--pink);" onclick="xuLyMuaTui('Túi Cao Thủ', 40000)">MUA & MỞ</button>
+                </div>
+                <div class="item-card">
+                    <img src="https://i.ytimg.com/vi/Sndq0xS1mQY/maxresdefault.jpg">
+                    <p><b>Túi Mù Vip Pro</b></p>
+                    <p style="color: var(--pink); font-weight: bold;">Giá: 80.000đ</p>
+                    <button class="btn-mua" style="background: var(--pink);" onclick="xuLyMuaTui('Túi Vip Pro', 80000)">MUA & MỞ</button>
                 </div>
                 <div class="item-card">
                     <img src="https://i.ytimg.com/vi/v5j7n6n8p7k/maxresdefault.jpg">
                     <p><b>Túi Mù Siêu Cấp</b></p>
-                    <p style="color: var(--pink); font-weight: bold;">Giá: 50.000đ</p>
-                    <button class="btn-mua" style="background: var(--pink);" onclick="xuLyMuaTui('Túi Siêu Cấp', 50000)">MUA & MỞ</button>
+                    <p style="color: var(--pink); font-weight: bold;">Giá: 100.000đ</p>
+                    <button class="btn-mua" style="background: var(--pink);" onclick="xuLyMuaTui('Túi Siêu Cấp', 100000)">MUA & MỞ</button>
                 </div>
             </div>
         </div>
@@ -125,19 +151,18 @@
     <div class="container">
         <button class="btn-user" style="background:#555; margin-bottom:15px;" onclick="chuyenTrang('trang-chu')">⬅ Quay Lại</button>
         
-        <!-- Khu vực Quay -->
         <div class="card" style="text-align: center;">
             <h3 style="border-color: orange; text-align: left;">🎡 VÒNG QUAY ROBUX</h3>
+            <p>Giá mỗi lượt quay: <b style="color:red">10.000đ</b></p>
             <p>Giải thưởng: 20, 40, 80, 160 Robux</p>
             <div class="spin-box" id="ket-qua-quay">? R$</div>
             <button class="btn-mua" style="background: orange; width: 200px; font-size: 18px;" onclick="thucHienQuay()" id="btn-quay">QUAY NGAY</button>
         </div>
 
-        <!-- Khu vực Rút -->
         <div class="card">
             <h3 style="border-color: #2ecc71;">💸 RÚT ROBUX VỀ TÀI KHOẢN</h3>
             <div style="display: flex; flex-direction: column; gap: 10px;">
-                <p>Số dư của bạn: <b style="color: green;" id="so-du-rut">0</b> R$</p>
+                <p>Số dư Robux của bạn: <b style="color: green;" id="so-du-rut">0</b> R$</p>
                 <input type="number" id="so-robux-rut" placeholder="Nhập số Robux muốn rút...">
                 <input type="text" id="username-roblox" placeholder="Nhập Username Roblox của bạn...">
                 <div class="note-text">
@@ -156,14 +181,15 @@
 <!-- ================= TRANG ADMIN ================= -->
 <div id="trang-admin" class="hidden">
     <div class="container">
-        <button class="btn-user" style="background:#555; margin-bottom:15px;" onclick="chuyenTrang('trang-chu')">⬅ Quay Lại Trang Chủ</button>
+        <button class="btn-user" style="background:#555; margin-bottom:15px;" onclick="chuyenTrang('trang-chu')">⬅ Quay Lại</button>
         <div class="card" style="border-top: 5px solid red;">
             <h3 style="color: red; border:none;">🛠️ BẢNG ĐIỀU KHIỂN ADMIN</h3>
-            <p>Đang đăng nhập quyền Admin: <b>tnquang477@gmail.com</b></p>
-            
-            <h4>Danh sách người dùng & Lịch sử:</h4>
-            <div id="admin-user-list" style="max-height: 400px; overflow-y: auto; background: #f9f9f9; padding: 10px; border-radius: 5px; border: 1px solid #ddd;">
-                <i>Đang tải dữ liệu...</i>
+            <p>Admin: <b>tnquang477@gmail.com</b></p>
+            <div class="note-text" style="margin-bottom:10px;">
+                Lưu ý: Để cộng tiền (VNĐ) cho khách, ông bấm nút "Cộng Tiền" bên dưới mỗi user nhé!
+            </div>
+            <div id="admin-user-list" style="max-height: 500px; overflow-y: auto; background: #f9f9f9; padding: 10px; border-radius: 5px; border: 1px solid #ddd;">
+                <i>Đang tải dữ liệu... Hãy chắc chắn đã bật Firestore Database!</i>
             </div>
         </div>
     </div>
@@ -175,14 +201,34 @@
         <h3 id="authTitle" style="border:none">Đăng Nhập</h3>
         <input type="email" id="email" placeholder="Email">
         <input type="password" id="password" placeholder="Mật khẩu">
-        <button class="btn-mua" onclick="handleAuth()">XÁC NHẬN</button>
+        <button class="btn-mua" onclick="handleAuth()" id="btn-xac-nhan">XÁC NHẬN</button>
         <p style="font-size: 13px; color: blue; cursor: pointer;" onclick="switchAuth()" id="switchBtn">Chưa có tài khoản? Đăng ký</p>
         <button onclick="toggleModal('authModal', false)" style="background:none; border:none; color:red; cursor:pointer; margin-top:10px;">Đóng</button>
     </div>
 </div>
 
 <script>
-    // 1. CẤU HÌNH FIREBASE
+    // --- HỆ THỐNG THÔNG BÁO XỊN XÒ TRÁNH PHÈN ---
+    function hienThongBao(noidung, loai = 'thong-tin') {
+        const container = document.getElementById('toast-container');
+        const toast = document.createElement('div');
+        toast.className = `toast ${loai}`;
+        
+        let icon = "💡";
+        if (loai === 'thanh-cong') icon = "✅";
+        if (loai === 'loi') icon = "❌";
+
+        toast.innerHTML = `<span>${icon} ${noidung}</span>`;
+        container.appendChild(toast);
+
+        // Tự biến mất sau 3 giây
+        setTimeout(() => {
+            toast.style.animation = 'fadeOut 0.3s forwards';
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
+    }
+
+    // --- CẤU HÌNH FIREBASE ---
     const firebaseConfig = {
       apiKey: "AIzaSyBfFejnht7HCJqjw95JFCpOMPR1HB3GSGU",
       authDomain: "tnquangstore.firebaseapp.com",
@@ -194,70 +240,72 @@
     
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
-    const db = firebase.firestore(); // Kích hoạt Database
+    const db = firebase.firestore();
 
     let currentUser = null;
     let userData = null;
 
-    // 2. CHUYỂN TRANG
     function chuyenTrang(idTrang) {
         document.getElementById('trang-chu').classList.add('hidden');
         document.getElementById('trang-tui-mu').classList.add('hidden');
         document.getElementById('trang-vong-quay').classList.add('hidden');
         document.getElementById('trang-admin').classList.add('hidden');
-        
         document.getElementById(idTrang).classList.remove('hidden');
     }
 
-    // 3. XỬ LÝ ĐĂNG NHẬP & DB
+    // XỬ LÝ ĐĂNG NHẬP AN TOÀN (FIX LỖI KẸT)
     auth.onAuthStateChanged(async (user) => {
         currentUser = user;
         if (user) {
-            // Kiểm tra trong Database
-            const userRef = db.collection("users").doc(user.email);
-            const doc = await userRef.get();
-            
-            if (!doc.exists) {
-                // Tạo mới nếu chưa có
-                await userRef.set({
-                    email: user.email,
-                    robux: 0,
-                    banned: false,
-                    history: []
-                });
-                userData = { robux: 0, banned: false, history: [] };
-            } else {
-                userData = doc.data();
-            }
-
-            // Nếu bị Ban
-            if (userData.banned) {
-                alert("Tài khoản của bạn đã bị ADMIN cấm vĩnh viễn!");
-                auth.signOut();
-                return;
-            }
-
-            // Giao diện người dùng
-            document.getElementById('btn-login').classList.add('hidden');
-            document.getElementById('user-info').classList.remove('hidden');
-            document.getElementById('display-name').innerText = user.email.split('@')[0];
-            
-            // Lắng nghe thay đổi Robux
-            userRef.onSnapshot((doc) => {
-                if(doc.data()) {
-                    document.getElementById('so-robux').innerText = doc.data().robux;
-                    document.getElementById('so-du-rut').innerText = doc.data().robux;
+            try {
+                const userRef = db.collection("users").doc(user.email);
+                const doc = await userRef.get();
+                
+                if (!doc.exists) {
+                    await userRef.set({
+                        email: user.email,
+                        robux: 0,
+                        vnd: 0, // THÊM SỐ DƯ VNĐ
+                        banned: false,
+                        history: []
+                    });
+                    userData = { robux: 0, vnd: 0, banned: false, history: [] };
+                } else {
+                    userData = doc.data();
                 }
-            });
 
-            // Giao diện Admin tnquang477@gmail.com
-            if (user.email === "tnquang477@gmail.com") {
-                document.getElementById('btn-admin').style.display = 'inline-block';
-                taiDuLieuAdmin();
-            } else {
-                document.getElementById('btn-admin').style.display = 'none';
+                if (userData.banned) {
+                    hienThongBao("Tài khoản của bạn đã bị ADMIN cấm vĩnh viễn!", "loi");
+                    auth.signOut();
+                    return;
+                }
+
+                document.getElementById('btn-login').classList.add('hidden');
+                document.getElementById('user-info').classList.remove('hidden');
+                document.getElementById('display-name').innerText = user.email.split('@')[0];
+                
+                // Cập nhật số dư realtime
+                userRef.onSnapshot((doc) => {
+                    if(doc.data()) {
+                        userData = doc.data();
+                        document.getElementById('so-robux').innerText = userData.robux.toLocaleString();
+                        document.getElementById('so-du-rut').innerText = userData.robux.toLocaleString();
+                        document.getElementById('so-vnd').innerText = (userData.vnd || 0).toLocaleString();
+                    }
+                });
+
+                if (user.email === "tnquang477@gmail.com") {
+                    document.getElementById('btn-admin').style.display = 'inline-block';
+                    taiDuLieuAdmin();
+                }
+                toggleModal('authModal', false);
+                hienThongBao("Đăng nhập thành công!", "thanh-cong");
+
+            } catch (error) {
+                console.error("Lỗi Database:", error);
+                hienThongBao("Lỗi hệ thống kho dữ liệu! Admin hãy kiểm tra Firebase.", "loi");
+                auth.signOut();
             }
-            toggleModal('authModal', false);
         } else {
             document.getElementById('btn-login').classList.remove('hidden');
             document.getElementById('user-info').classList.add('hidden');
@@ -265,108 +313,105 @@
         }
     });
 
-    // 4. VÒNG QUAY ROBUX & TỶ LỆ (20, 40, 80, 160)
-    function thucHienQuay() {
-        if (!currentUser) return alert("Bạn phải đăng nhập để quay!");
+    // --- FIX LỖI VÒNG QUAY HIỂN THỊ SAI & TRỪ TIỀN ---
+    async function thucHienQuay() {
+        if (!currentUser) return hienThongBao("Bạn phải đăng nhập để quay!", "loi");
         
+        // KIỂM TRA TIỀN (Giá quay: 10.000đ)
+        const GIA_QUAY = 10000;
+        if ((userData.vnd || 0) < GIA_QUAY) {
+            return hienThongBao("Bạn không đủ tiền! Cần 10.000đ để quay.", "loi");
+        }
+
         const btn = document.getElementById('btn-quay');
         const ketQuaBox = document.getElementById('ket-qua-quay');
         btn.disabled = true;
+
+        // Trừ tiền trước
+        const userRef = db.collection("users").doc(currentUser.email);
+        await userRef.update({ vnd: userData.vnd - GIA_QUAY });
+        ghiLichSu(`Trừ ${GIA_QUAY}đ (Chơi vòng quay)`);
         
-        // Hiệu ứng số chạy
+        // Chạy hiệu ứng mượt mà
         let giay = 0;
+        const arr = [20, 40, 80, 160];
         let inter = setInterval(() => {
-            const arr = [20, 40, 80, 160];
             ketQuaBox.innerText = arr[Math.floor(Math.random() * arr.length)] + " R$";
             giay++;
             if(giay > 20) {
                 clearInterval(inter);
-                tinhKetQuaQuay();
-                btn.disabled = false;
+                tinhKetQuaQuay(userRef);
             }
         }, 100);
     }
 
-    function tinhKetQuaQuay() {
-        // Tỷ lệ: 20(50%), 40(30%), 80(15%), 160(5%)
+    async function tinhKetQuaQuay(userRef) {
+        // Tính toán tỷ lệ
         const rand = Math.random() * 100;
         let phanThuong = 0;
-        
         if (rand <= 50) phanThuong = 20;
         else if (rand <= 80) phanThuong = 40;
         else if (rand <= 95) phanThuong = 80;
         else phanThuong = 160;
 
+        // Cập nhật lên UI (FIX LỖI HIỂN THỊ SAI)
         document.getElementById('ket-qua-quay').innerText = phanThuong + " R$";
-        alert(`🎉 Chúc mừng! Bạn đã quay trúng ${phanThuong} Robux!`);
+        hienThongBao(`Tuyệt vời! Bạn quay trúng ${phanThuong} Robux!`, "thanh-cong");
 
-        // Cộng vào Database
-        const userRef = db.collection("users").doc(currentUser.email);
+        // Cộng Robux vào Database
         db.runTransaction(async (transaction) => {
             const doc = await transaction.get(userRef);
             const newRobux = (doc.data().robux || 0) + phanThuong;
             const newHistory = doc.data().history || [];
             newHistory.push(`Quay trúng ${phanThuong} R$`);
             transaction.update(userRef, { robux: newRobux, history: newHistory });
+        }).then(() => {
+            document.getElementById('btn-quay').disabled = false;
         });
     }
 
-    // 5. RÚT ROBUX
+    // --- MUA TÚI MÙ BẰNG VNĐ ---
+    async function xuLyMuaTui(tenTui, gia) {
+        if(!currentUser) return hienThongBao("Đăng nhập để mua ông ơi!", "loi");
+        
+        if ((userData.vnd || 0) < gia) {
+            return hienThongBao(`Bạn không đủ tiền! Cần ${gia.toLocaleString()}đ.`, "loi");
+        }
+
+        if(confirm(`Xác nhận mua ${tenTui} với giá ${gia.toLocaleString()}đ?`)) {
+            const userRef = db.collection("users").doc(currentUser.email);
+            await userRef.update({ vnd: userData.vnd - gia });
+            ghiLichSu(`Mua thành công: ${tenTui}`);
+            hienThongBao(`Đã mua ${tenTui}! Vui lòng chờ Admin gửi acc/đồ.`, "thanh-cong");
+        }
+    }
+
+    // --- RÚT ROBUX ---
     async function xuLyRutRobux() {
-        if (!currentUser) return alert("Vui lòng đăng nhập!");
+        if (!currentUser) return hienThongBao("Vui lòng đăng nhập!", "loi");
         const soRut = parseInt(document.getElementById('so-robux-rut').value);
         const username = document.getElementById('username-roblox').value.trim();
 
-        if (!soRut || soRut <= 0) return alert("Vui lòng nhập số Robux hợp lệ!");
-        if (!username) return alert("Vui lòng nhập Username Roblox!");
+        if (!soRut || soRut <= 0) return hienThongBao("Nhập số Robux hợp lệ!", "loi");
+        if (!username) return hienThongBao("Thiếu Username Roblox!", "loi");
 
-        const userRef = db.collection("users").doc(currentUser.email);
-        const doc = await userRef.get();
-        const soDuHienTai = doc.data().robux || 0;
-
+        const soDuHienTai = userData.robux || 0;
         if (soRut > soDuHienTai) {
-            return alert(`❌ LỖI: Bạn chỉ có ${soDuHienTai} R$. Không thể rút ${soRut} R$!`);
+            return hienThongBao(`Lỗi! Bạn chỉ có ${soDuHienTai} R$.`, "loi");
         }
 
-        // Trừ tiền và lưu lịch sử
-        const newRobux = soDuHienTai - soRut;
-        const newHistory = doc.data().history || [];
-        newHistory.push(`Rút ${soRut} R$ về acc: ${username}`);
+        const userRef = db.collection("users").doc(currentUser.email);
+        await userRef.update({ robux: soDuHienTai - soRut });
+        ghiLichSu(`Rút ${soRut} R$ về acc: ${username}`);
         
-        await userRef.update({ robux: newRobux, history: newHistory });
-        
-        alert(`✅ Rút thành công ${soRut} R$ về tài khoản ${username}.\nVui lòng đợi Admin duyệt qua PLS DONATE!`);
+        hienThongBao(`Đã gửi lệnh rút ${soRut} R$. Admin sẽ duyệt qua PLS DONATE!`, "thanh-cong");
         document.getElementById('so-robux-rut').value = '';
         document.getElementById('username-roblox').value = '';
     }
 
-    // 6. MUA TÚI MÙ & MUA ACC
-    function xuLyMuaTui(tenTui, gia) {
-        if(!currentUser) return alert("Đăng nhập để mua ông ơi!");
-        alert(`Chuyển yêu cầu mua ${tenTui} (Giá: ${gia}đ) tới Admin! Vui lòng đợi Admin liên hệ.`);
-        ghiLichSu(`Yêu cầu mua ${tenTui}`);
-    }
-
-    function muaAcc(tenAcc) {
-        if(!currentUser) return alert("Đăng nhập để mua acc nhé!");
-        alert(`Đã báo cho Admin bạn muốn mua ${tenAcc}. Vui lòng nạp tiền/liên hệ Admin.`);
-        ghiLichSu(`Yêu cầu mua Acc: ${tenAcc}`);
-    }
-
-    async function ghiLichSu(hanhDong) {
-        if(!currentUser) return;
-        const userRef = db.collection("users").doc(currentUser.email);
-        const doc = await userRef.get();
-        const newHistory = doc.data().history || [];
-        newHistory.push(hanhDong);
-        userRef.update({ history: newHistory });
-    }
-
-    // 7. ADMIN PANEL
+    // --- ADMIN ---
     async function taiDuLieuAdmin() {
         const listDiv = document.getElementById('admin-user-list');
-        listDiv.innerHTML = "<i>Đang tải...</i>";
-        
         db.collection("users").onSnapshot((querySnapshot) => {
             listDiv.innerHTML = "";
             querySnapshot.forEach((doc) => {
@@ -374,30 +419,55 @@
                 const histHTML = data.history ? data.history.map(h => `<li>${h}</li>`).join('') : '';
                 
                 listDiv.innerHTML += `
-                    <div style="border-bottom: 1px solid #ccc; padding: 10px 0;">
-                        <p><b>Email:</b> ${data.email} ${data.banned ? '<span style="color:red">(BANNED)</span>' : ''}</p>
-                        <p><b>Robux:</b> ${data.robux} R$</p>
+                    <div style="border-bottom: 2px solid #ddd; padding: 10px 0; margin-bottom: 10px;">
+                        <p><b>Email:</b> ${data.email} ${data.banned ? '<span style="color:red; font-weight:bold;">(BANNED)</span>' : ''}</p>
+                        <p style="color: green; font-weight: bold;">VNĐ: ${(data.vnd || 0).toLocaleString()}đ | Robux: ${data.robux} R$</p>
+                        
+                        <div style="margin: 5px 0;">
+                            <button onclick="congTienAdmin('${data.email}')" style="background:#2ecc71; color:white; border:none; padding:5px; border-radius:3px;">+ Cộng Tiền VNĐ</button>
+                            <button onclick="banUser('${data.email}', ${!data.banned})" style="background:${data.banned ? '#f39c12' : '#e74c3c'}; color:white; border:none; padding:5px; border-radius:3px;">
+                                ${data.banned ? 'Mở Khóa (Unban)' : 'Cấm (Ban)'}
+                            </button>
+                        </div>
+
                         <details>
-                            <summary>Xem Lịch sử giao dịch</summary>
-                            <ul style="font-size:13px; color:#555;">${histHTML}</ul>
+                            <summary style="cursor:pointer; color: blue;">Xem Lịch sử giao dịch</summary>
+                            <ul style="font-size:13px; color:#555; background: #fff; padding:10px;">${histHTML}</ul>
                         </details>
-                        <button onclick="banUser('${data.email}', ${!data.banned})" style="background:${data.banned ? 'green' : 'red'}; color:white; border:none; padding:5px; margin-top:5px;">
-                            ${data.banned ? 'Mở Khóa (Unban)' : 'Cấm Tài Khoản (Ban)'}
-                        </button>
                     </div>
                 `;
             });
         });
     }
 
-    async function banUser(email, isBan) {
-        if(confirm(`Bạn có chắc muốn ${isBan ? 'CẤM' : 'MỞ KHÓA'} user ${email}?`)) {
-            await db.collection("users").doc(email).update({ banned: isBan });
-            alert("Thành công!");
+    async function congTienAdmin(email) {
+        const soTien = prompt(`Nhập số tiền VNĐ muốn CỘNG cho ${email}:`, "10000");
+        if(soTien && !isNaN(soTien)) {
+            const userRef = db.collection("users").doc(email);
+            const doc = await userRef.get();
+            const tienMoi = (doc.data().vnd || 0) + parseInt(soTien);
+            await userRef.update({ vnd: tienMoi });
+            hienThongBao(`Đã cộng ${parseInt(soTien).toLocaleString()}đ cho ${email}`, "thanh-cong");
         }
     }
 
-    // 8. HỆ THỐNG AUTHENTICATION (Giữ nguyên)
+    async function banUser(email, isBan) {
+        if(confirm(`Bạn có chắc muốn ${isBan ? 'CẤM' : 'MỞ KHÓA'} user ${email}?`)) {
+            await db.collection("users").doc(email).update({ banned: isBan });
+        }
+    }
+
+    async function ghiLichSu(hanhDong) {
+        if(!currentUser) return;
+        const userRef = db.collection("users").doc(currentUser.email);
+        const doc = await userRef.get();
+        const newHistory = doc.data().history || [];
+        const time = new Date().toLocaleString('vi-VN');
+        newHistory.push(`[${time}] ${hanhDong}`);
+        userRef.update({ history: newHistory });
+    }
+
+    // --- AUTH MODAL ---
     function toggleModal(id, show) { document.getElementById(id).style.display = show ? 'flex' : 'none'; }
     let isLogin = true;
     function switchAuth() {
@@ -408,11 +478,14 @@
     function handleAuth() {
         const e = document.getElementById('email').value;
         const p = document.getElementById('password').value;
-        if(isLogin) auth.signInWithEmailAndPassword(e, p).catch(err => alert("Lỗi: " + err.message));
-        else auth.createUserWithEmailAndPassword(e, p).then(() => alert("Đăng ký thành công!")).catch(err => alert("Lỗi: " + err.message));
+        document.getElementById('btn-xac-nhan').innerText = "ĐANG XỬ LÝ...";
+        if(isLogin) {
+            auth.signInWithEmailAndPassword(e, p).catch(err => hienThongBao("Lỗi đăng nhập: " + err.message, "loi")).finally(() => document.getElementById('btn-xac-nhan').innerText = "XÁC NHẬN");
+        } else {
+            auth.createUserWithEmailAndPassword(e, p).then(() => hienThongBao("Đăng ký thành công!", "thanh-cong")).catch(err => hienThongBao("Lỗi đăng ký: " + err.message, "loi")).finally(() => document.getElementById('btn-xac-nhan').innerText = "XÁC NHẬN");
+        }
     }
-    function logout() { auth.signOut(); }
-
+    function logout() { auth.signOut(); hienThongBao("Đã đăng xuất!", "thong-tin"); }
 </script>
 </body>
 </html>
