@@ -3,489 +3,238 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TNQuangStore - Shop Roblox Chính Chủ</title>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <title>TN QUANG STORE - SHOP ROBUX UY TÍN</title>
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+    
     <style>
-        :root { --main: #00a2ff; --dark: #111; --pink: #ff00ff; --red: #ff4d4d; --gold: #f1c40f; }
-        body { font-family: 'Segoe UI', sans-serif; background: #f4f7f8; margin: 0; padding-bottom: 50px; }
-        header { background: var(--dark); padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; color: white; position: sticky; top: 0; z-index: 100; }
-        .btn-user { background: var(--main); color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-weight: bold; }
-        #banner { width: 100%; height: 150px; background: #222; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; font-weight: 900; }
-        .container { max-width: 800px; margin: auto; padding: 15px; }
-        .card { background: white; border-radius: 12px; padding: 15px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .item-card { background: white; border-radius: 10px; overflow: hidden; border: 1px solid #ddd; text-align: center; padding-bottom: 10px; }
-        .item-card img { width: 100%; height: 120px; object-fit: cover; }
-        .btn-mua { background: var(--main); color: white; border: none; padding: 10px; width: 90%; margin-top: 10px; border-radius: 5px; cursor: pointer; font-weight: bold; transition: 0.2s; }
-        .btn-mua:hover { opacity: 0.8; }
-        .btn-mua:disabled { background: #ccc !important; cursor: not-allowed; }
-        .btn-admin { background: #e74c3c; display: none; }
-        .modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:1000; justify-content:center; align-items:center; }
-        .modal-content { background:white; width:90%; max-width:400px; padding:20px; border-radius:15px; text-align:center; position: relative; }
-        input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
-        h3 { border-left: 5px solid var(--main); padding-left: 10px; margin-bottom: 15px; margin-top: 0; }
-        .hidden { display: none !important; }
+        :root { --primary: #ff4757; --secondary: #2f3542; --gold: #f1c40f; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #1e272e; color: white; margin: 0; padding: 20px; }
+        .container { max-width: 1000px; margin: auto; }
+        header { display: flex; justify-content: space-between; align-items: center; background: var(--secondary); padding: 15px 25px; border-radius: 15px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        .user-info { display: flex; gap: 20px; align-items: center; }
+        .btn { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        .btn-nap { background: var(--gold); color: #000; }
+        .btn-admin { background: #e67e22; color: white; display: none; }
         
-        /* Box Vòng quay */
-        .spin-box { font-size: 40px; font-weight: bold; color: var(--gold); background: #222; padding: 20px; border-radius: 10px; margin: 20px 0; border: 3px solid var(--gold); }
-        .note-text { font-size: 13px; color: red; text-align: left; background: #ffe6e6; padding: 10px; border-radius: 5px; border-left: 3px solid red; }
-
-        /* HỆ THỐNG THÔNG BÁO XỊN (Toast) */
-        #toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
-        .toast { background: white; min-width: 250px; padding: 15px 20px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); animation: slideIn 0.3s forwards; font-weight: 600; color: #333; display: flex; align-items: center; justify-content: space-between; }
-        .toast.thong-tin { border-left: 5px solid var(--main); }
-        .toast.thanh-cong { border-left: 5px solid #2ecc71; }
-        .toast.loi { border-left: 5px solid #e74c3c; }
-        @keyframes slideIn { from { transform: translateX(120%); } to { transform: translateX(0); } }
-        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+        /* Grid Sản phẩm */
+        .grid-games { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+        .card { background: var(--secondary); padding: 15px; border-radius: 12px; text-align: center; border: 1px solid #3d4451; transition: transform 0.3s; }
+        .card:hover { transform: translateY(-5px); border-color: var(--primary); }
+        .card img { width: 100%; border-radius: 8px; margin-bottom: 10px; }
+        
+        /* Modal Styles */
+        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); }
+        .modal-content { background: #2f3542; margin: 10% auto; padding: 30px; border-radius: 15px; width: 400px; text-align: center; }
+        .modal-content input, .modal-content select { width: 100%; padding: 12px; margin: 10px 0; border-radius: 5px; border: none; }
+        
+        /* Admin Section */
+        #admin-panel { display: none; background: #fff; color: #333; padding: 20px; border-radius: 15px; margin-top: 30px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: center; }
+        th { background: var(--primary); color: white; }
     </style>
 </head>
 <body>
 
-<!-- KHU VỰC CHỨA THÔNG BÁO -->
-<div id="toast-container"></div>
-
-<header>
-    <div style="font-size: 18px; font-weight: bold; cursor: pointer;" onclick="chuyenTrang('trang-chu')">TNQuangStore</div>
-    <div id="user-nav">
-        <button class="btn-user btn-admin" id="btn-admin" onclick="chuyenTrang('trang-admin')">⚙️ ADMIN</button>
-        <button class="btn-user" id="btn-login" onclick="toggleModal('authModal', true)">Đăng nhập</button>
-    </div>
-</header>
-
-<!-- ================= TRANG CHỦ ================= -->
-<div id="trang-chu">
-    <div id="banner">TNQUANG STORE</div>
-    <div class="container">
-        <!-- Thông tin User -->
-        <div id="user-info" class="card hidden" style="border-left: 5px solid var(--main);">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <div>
-                    <p style="margin: 0;">Chào, <b id="display-name">Khách</b>!</p>
-                    <p style="margin: 5px 0 0 0; color: var(--main); font-weight: bold;">Số dư: <span id="so-vnd">0</span>đ</p>
-                    <p style="margin: 5px 0 0 0; color: green; font-weight: bold;">Robux: <span id="so-robux">0</span> R$</p>
-                </div>
-                <button class="btn-user" style="background:#444" onclick="logout()">Thoát</button>
-            </div>
+<div class="container">
+    <header>
+        <h1 style="color: var(--primary); margin: 0;">TN QUANG STORE</h1>
+        <div class="user-info" id="user-area">
+            <button class="btn" onclick="showAuth('login')">Đăng Nhập</button>
         </div>
+    </header>
 
-        <!-- TÚI MÙ & VÒNG QUAY -->
+    <div class="grid-games">
         <div class="card">
-            <h3 style="border-color: var(--pink);">🎁 TRÒ CHƠI NHÂN PHẨM</h3>
-            <div class="grid">
-                <div class="item-card" style="border-top: 4px solid var(--pink);">
-                    <img src="https://i.ytimg.com/vi/Sndq0xS1mQY/maxresdefault.jpg">
-                    <p><b>Cửa Hàng Túi Mù</b></p>
-                    <button class="btn-mua" style="background: var(--pink);" onclick="chuyenTrang('trang-tui-mu')">XEM VÀ MỞ TÚI</button>
-                </div>
-                <div class="item-card" style="border-top: 4px solid orange;">
-                    <img src="https://i.ytimg.com/vi/v5j7n6n8p7k/maxresdefault.jpg">
-                    <p><b>Vòng Quay Robux</b></p>
-                    <button class="btn-mua" style="background: orange;" onclick="chuyenTrang('trang-vong-quay')">CHƠI NGAY</button>
-                </div>
-            </div>
+            <img src="https://img.freepik.com/free-vector/lucky-spin-banner-with-glowing-light-effect_1017-31038.jpg" alt="Vòng quay">
+            <h3>Vòng Quay Robux</h3>
+            <p>Giá: 10.000đ / lượt</p>
+            <button class="btn btn-nap" onclick="quayRobux()">QUAY NGAY</button>
         </div>
-
-        <!-- ACC GAME HOT -->
-        <div class="card">
-            <h3 style="border-color: var(--red);">🔥 ACC GAME HOT</h3>
-            <div class="grid" id="kho-acc">
-                <div class="item-card">
-                    <img src="https://i.ytimg.com/vi/Sndq0xS1mQY/maxresdefault.jpg">
-                    <p><b>Blox Fruit Max Lv - Mochi V2</b></p>
-                    <p style="color: red; font-weight: bold; margin: 0;">Giá: 50.000đ</p>
-                    <button class="btn-mua" style="background: var(--red);" onclick="muaAcc('Blox Fruit Max Lv', 50000)">MUA NGAY</button>
-                </div>
-                <div class="item-card">
-                    <img src="https://i.ytimg.com/vi/v5j7n6n8p7k/maxresdefault.jpg">
-                    <p><b>Acc Pet Sim 99 Cực VIP</b></p>
-                    <p style="color: red; font-weight: bold; margin: 0;">Giá: 100.000đ</p>
-                    <button class="btn-mua" style="background: var(--red);" onclick="muaAcc('Pet Sim 99 VIP', 100000)">MUA NGAY</button>
-                </div>
-            </div>
-        </div>
+        <!-- Thêm các card túi mù tương tự ở đây -->
     </div>
-</div>
 
-<!-- ================= TRANG TÚI MÙ ================= -->
-<div id="trang-tui-mu" class="hidden">
-    <div class="container">
-        <button class="btn-user" style="background:#555; margin-bottom:15px;" onclick="chuyenTrang('trang-chu')">⬅ Quay Lại</button>
-        <div class="card">
-            <h3 style="border-color: var(--pink);">🛍️ CHỌN TÚI MÙ ĐỂ MỞ</h3>
-            <div class="grid">
-                <!-- 4 TÚI MÙ THEO YÊU CẦU -->
-                <div class="item-card">
-                    <img src="https://i.ytimg.com/vi/Sndq0xS1mQY/maxresdefault.jpg">
-                    <p><b>Túi Mù Tân Thủ</b></p>
-                    <p style="color: var(--pink); font-weight: bold;">Giá: 20.000đ</p>
-                    <button class="btn-mua" style="background: var(--pink);" onclick="xuLyMuaTui('Túi Tân Thủ', 20000)">MUA & MỞ</button>
-                </div>
-                <div class="item-card">
-                    <img src="https://i.ytimg.com/vi/v5j7n6n8p7k/maxresdefault.jpg">
-                    <p><b>Túi Mù Cao Thủ</b></p>
-                    <p style="color: var(--pink); font-weight: bold;">Giá: 40.000đ</p>
-                    <button class="btn-mua" style="background: var(--pink);" onclick="xuLyMuaTui('Túi Cao Thủ', 40000)">MUA & MỞ</button>
-                </div>
-                <div class="item-card">
-                    <img src="https://i.ytimg.com/vi/Sndq0xS1mQY/maxresdefault.jpg">
-                    <p><b>Túi Mù Vip Pro</b></p>
-                    <p style="color: var(--pink); font-weight: bold;">Giá: 80.000đ</p>
-                    <button class="btn-mua" style="background: var(--pink);" onclick="xuLyMuaTui('Túi Vip Pro', 80000)">MUA & MỞ</button>
-                </div>
-                <div class="item-card">
-                    <img src="https://i.ytimg.com/vi/v5j7n6n8p7k/maxresdefault.jpg">
-                    <p><b>Túi Mù Siêu Cấp</b></p>
-                    <p style="color: var(--pink); font-weight: bold;">Giá: 100.000đ</p>
-                    <button class="btn-mua" style="background: var(--pink);" onclick="xuLyMuaTui('Túi Siêu Cấp', 100000)">MUA & MỞ</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- ================= TRANG VÒNG QUAY & RÚT ROBUX ================= -->
-<div id="trang-vong-quay" class="hidden">
-    <div class="container">
-        <button class="btn-user" style="background:#555; margin-bottom:15px;" onclick="chuyenTrang('trang-chu')">⬅ Quay Lại</button>
+    <!-- Admin Panel -->
+    <div id="admin-panel">
+        <h2 style="color: #e67e22;">⚙️ HỆ THỐNG QUẢN TRỊ</h2>
+        <h3>📋 Duyệt Thẻ Nạp</h3>
+        <table>
+            <thead>
+                <tr><th>User</th><th>Loại</th><th>Mệnh giá</th><th>Mã/Seri</th><th>Duyệt</th></tr>
+            </thead>
+            <tbody id="list-nap-the"></tbody>
+        </table>
         
-        <div class="card" style="text-align: center;">
-            <h3 style="border-color: orange; text-align: left;">🎡 VÒNG QUAY ROBUX</h3>
-            <p>Giá mỗi lượt quay: <b style="color:red">10.000đ</b></p>
-            <p>Giải thưởng: 20, 40, 80, 160 Robux</p>
-            <div class="spin-box" id="ket-qua-quay">? R$</div>
-            <button class="btn-mua" style="background: orange; width: 200px; font-size: 18px;" onclick="thucHienQuay()" id="btn-quay">QUAY NGAY</button>
-        </div>
-
-        <div class="card">
-            <h3 style="border-color: #2ecc71;">💸 RÚT ROBUX VỀ TÀI KHOẢN</h3>
-            <div style="display: flex; flex-direction: column; gap: 10px;">
-                <p>Số dư Robux của bạn: <b style="color: green;" id="so-du-rut">0</b> R$</p>
-                <input type="number" id="so-robux-rut" placeholder="Nhập số Robux muốn rút...">
-                <input type="text" id="username-roblox" placeholder="Nhập Username Roblox của bạn...">
-                <div class="note-text">
-                    <b>LƯU Ý QUAN TRỌNG:</b><br>
-                    Khách hàng lưu ý giúp mình là phải có tài khoản PLS DONATE trong game roblox. 
-                    Cách làm: tìm kiếm pls donate vào đó sẽ có hướng dẫn tạo gamepass. 
-                    Trong trường hợp khách không biết tạo hãy nhắn shop, shop sẽ hướng dẫn chi tiết. 
-                    Ngoài ra trường hợp nhập sai username bên mình không chịu trách nhiệm hoàn trả!
-                </div>
-                <button class="btn-mua" style="background: #2ecc71;" onclick="xuLyRutRobux()">TIẾN HÀNH RÚT</button>
-            </div>
-        </div>
+        <h3>👥 Quản lý Thành viên</h3>
+        <table id="user-table">
+            <thead>
+                <tr><th>Email</th><th>Tiền VNĐ</th><th>Robux</th><th>Hành động</th></tr>
+            </thead>
+            <tbody id="list-users"></tbody>
+        </table>
     </div>
 </div>
 
-<!-- ================= TRANG ADMIN ================= -->
-<div id="trang-admin" class="hidden">
-    <div class="container">
-        <button class="btn-user" style="background:#555; margin-bottom:15px;" onclick="chuyenTrang('trang-chu')">⬅ Quay Lại</button>
-        <div class="card" style="border-top: 5px solid red;">
-            <h3 style="color: red; border:none;">🛠️ BẢNG ĐIỀU KHIỂN ADMIN</h3>
-            <p>Admin: <b>tnquang477@gmail.com</b></p>
-            <div class="note-text" style="margin-bottom:10px;">
-                Lưu ý: Để cộng tiền (VNĐ) cho khách, ông bấm nút "Cộng Tiền" bên dưới mỗi user nhé!
-            </div>
-            <div id="admin-user-list" style="max-height: 500px; overflow-y: auto; background: #f9f9f9; padding: 10px; border-radius: 5px; border: 1px solid #ddd;">
-                <i>Đang tải dữ liệu... Hãy chắc chắn đã bật Firestore Database!</i>
-            </div>
-        </div>
+<!-- Modal Nạp Thẻ -->
+<div id="napTheModal" class="modal">
+    <div class="modal-content">
+        <h3>🎫 NẠP THẺ CÀO</h3>
+        <select id="loaiThe"><option>Viettel</option><option>Zing</option></select>
+        <select id="menhGia"><option value="20000">20.000đ</option><option value="50000">50.000đ</option><option value="100000">100.000đ</option></select>
+        <input type="text" id="maThe" placeholder="Mã thẻ">
+        <input type="text" id="seriThe" placeholder="Số seri">
+        <button class="btn btn-nap" onclick="guiDonNapThe()">GỬI THẺ</button>
+        <button class="btn" onclick="closeModal('napTheModal')">Đóng</button>
     </div>
 </div>
 
-<!-- MODAL ĐĂNG NHẬP -->
+<!-- Modal Auth -->
 <div id="authModal" class="modal">
     <div class="modal-content">
-        <h3 id="authTitle" style="border:none">Đăng Nhập</h3>
+        <h3 id="authTitle">ĐĂNG NHẬP</h3>
         <input type="email" id="email" placeholder="Email">
-        <input type="password" id="password" placeholder="Mật khẩu">
-        <button class="btn-mua" onclick="handleAuth()" id="btn-xac-nhan">XÁC NHẬN</button>
-        <p style="font-size: 13px; color: blue; cursor: pointer;" onclick="switchAuth()" id="switchBtn">Chưa có tài khoản? Đăng ký</p>
-        <button onclick="toggleModal('authModal', false)" style="background:none; border:none; color:red; cursor:pointer; margin-top:10px;">Đóng</button>
+        <input type="password" id="pass" placeholder="Mật khẩu">
+        <button id="authBtn" class="btn btn-nap" onclick="handleAuth()">Xác Nhận</button>
+        <p onclick="toggleAuth()" style="cursor:pointer; text-decoration: underline;">Chưa có tài khoản? Đăng ký</p>
     </div>
 </div>
 
 <script>
-    // --- HỆ THỐNG THÔNG BÁO XỊN XÒ TRÁNH PHÈN ---
-    function hienThongBao(noidung, loai = 'thong-tin') {
-        const container = document.getElementById('toast-container');
-        const toast = document.createElement('div');
-        toast.className = `toast ${loai}`;
-        
-        let icon = "💡";
-        if (loai === 'thanh-cong') icon = "✅";
-        if (loai === 'loi') icon = "❌";
+// --- CẤU HÌNH FIREBASE --- (Ông dán thông số của ông vào đây)
+const firebaseConfig = {
+  apiKey: "AIzaSy...",
+  authDomain: "tnquangstore.firebaseapp.com",
+  projectId: "tnquangstore",
+  storageBucket: "tnquangstore.appspot.com",
+  messagingSenderId: "...",
+  appId: "..."
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
 
-        toast.innerHTML = `<span>${icon} ${noidung}</span>`;
-        container.appendChild(toast);
+let isLogin = true;
+const adminEmail = "tnquang477@gmail.com";
 
-        // Tự biến mất sau 3 giây
-        setTimeout(() => {
-            toast.style.animation = 'fadeOut 0.3s forwards';
-            setTimeout(() => toast.remove(), 300);
-        }, 3000);
+// --- XỬ LÝ ĐĂNG NHẬP ---
+function showAuth(type) { document.getElementById('authModal').style.display = 'block'; }
+function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+function toggleAuth() {
+    isLogin = !isLogin;
+    document.getElementById('authTitle').innerText = isLogin ? "ĐĂNG NHẬP" : "ĐĂNG KÝ";
+}
+
+async function handleAuth() {
+    const e = document.getElementById('email').value;
+    const p = document.getElementById('pass').value;
+    try {
+        if(isLogin) { await auth.signInWithEmailAndPassword(e, p); }
+        else { 
+            await auth.createUserWithEmailAndPassword(e, p);
+            await db.collection("users").doc(e).set({ vnd: 0, robux: 0 });
+        }
+        location.reload();
+    } catch(err) { alert(err.message); }
+}
+
+// --- THEO DÕI NGƯỜI DÙNG ---
+auth.onAuthStateChanged(user => {
+    if(user) {
+        db.collection("users").doc(user.email).onSnapshot(doc => {
+            const data = doc.data();
+            document.getElementById('user-area').innerHTML = `
+                <span>💰 ${data.vnd.toLocaleString()}đ | 💎 ${data.robux} R$</span>
+                <button class="btn btn-nap" onclick="showModal('napTheModal')">Nạp Thẻ</button>
+                ${user.email === adminEmail ? '<button class="btn btn-admin" style="display:block" onclick="toggleAdmin()">⚙️ ADMIN</button>' : ''}
+                <button onclick="auth.signOut()">Thoát</button>
+            `;
+        });
+        if(user.email === adminEmail) loadAdminData();
     }
+});
 
-    // --- CẤU HÌNH FIREBASE ---
-    const firebaseConfig = {
-      apiKey: "AIzaSyBfFejnht7HCJqjw95JFCpOMPR1HB3GSGU",
-      authDomain: "tnquangstore.firebaseapp.com",
-      projectId: "tnquangstore",
-      storageBucket: "tnquangstore.firebasestorage.app",
-      messagingSenderId: "683180615667",
-      appId: "1:683180615667:web:8baece012df95a0bb35486"
-    };
+function showModal(id) { document.getElementById(id).style.display='block'; }
+function toggleAdmin() {
+    const p = document.getElementById('admin-panel');
+    p.style.display = p.style.display === 'none' ? 'block' : 'none';
+}
+
+// --- XỬ LÝ NẠP THẺ ---
+async function guiDonNapThe() {
+    const ma = document.getElementById('maThe').value;
+    const seri = document.getElementById('seriThe').value;
+    if(!ma || !seri) return alert("Nhập đủ thông tin!");
     
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
-
-    let currentUser = null;
-    let userData = null;
-
-    function chuyenTrang(idTrang) {
-        document.getElementById('trang-chu').classList.add('hidden');
-        document.getElementById('trang-tui-mu').classList.add('hidden');
-        document.getElementById('trang-vong-quay').classList.add('hidden');
-        document.getElementById('trang-admin').classList.add('hidden');
-        document.getElementById(idTrang).classList.remove('hidden');
-    }
-
-    // XỬ LÝ ĐĂNG NHẬP AN TOÀN (FIX LỖI KẸT)
-    auth.onAuthStateChanged(async (user) => {
-        currentUser = user;
-        if (user) {
-            try {
-                const userRef = db.collection("users").doc(user.email);
-                const doc = await userRef.get();
-                
-                if (!doc.exists) {
-                    await userRef.set({
-                        email: user.email,
-                        robux: 0,
-                        vnd: 0, // THÊM SỐ DƯ VNĐ
-                        banned: false,
-                        history: []
-                    });
-                    userData = { robux: 0, vnd: 0, banned: false, history: [] };
-                } else {
-                    userData = doc.data();
-                }
-
-                if (userData.banned) {
-                    hienThongBao("Tài khoản của bạn đã bị ADMIN cấm vĩnh viễn!", "loi");
-                    auth.signOut();
-                    return;
-                }
-
-                document.getElementById('btn-login').classList.add('hidden');
-                document.getElementById('user-info').classList.remove('hidden');
-                document.getElementById('display-name').innerText = user.email.split('@')[0];
-                
-                // Cập nhật số dư realtime
-                userRef.onSnapshot((doc) => {
-                    if(doc.data()) {
-                        userData = doc.data();
-                        document.getElementById('so-robux').innerText = userData.robux.toLocaleString();
-                        document.getElementById('so-du-rut').innerText = userData.robux.toLocaleString();
-                        document.getElementById('so-vnd').innerText = (userData.vnd || 0).toLocaleString();
-                    }
-                });
-
-                if (user.email === "tnquang477@gmail.com") {
-                    document.getElementById('btn-admin').style.display = 'inline-block';
-                    taiDuLieuAdmin();
-                }
-                toggleModal('authModal', false);
-                hienThongBao("Đăng nhập thành công!", "thanh-cong");
-
-            } catch (error) {
-                console.error("Lỗi Database:", error);
-                hienThongBao("Lỗi hệ thống kho dữ liệu! Admin hãy kiểm tra Firebase.", "loi");
-                auth.signOut();
-            }
-        } else {
-            document.getElementById('btn-login').classList.remove('hidden');
-            document.getElementById('user-info').classList.add('hidden');
-            document.getElementById('btn-admin').style.display = 'none';
-        }
+    await db.collection("napthe").add({
+        email: auth.currentUser.email,
+        loaiThe: document.getElementById('loaiThe').value,
+        menhGia: parseInt(document.getElementById('menhGia').value),
+        maThe: ma, seriThe: seri,
+        status: "Chờ duyệt",
+        time: new Date().toLocaleString()
     });
+    alert("Đã gửi đơn nạp! Chờ Admin duyệt.");
+    closeModal('napTheModal');
+}
 
-    // --- FIX LỖI VÒNG QUAY HIỂN THỊ SAI & TRỪ TIỀN ---
-    async function thucHienQuay() {
-        if (!currentUser) return hienThongBao("Bạn phải đăng nhập để quay!", "loi");
-        
-        // KIỂM TRA TIỀN (Giá quay: 10.000đ)
-        const GIA_QUAY = 10000;
-        if ((userData.vnd || 0) < GIA_QUAY) {
-            return hienThongBao("Bạn không đủ tiền! Cần 10.000đ để quay.", "loi");
-        }
+// --- XỬ LÝ VÒNG QUAY ---
+async function quayRobux() {
+    const userRef = db.collection("users").doc(auth.currentUser.email);
+    const doc = await userRef.get();
+    if(doc.data().vnd < 10000) return alert("Bạn không đủ tiền!");
 
-        const btn = document.getElementById('btn-quay');
-        const ketQuaBox = document.getElementById('ket-qua-quay');
-        btn.disabled = true;
+    const phanThuong = [10, 50, 100, 500, 1000];
+    const ketQua = phanThuong[Math.floor(Math.random() * phanThuong.length)];
 
-        // Trừ tiền trước
-        const userRef = db.collection("users").doc(currentUser.email);
-        await userRef.update({ vnd: userData.vnd - GIA_QUAY });
-        ghiLichSu(`Trừ ${GIA_QUAY}đ (Chơi vòng quay)`);
-        
-        // Chạy hiệu ứng mượt mà
-        let giay = 0;
-        const arr = [20, 40, 80, 160];
-        let inter = setInterval(() => {
-            ketQuaBox.innerText = arr[Math.floor(Math.random() * arr.length)] + " R$";
-            giay++;
-            if(giay > 20) {
-                clearInterval(inter);
-                tinhKetQuaQuay(userRef);
-            }
-        }, 100);
-    }
+    await userRef.update({
+        vnd: doc.data().vnd - 10000,
+        robux: doc.data().robux + ketQua
+    });
+    alert(`🎉 Chúc mừng! Bạn nhận được ${ketQua} Robux!`);
+}
 
-    async function tinhKetQuaQuay(userRef) {
-        // Tính toán tỷ lệ
-        const rand = Math.random() * 100;
-        let phanThuong = 0;
-        if (rand <= 50) phanThuong = 20;
-        else if (rand <= 80) phanThuong = 40;
-        else if (rand <= 95) phanThuong = 80;
-        else phanThuong = 160;
-
-        // Cập nhật lên UI (FIX LỖI HIỂN THỊ SAI)
-        document.getElementById('ket-qua-quay').innerText = phanThuong + " R$";
-        hienThongBao(`Tuyệt vời! Bạn quay trúng ${phanThuong} Robux!`, "thanh-cong");
-
-        // Cộng Robux vào Database
-        db.runTransaction(async (transaction) => {
-            const doc = await transaction.get(userRef);
-            const newRobux = (doc.data().robux || 0) + phanThuong;
-            const newHistory = doc.data().history || [];
-            newHistory.push(`Quay trúng ${phanThuong} R$`);
-            transaction.update(userRef, { robux: newRobux, history: newHistory });
-        }).then(() => {
-            document.getElementById('btn-quay').disabled = false;
+// --- ADMIN LOGIC ---
+function loadAdminData() {
+    // Load thẻ nạp
+    db.collection("napthe").where("status", "==", "Chờ duyệt").onSnapshot(snap => {
+        let h = "";
+        snap.forEach(doc => {
+            const d = doc.data();
+            h += `<tr><td>${d.email}</td><td>${d.loaiThe}</td><td>${d.menhGia}</td><td>${d.maThe}</td>
+                <td><button onclick="duyetThe('${doc.id}','${d.email}',${d.menhGia})">Duyệt</button></td></tr>`;
         });
-    }
-
-    // --- MUA TÚI MÙ BẰNG VNĐ ---
-    async function xuLyMuaTui(tenTui, gia) {
-        if(!currentUser) return hienThongBao("Đăng nhập để mua ông ơi!", "loi");
-        
-        if ((userData.vnd || 0) < gia) {
-            return hienThongBao(`Bạn không đủ tiền! Cần ${gia.toLocaleString()}đ.`, "loi");
-        }
-
-        if(confirm(`Xác nhận mua ${tenTui} với giá ${gia.toLocaleString()}đ?`)) {
-            const userRef = db.collection("users").doc(currentUser.email);
-            await userRef.update({ vnd: userData.vnd - gia });
-            ghiLichSu(`Mua thành công: ${tenTui}`);
-            hienThongBao(`Đã mua ${tenTui}! Vui lòng chờ Admin gửi acc/đồ.`, "thanh-cong");
-        }
-    }
-
-    // --- RÚT ROBUX ---
-    async function xuLyRutRobux() {
-        if (!currentUser) return hienThongBao("Vui lòng đăng nhập!", "loi");
-        const soRut = parseInt(document.getElementById('so-robux-rut').value);
-        const username = document.getElementById('username-roblox').value.trim();
-
-        if (!soRut || soRut <= 0) return hienThongBao("Nhập số Robux hợp lệ!", "loi");
-        if (!username) return hienThongBao("Thiếu Username Roblox!", "loi");
-
-        const soDuHienTai = userData.robux || 0;
-        if (soRut > soDuHienTai) {
-            return hienThongBao(`Lỗi! Bạn chỉ có ${soDuHienTai} R$.`, "loi");
-        }
-
-        const userRef = db.collection("users").doc(currentUser.email);
-        await userRef.update({ robux: soDuHienTai - soRut });
-        ghiLichSu(`Rút ${soRut} R$ về acc: ${username}`);
-        
-        hienThongBao(`Đã gửi lệnh rút ${soRut} R$. Admin sẽ duyệt qua PLS DONATE!`, "thanh-cong");
-        document.getElementById('so-robux-rut').value = '';
-        document.getElementById('username-roblox').value = '';
-    }
-
-    // --- ADMIN ---
-    async function taiDuLieuAdmin() {
-        const listDiv = document.getElementById('admin-user-list');
-        db.collection("users").onSnapshot((querySnapshot) => {
-            listDiv.innerHTML = "";
-            querySnapshot.forEach((doc) => {
-                const data = doc.data();
-                const histHTML = data.history ? data.history.map(h => `<li>${h}</li>`).join('') : '';
-                
-                listDiv.innerHTML += `
-                    <div style="border-bottom: 2px solid #ddd; padding: 10px 0; margin-bottom: 10px;">
-                        <p><b>Email:</b> ${data.email} ${data.banned ? '<span style="color:red; font-weight:bold;">(BANNED)</span>' : ''}</p>
-                        <p style="color: green; font-weight: bold;">VNĐ: ${(data.vnd || 0).toLocaleString()}đ | Robux: ${data.robux} R$</p>
-                        
-                        <div style="margin: 5px 0;">
-                            <button onclick="congTienAdmin('${data.email}')" style="background:#2ecc71; color:white; border:none; padding:5px; border-radius:3px;">+ Cộng Tiền VNĐ</button>
-                            <button onclick="banUser('${data.email}', ${!data.banned})" style="background:${data.banned ? '#f39c12' : '#e74c3c'}; color:white; border:none; padding:5px; border-radius:3px;">
-                                ${data.banned ? 'Mở Khóa (Unban)' : 'Cấm (Ban)'}
-                            </button>
-                        </div>
-
-                        <details>
-                            <summary style="cursor:pointer; color: blue;">Xem Lịch sử giao dịch</summary>
-                            <ul style="font-size:13px; color:#555; background: #fff; padding:10px;">${histHTML}</ul>
-                        </details>
-                    </div>
-                `;
-            });
+        document.getElementById('list-nap-the').innerHTML = h;
+    });
+    // Load User
+    db.collection("users").onSnapshot(snap => {
+        let h = "";
+        snap.forEach(doc => {
+            h += `<tr><td>${doc.id}</td><td>${doc.data().vnd}</td><td>${doc.data().robux}</td>
+                <td><button onclick="congTien('${doc.id}')">+ Tiền</button></td></tr>`;
         });
-    }
+        document.getElementById('list-users').innerHTML = h;
+    });
+}
 
-    async function congTienAdmin(email) {
-        const soTien = prompt(`Nhập số tiền VNĐ muốn CỘNG cho ${email}:`, "10000");
-        if(soTien && !isNaN(soTien)) {
-            const userRef = db.collection("users").doc(email);
-            const doc = await userRef.get();
-            const tienMoi = (doc.data().vnd || 0) + parseInt(soTien);
-            await userRef.update({ vnd: tienMoi });
-            hienThongBao(`Đã cộng ${parseInt(soTien).toLocaleString()}đ cho ${email}`, "thanh-cong");
-        }
-    }
+async function duyetThe(id, email, tien) {
+    const ref = db.collection("users").doc(email);
+    const d = await ref.get();
+    await ref.update({ vnd: d.data().vnd + tien });
+    await db.collection("napthe").doc(id).update({ status: "Thành công" });
+    alert("Đã duyệt!");
+}
 
-    async function banUser(email, isBan) {
-        if(confirm(`Bạn có chắc muốn ${isBan ? 'CẤM' : 'MỞ KHÓA'} user ${email}?`)) {
-            await db.collection("users").doc(email).update({ banned: isBan });
-        }
+async function congTien(email) {
+    const t = prompt("Nhập số tiền muốn cộng:");
+    if(t) {
+        const ref = db.collection("users").doc(email);
+        const d = await ref.get();
+        await ref.update({ vnd: d.data().vnd + parseInt(t) });
     }
-
-    async function ghiLichSu(hanhDong) {
-        if(!currentUser) return;
-        const userRef = db.collection("users").doc(currentUser.email);
-        const doc = await userRef.get();
-        const newHistory = doc.data().history || [];
-        const time = new Date().toLocaleString('vi-VN');
-        newHistory.push(`[${time}] ${hanhDong}`);
-        userRef.update({ history: newHistory });
-    }
-
-    // --- AUTH MODAL ---
-    function toggleModal(id, show) { document.getElementById(id).style.display = show ? 'flex' : 'none'; }
-    let isLogin = true;
-    function switchAuth() {
-        isLogin = !isLogin;
-        document.getElementById('authTitle').innerText = isLogin ? 'Đăng Nhập' : 'Đăng Ký';
-        document.getElementById('switchBtn').innerText = isLogin ? 'Chưa có tài khoản? Đăng ký' : 'Đã có tài khoản? Đăng nhập';
-    }
-    function handleAuth() {
-        const e = document.getElementById('email').value;
-        const p = document.getElementById('password').value;
-        document.getElementById('btn-xac-nhan').innerText = "ĐANG XỬ LÝ...";
-        if(isLogin) {
-            auth.signInWithEmailAndPassword(e, p).catch(err => hienThongBao("Lỗi đăng nhập: " + err.message, "loi")).finally(() => document.getElementById('btn-xac-nhan').innerText = "XÁC NHẬN");
-        } else {
-            auth.createUserWithEmailAndPassword(e, p).then(() => hienThongBao("Đăng ký thành công!", "thanh-cong")).catch(err => hienThongBao("Lỗi đăng ký: " + err.message, "loi")).finally(() => document.getElementById('btn-xac-nhan').innerText = "XÁC NHẬN");
-        }
-    }
-    function logout() { auth.signOut(); hienThongBao("Đã đăng xuất!", "thong-tin"); }
+}
 </script>
 </body>
 </html>
