@@ -3,79 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TN QUANG STORE - SHOP ROBUX UY TÍN</title>
-    <!-- Firebase SDKs -->
+    <title>TN QUANG STORE - SHOP ROBUX</title>
+    <!-- Firebase SDKs (Bản dễ dùng nhất cho HTML) -->
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
-    
     <style>
         :root { --primary: #ff4757; --secondary: #2f3542; --gold: #f1c40f; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #1e272e; color: white; margin: 0; padding: 20px; }
-        .container { max-width: 1000px; margin: auto; }
-        header { display: flex; justify-content: space-between; align-items: center; background: var(--secondary); padding: 15px 25px; border-radius: 15px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
-        .user-info { display: flex; gap: 20px; align-items: center; }
-        .btn { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s; }
-        .btn-nap { background: var(--gold); color: #000; }
+        body { font-family: sans-serif; background: #1e272e; color: white; padding: 20px; text-align: center; }
+        header { display: flex; justify-content: space-between; align-items: center; background: #2f3542; padding: 15px; border-radius: 10px; margin-bottom: 20px; }
+        .btn { padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin: 5px; }
+        .btn-nap { background: var(--gold); color: black; }
         .btn-admin { background: #e67e22; color: white; display: none; }
-        
-        /* Grid Sản phẩm */
-        .grid-games { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
-        .card { background: var(--secondary); padding: 15px; border-radius: 12px; text-align: center; border: 1px solid #3d4451; transition: transform 0.3s; }
-        .card:hover { transform: translateY(-5px); border-color: var(--primary); }
-        .card img { width: 100%; border-radius: 8px; margin-bottom: 10px; }
-        
-        /* Modal Styles */
-        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); }
-        .modal-content { background: #2f3542; margin: 10% auto; padding: 30px; border-radius: 15px; width: 400px; text-align: center; }
-        .modal-content input, .modal-content select { width: 100%; padding: 12px; margin: 10px 0; border-radius: 5px; border: none; }
-        
-        /* Admin Section */
-        #admin-panel { display: none; background: #fff; color: #333; padding: 20px; border-radius: 15px; margin-top: 30px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { border: 1px solid #ddd; padding: 10px; text-align: center; }
-        th { background: var(--primary); color: white; }
+        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); }
+        .modal-content { background: #2f3542; margin: 10% auto; padding: 20px; width: 350px; border-radius: 10px; }
+        input, select { width: 90%; padding: 10px; margin: 10px 0; border-radius: 5px; }
+        #admin-panel { display: none; background: white; color: black; padding: 20px; border-radius: 10px; margin-top: 20px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 8px; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <header>
-        <h1 style="color: var(--primary); margin: 0;">TN QUANG STORE</h1>
-        <div class="user-info" id="user-area">
-            <button class="btn" onclick="showAuth('login')">Đăng Nhập</button>
-        </div>
-    </header>
-
-    <div class="grid-games">
-        <div class="card">
-            <img src="https://img.freepik.com/free-vector/lucky-spin-banner-with-glowing-light-effect_1017-31038.jpg" alt="Vòng quay">
-            <h3>Vòng Quay Robux</h3>
-            <p>Giá: 10.000đ / lượt</p>
-            <button class="btn btn-nap" onclick="quayRobux()">QUAY NGAY</button>
-        </div>
-        <!-- Thêm các card túi mù tương tự ở đây -->
+<header>
+    <h2 style="color: var(--primary); margin:0;">TN QUANG STORE</h2>
+    <div id="user-area">
+        <button class="btn" onclick="openModal('authModal')">Đăng Nhập / Đăng Ký</button>
     </div>
+</header>
 
-    <!-- Admin Panel -->
-    <div id="admin-panel">
-        <h2 style="color: #e67e22;">⚙️ HỆ THỐNG QUẢN TRỊ</h2>
-        <h3>📋 Duyệt Thẻ Nạp</h3>
-        <table>
-            <thead>
-                <tr><th>User</th><th>Loại</th><th>Mệnh giá</th><th>Mã/Seri</th><th>Duyệt</th></tr>
-            </thead>
-            <tbody id="list-nap-the"></tbody>
-        </table>
-        
-        <h3>👥 Quản lý Thành viên</h3>
-        <table id="user-table">
-            <thead>
-                <tr><th>Email</th><th>Tiền VNĐ</th><th>Robux</th><th>Hành động</th></tr>
-            </thead>
-            <tbody id="list-users"></tbody>
-        </table>
+<div class="shop-content">
+    <div style="background:#2f3542; padding: 20px; border-radius: 10px; display: inline-block;">
+        <img src="https://img.freepik.com/free-vector/lucky-spin-banner-with-glowing-light-effect_1017-31038.jpg" width="200"><br>
+        <h3>Vòng Quay Robux</h3>
+        <p>10.000đ / lượt</p>
+        <button class="btn btn-nap" onclick="quayRobux()">QUAY NGAY</button>
     </div>
+</div>
+
+<!-- Admin Panel -->
+<div id="admin-panel">
+    <h2 style="color: orange;">⚙️ QUẢN TRỊ VIÊN</h2>
+    <h3>Duyệt Thẻ Nạp</h3>
+    <table>
+        <thead><tr><th>User</th><th>Thẻ</th><th>Mệnh giá</th><th>Duyệt</th></tr></thead>
+        <tbody id="list-nap-the"></tbody>
+    </table>
+    <h3>Thành Viên</h3>
+    <table>
+        <thead><tr><th>Email</th><th>Tiền</th><th>Hành động</th></tr></thead>
+        <tbody id="list-users"></tbody>
+    </table>
 </div>
 
 <!-- Modal Nạp Thẻ -->
@@ -83,29 +61,27 @@
     <div class="modal-content">
         <h3>🎫 NẠP THẺ CÀO</h3>
         <select id="loaiThe"><option>Viettel</option><option>Zing</option></select>
-        <select id="menhGia"><option value="20000">20.000đ</option><option value="50000">50.000đ</option><option value="100000">100.000đ</option></select>
+        <select id="menhGia"><option value="10000">10k</option><option value="20000">20k</option><option value="50000">50k</option></select>
         <input type="text" id="maThe" placeholder="Mã thẻ">
         <input type="text" id="seriThe" placeholder="Số seri">
         <button class="btn btn-nap" onclick="guiDonNapThe()">GỬI THẺ</button>
-        <button class="btn" onclick="closeModal('napTheModal')">Đóng</button>
+        <button onclick="closeModal('napTheModal')">Đóng</button>
     </div>
 </div>
 
-<!-- Modal Auth -->
+<!-- Modal Login -->
 <div id="authModal" class="modal">
     <div class="modal-content">
-        <h3 id="authTitle">ĐĂNG NHẬP</h3>
+        <h3>ĐĂNG NHẬP / ĐĂNG KÝ</h3>
         <input type="email" id="email" placeholder="Email">
         <input type="password" id="pass" placeholder="Mật khẩu">
-        <button id="authBtn" class="btn btn-nap" onclick="handleAuth()">Xác Nhận</button>
-        <p onclick="toggleAuth()" style="cursor:pointer; text-decoration: underline;">Chưa có tài khoản? Đăng ký</p>
+        <button class="btn btn-nap" onclick="handleAuth()">XÁC NHẬN</button>
+        <button onclick="closeModal('authModal')">Đóng</button>
     </div>
 </div>
 
 <script>
-// --- CẤU HÌNH FIREBASE --- (Ông dán thông số của ông vào đây)
-const firebaseConfig = {
-// --- CẤU HÌNH FIREBASE XỊN CỦA TNQUANGSTORE ---
+// CẤU HÌNH XỊN CỦA ÔNG
 const firebaseConfig = {
   apiKey: "AIzaSyBfFejnht7HCJqjw95JFCpOMPR1HB3GSGU",
   authDomain: "tnquangstore.firebaseapp.com",
@@ -115,129 +91,92 @@ const firebaseConfig = {
   appId: "1:683180615667:web:8baece012df95a0bb35486"
 };
 
-// Đảm bảo bên dưới nó có 3 dòng này để khởi tạo:
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
-
-let isLogin = true;
 const adminEmail = "tnquang477@gmail.com";
 
-// --- XỬ LÝ ĐĂNG NHẬP ---
-function showAuth(type) { document.getElementById('authModal').style.display = 'block'; }
-function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-function toggleAuth() {
-    isLogin = !isLogin;
-    document.getElementById('authTitle').innerText = isLogin ? "ĐĂNG NHẬP" : "ĐĂNG KÝ";
-}
+function openModal(id) { document.getElementById(id).style.display='block'; }
+function closeModal(id) { document.getElementById(id).style.display='none'; }
 
+// Đăng nhập / Đăng ký
 async function handleAuth() {
     const e = document.getElementById('email').value;
     const p = document.getElementById('pass').value;
     try {
-        if(isLogin) { await auth.signInWithEmailAndPassword(e, p); }
-        else { 
+        await auth.signInWithEmailAndPassword(e, p);
+    } catch(err) {
+        try {
             await auth.createUserWithEmailAndPassword(e, p);
             await db.collection("users").doc(e).set({ vnd: 0, robux: 0 });
-        }
-        location.reload();
-    } catch(err) { alert(err.message); }
+        } catch(e2) { alert(e2.message); }
+    }
+    closeModal('authModal');
 }
 
-// --- THEO DÕI NGƯỜI DÙNG ---
+// Theo dõi trạng thái
 auth.onAuthStateChanged(user => {
     if(user) {
         db.collection("users").doc(user.email).onSnapshot(doc => {
-            const data = doc.data();
+            const d = doc.data();
             document.getElementById('user-area').innerHTML = `
-                <span>💰 ${data.vnd.toLocaleString()}đ | 💎 ${data.robux} R$</span>
-                <button class="btn btn-nap" onclick="showModal('napTheModal')">Nạp Thẻ</button>
-                ${user.email === adminEmail ? '<button class="btn btn-admin" style="display:block" onclick="toggleAdmin()">⚙️ ADMIN</button>' : ''}
+                <span>💰 ${d.vnd.toLocaleString()}đ | 💎 ${d.robux} R$</span>
+                <button class="btn btn-nap" onclick="openModal('napTheModal')">🎫 Nạp Thẻ</button>
+                ${user.email === adminEmail ? '<button class="btn btn-admin" style="display:inline" onclick="toggleAdmin()">⚙️ ADMIN</button>' : ''}
                 <button onclick="auth.signOut()">Thoát</button>
             `;
         });
-        if(user.email === adminEmail) loadAdminData();
+        if(user.email === adminEmail) loadAdmin();
+    } else {
+        document.getElementById('user-area').innerHTML = `<button class="btn" onclick="openModal('authModal')">Đăng Nhập / Đăng Ký</button>`;
     }
 });
 
-function showModal(id) { document.getElementById(id).style.display='block'; }
 function toggleAdmin() {
     const p = document.getElementById('admin-panel');
     p.style.display = p.style.display === 'none' ? 'block' : 'none';
 }
 
-// --- XỬ LÝ NẠP THẺ ---
 async function guiDonNapThe() {
-    const ma = document.getElementById('maThe').value;
-    const seri = document.getElementById('seriThe').value;
-    if(!ma || !seri) return alert("Nhập đủ thông tin!");
-    
     await db.collection("napthe").add({
         email: auth.currentUser.email,
         loaiThe: document.getElementById('loaiThe').value,
         menhGia: parseInt(document.getElementById('menhGia').value),
-        maThe: ma, seriThe: seri,
-        status: "Chờ duyệt",
-        time: new Date().toLocaleString()
+        maThe: document.getElementById('maThe').value,
+        seriThe: document.getElementById('seriThe').value,
+        status: "Chờ duyệt"
     });
-    alert("Đã gửi đơn nạp! Chờ Admin duyệt.");
+    alert("Đã gửi đơn nạp!");
     closeModal('napTheModal');
 }
 
-// --- XỬ LÝ VÒNG QUAY ---
 async function quayRobux() {
-    const userRef = db.collection("users").doc(auth.currentUser.email);
-    const doc = await userRef.get();
-    if(doc.data().vnd < 10000) return alert("Bạn không đủ tiền!");
-
-    const phanThuong = [10, 50, 100, 500, 1000];
-    const ketQua = phanThuong[Math.floor(Math.random() * phanThuong.length)];
-
-    await userRef.update({
-        vnd: doc.data().vnd - 10000,
-        robux: doc.data().robux + ketQua
-    });
-    alert(`🎉 Chúc mừng! Bạn nhận được ${ketQua} Robux!`);
+    const ref = db.collection("users").doc(auth.currentUser.email);
+    const d = (await ref.get()).data();
+    if(d.vnd < 10000) return alert("Bạn không đủ tiền!");
+    const r = [10, 20, 50, 100][Math.floor(Math.random()*4)];
+    await ref.update({ vnd: d.vnd - 10000, robux: d.robux + r });
+    alert("Bạn nhận được " + r + " Robux!");
 }
 
-// --- ADMIN LOGIC ---
-function loadAdminData() {
-    // Load thẻ nạp
-    db.collection("napthe").where("status", "==", "Chờ duyệt").onSnapshot(snap => {
+function loadAdmin() {
+    db.collection("napthe").where("status","==","Chờ duyệt").onSnapshot(s => {
         let h = "";
-        snap.forEach(doc => {
+        s.forEach(doc => {
             const d = doc.data();
-            h += `<tr><td>${d.email}</td><td>${d.loaiThe}</td><td>${d.menhGia}</td><td>${d.maThe}</td>
-                <td><button onclick="duyetThe('${doc.id}','${d.email}',${d.menhGia})">Duyệt</button></td></tr>`;
+            h += `<tr><td>${d.email}</td><td>${d.loaiThe}</td><td>${d.menhGia}</td>
+            <td><button onclick="duyetThe('${doc.id}','${d.email}',${d.menhGia})">Duyệt</button></td></tr>`;
         });
         document.getElementById('list-nap-the').innerHTML = h;
-    });
-    // Load User
-    db.collection("users").onSnapshot(snap => {
-        let h = "";
-        snap.forEach(doc => {
-            h += `<tr><td>${doc.id}</td><td>${doc.data().vnd}</td><td>${doc.data().robux}</td>
-                <td><button onclick="congTien('${doc.id}')">+ Tiền</button></td></tr>`;
-        });
-        document.getElementById('list-users').innerHTML = h;
     });
 }
 
 async function duyetThe(id, email, tien) {
     const ref = db.collection("users").doc(email);
-    const d = await ref.get();
-    await ref.update({ vnd: d.data().vnd + tien });
+    const d = (await ref.get()).data();
+    await ref.update({ vnd: d.vnd + tien });
     await db.collection("napthe").doc(id).update({ status: "Thành công" });
-    alert("Đã duyệt!");
-}
-
-async function congTien(email) {
-    const t = prompt("Nhập số tiền muốn cộng:");
-    if(t) {
-        const ref = db.collection("users").doc(email);
-        const d = await ref.get();
-        await ref.update({ vnd: d.data().vnd + parseInt(t) });
-    }
+    alert("Đã cộng tiền!");
 }
 </script>
 </body>
