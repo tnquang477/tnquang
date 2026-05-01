@@ -3,192 +3,130 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TNQuangStore - Roblox Service & Luck</title>
+    <title>TNQuangStore - Shop Roblox Chính Chủ</title>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
     <style>
-        :root { --main-color: #00a2ff; --pink-lucky: #ff00ff; --orange-spin: #ff9800; --bg-dark: #191b1d; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; margin: 0; padding: 0; }
-        
-        #banner { width: 100%; height: 220px; background: var(--bg-dark); background-size: cover; background-position: center; transition: 1s; display: flex; align-items: center; justify-content: center; color: white; text-shadow: 2px 2px 15px rgba(0,0,0,0.8); font-size: 32px; font-weight: 900; }
-        .container { max-width: 800px; margin: 20px auto; padding: 15px; }
-        .section-title { border-left: 5px solid var(--main-color); padding-left: 12px; margin: 25px 0; font-size: 20px; color: var(--bg-dark); font-weight: bold; text-transform: uppercase; }
-
-        .grid-acc { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .acc-card { background: white; border-radius: 12px; overflow: hidden; border: 1px solid #ddd; text-align: center; padding-bottom: 15px; transition: 0.3s; position: relative; }
-        .acc-card:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        .acc-card img { width: 100%; height: 150px; object-fit: cover; }
-        
-        .btn-mua { background: var(--main-color); color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 85%; }
-
-        #popupPayment, #popupTuiMu, #popupVongQuay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:9999; justify-content:center; align-items:center; }
-        .popup-content { background:white; width:90%; max-width:380px; padding:25px; border-radius:20px; text-align:center; position: relative; }
-        .input-style { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; }
-        .hidden { display: none; }
-
-        .price-btn { width: 100%; padding: 12px; margin: 5px 0; border: 1px solid #ddd; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; }
-        .price-btn.bf { border-color: var(--pink-lucky); background: #fff0ff; color: var(--pink-lucky); }
-        .price-btn.rb { border-color: var(--orange-spin); background: #fff3e0; color: var(--orange-spin); }
-        .price-btn:hover { background: #333; color: white; }
-        .note-box { background: #fff3e0; border: 1px solid #ff9800; padding: 10px; border-radius: 8px; font-size: 13px; color: #e65100; margin-bottom: 15px; line-height: 1.5; }
+        :root { --main: #00a2ff; --dark: #111; --pink: #ff00ff; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f4f7f8; margin: 0; padding-bottom: 50px; }
+        header { background: var(--dark); padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; color: white; position: sticky; top: 0; z-index: 100; }
+        .btn-user { background: var(--main); color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        #banner { width: 100%; height: 150px; background: #222; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; font-weight: 900; }
+        .container { max-width: 800px; margin: auto; padding: 15px; }
+        .card { background: white; border-radius: 12px; padding: 15px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .item-card { background: white; border-radius: 10px; overflow: hidden; border: 1px solid #ddd; text-align: center; }
+        .item-card img { width: 100%; height: 120px; object-fit: cover; }
+        .btn-mua { background: var(--main); color: white; border: none; padding: 10px; width: 90%; margin: 10px 0; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        .modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:1000; justify-content:center; align-items:center; }
+        .modal-content { background:white; width:90%; max-width:350px; padding:20px; border-radius:15px; text-align:center; position: relative; }
+        input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
     </style>
 </head>
 <body>
 
-    <div id="banner">TNQUANG STORE</div>
+<header>
+    <div style="font-size: 18px; font-weight: bold;">TNQuangStore</div>
+    <div id="user-nav">
+        <button class="btn-user" onclick="toggleModal('authModal')">Đăng nhập</button>
+    </div>
+</header>
 
-    <div class="container">
-        <!-- NHẬN HÀNG TỰ ĐỘNG -->
-        <div style="background: #e1f5fe; border: 2px solid var(--main-color); padding: 20px; border-radius: 15px; margin-bottom: 30px; text-align: center;">
-            <h3 style="margin-top:0; color: #01579b;">📦 NHẬN HÀNG TỰ ĐỘNG</h3>
-            <input type="text" id="inputMaDon" class="input-style" placeholder="Nhập mã đơn từ Admin...">
-            <button onclick="layAcc()" style="width:100%; background:#01579b;" class="btn-mua">KIỂM TRA NGAY</button>
-            <div id="ketQuaAcc" class="hidden" style="margin-top:15px; padding:15px; background:white; border: 1px solid #4caf50; border-radius:10px; text-align: left;">
-                <span id="thongTinChiTiet" style="font-family: monospace;"></span>
-            </div>
-        </div>
+<div id="banner">TNQUANG STORE</div>
 
-        <!-- 2 PHẦN NHÂN PHẨM -->
-        <div class="grid-acc">
-            <!-- TÚI MÙ -->
-            <div class="acc-card" style="border: 2px solid var(--pink-lucky);">
-                <img src="https://i.ytimg.com/vi/Sndq0xS1mQY/maxresdefault.jpg">
-                <h4 style="color: var(--pink-lucky);">Túi Mù Blox Fruit</h4>
-                <button class="btn-mua" style="background: var(--pink-lucky);" onclick="moPopupTuiMu()">MỞ NGAY</button>
-            </div>
-            <!-- VÒNG QUAY -->
-            <div class="acc-card" style="border: 2px solid var(--orange-spin);">
-                <img src="https://i.ytimg.com/vi/v5j7n6n8p7k/maxresdefault.jpg">
-                <h4 style="color: var(--orange-spin);">Vòng Quay Robux</h4>
-                <button class="btn-mua" style="background: var(--orange-spin);" onclick="moPopupVongQuay()">QUAY NGAY</button>
-            </div>
-        </div>
-
-        <!-- DỊCH VỤ HOT -->
-        <div class="section-title">🔥 Dịch Vụ Cày Thuê & Acc</div>
-        <div class="grid-acc">
-            <div class="acc-card">
-                <img src="https://wallpapers.com/images/featured/blox-fruits-pictures-7u55p4n509015c7j.jpg">
-                <h4>Acc Blox Fruit Rank Cao</h4>
-                <p><b>100.000đ</b></p>
-                <button class="btn-mua" onclick="moThanhToan('100000', 'ACC BF VIP')">THANH TOÁN</button>
-            </div>
-            <div class="acc-card">
-                <img src="https://trungtamgarena.vn/wp-content/uploads/2023/11/cay-thue-blox-fruit-gia-re.jpg">
-                <h4>Cày Thuê Level Siêu Tốc</h4>
-                <p><b>30.000đ</b></p>
-                <button class="btn-mua" onclick="moThanhToan('30000', 'CÀY THUÊ')">THANH TOÁN</button>
-            </div>
-        </div>
+<div class="container">
+    <div id="user-info" class="card" style="display: none; border-left: 5px solid var(--main);">
+        <p style="margin: 0;">Chào mừng, <b id="display-name">Người dùng</b>!</p>
+        <p style="font-size: 12px; color: #666; margin: 5px 0 0 0;">Bạn đã có thể tham gia các trò chơi nhân phẩm.</p>
     </div>
 
-    <!-- POPUP TÚI MÙ -->
-    <div id="popupTuiMu">
-        <div class="popup-content">
-            <span onclick="dongPopup()" style="position:absolute; top:10px; right:15px; cursor:pointer;">&times;</span>
-            <h3 style="color: var(--pink-lucky);">Túi Mù Blox Fruit</h3>
-            <div class="note-box"><b>⚠️ Lưu ý:</b> Túi mù là ngẫu nhiên, không có sự sắp đặt. Nếu gặp lỗi hãy liên hệ shop!</div>
-            <button class="price-btn bf" onclick="moThanhToan('20000', 'TÚI MÙ BF 20K')">Mở Túi - 20.000đ</button>
-            <button class="price-btn bf" onclick="moThanhToan('50000', 'TÚI MÙ BF 50K')">Mở Túi - 50.000đ</button>
-        </div>
+    <div class="card">
+        <h4 style="margin-top: 0;">📦 NHẬN HÀNG TỰ ĐỘNG</h4>
+        <input type="text" id="orderId" placeholder="Nhập mã đơn hàng từ Admin...">
+        <button class="btn-mua" onclick="checkOrder()">KIỂM TRA NGAY</button>
     </div>
 
-    <!-- POPUP VÒNG QUAY -->
-    <div id="popupVongQuay">
-        <div class="popup-content">
-            <span onclick="dongPopup()" style="position:absolute; top:10px; right:15px; cursor:pointer;">&times;</span>
-            <h3 style="color: var(--orange-spin);">Vòng Quay Robux May Mắn</h3>
-            <div class="note-box"><b>⚠️ Lưu ý:</b> Vòng quay ngẫu nhiên 100%. Admin sẽ gửi Robux sau khi bạn nạp thành công!</div>
-            <button class="price-btn rb" onclick="moThanhToan('20000', 'VQ ROBUX 20K')">Quay 1 Lần - 20.000đ</button>
-            <button class="price-btn rb" onclick="moThanhToan('100000', 'VQ ROBUX 100K')">Quay 6 Lần - 100.000đ</button>
+    <div class="grid">
+        <div class="item-card" style="border-top: 4px solid var(--pink);">
+            <img src="https://i.ytimg.com/vi/Sndq0xS1mQY/maxresdefault.jpg">
+            <p><b>Túi Mù Blox Fruit</b></p>
+            <button class="btn-mua" style="background: var(--pink);" onclick="alert('Hãy đăng nhập để mở túi!')">MỞ TÚI</button>
+        </div>
+        <div class="item-card" style="border-top: 4px solid orange;">
+            <img src="https://i.ytimg.com/vi/v5j7n6n8p7k/maxresdefault.jpg">
+            <p><b>Vòng Quay Robux</b></p>
+            <button class="btn-mua" style="background: orange;" onclick="alert('Hãy đăng nhập để quay!')">QUAY NGAY</button>
         </div>
     </div>
+</div>
 
-    <!-- POPUP THANH TOÁN -->
-    <div id="popupPayment">
-        <div class="popup-content">
-            <h3 id="txtMaAcc" style="color: var(--main-color);">Thanh toán</h3>
-            <div id="step1">
-                <button onclick="hienBank()" style="width:100%; padding:12px; margin-bottom:10px; background:#28a745; color:white; border:none; border-radius:8px; font-weight:bold;">🏦 Ngân hàng (QR)</button>
-                <button onclick="hienThe()" style="width:100%; padding:12px; background:#f39c12; color:white; border:none; border-radius:8px; font-weight:bold;">💳 Thẻ Cào</button>
-                <button onclick="dongPopup()" style="background:none; border:none; color:blue; margin-top:10px; cursor:pointer;">Đóng</button>
-            </div>
-            <div id="stepBank" class="hidden">
-                <img id="hinhQR" src="" style="width:100%; border-radius:10px;">
-                <button onclick="quayLaiThanhToan()">Quay lại</button>
-            </div>
-            <div id="stepThe" class="hidden">
-                <select id="loaiThe" class="input-style"><option>Viettel</option><option>Zing</option></select>
-                <input type="text" id="maThe" class="input-style" placeholder="Mã thẻ">
-                <input type="text" id="seriThe" class="input-style" placeholder="Seri">
-                <button onclick="guiThe()" class="btn-mua">GỬI THẺ</button>
-                <button onclick="quayLaiThanhToan()" style="display:block; margin:10px auto;">Quay lại</button>
-            </div>
-        </div>
+<div id="authModal" class="modal">
+    <div class="modal-content">
+        <h3 id="authTitle">Đăng Nhập</h3>
+        <input type="email" id="email" placeholder="Email của bạn">
+        <input type="password" id="password" placeholder="Mật khẩu">
+        <button class="btn-mua" onclick="handleAuth()">XÁC NHẬN</button>
+        <p style="font-size: 13px; color: blue; cursor: pointer;" onclick="switchAuth()" id="switchBtn">Chưa có tài khoản? Đăng ký ngay</p>
+        <button onclick="toggleModal('authModal')" style="background:none; border:none; color:red; cursor:pointer;">Đóng</button>
     </div>
+</div>
 
-    <script>
-        const MY_WEBHOOK = "DÁN_LINK_DISCORD_VÀO_ĐÂY";
-        const MY_STK = "STK_CỦA_BẠN";
-        const MY_BANK = "MB";
-        const MY_NAME = "TEN_CUA_BAN";
+<script>
+    // DÁN MÃ FIREBASE CỦA ÔNG VÀO ĐÂY
+    const firebaseConfig = {
+      apiKey: "AIzaSyBfFejnht7HCJqjw95JFCpOMPR1HB3GSGU",
+      authDomain: "tnquangstore.firebaseapp.com",
+      projectId: "tnquangstore",
+      storageBucket: "tnquangstore.firebasestorage.app",
+      messagingSenderId: "683180615667",
+      appId: "1:683180615667:web:8baece012df95a0bb35486"
+    };
+    
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    let isLogin = true;
 
-        function moPopupTuiMu() { document.getElementById('popupTuiMu').style.display = 'flex'; }
-        function moPopupVongQuay() { document.getElementById('popupVongQuay').style.display = 'flex'; }
-        
-        let g_gia = ""; let g_ma = "";
-        function moThanhToan(gia, ma) {
-            g_gia = gia; g_ma = ma;
-            document.getElementById('popupTuiMu').style.display = 'none';
-            document.getElementById('popupVongQuay').style.display = 'none';
-            document.getElementById('txtMaAcc').innerText = "Thanh toán: " + ma;
-            document.getElementById('popupPayment').style.display = 'flex';
-            quayLaiThanhToan();
+    // Kiểm tra trạng thái đăng nhập
+    auth.onAuthStateChanged(user => {
+        if (user) {
+            document.getElementById('user-nav').innerHTML = `<button class="btn-user" style="background:#444" onclick="logout()">Thoát</button>`;
+            document.getElementById('user-info').style.display = 'block';
+            document.getElementById('display-name').innerText = user.email.split('@')[0];
+            toggleModal('authModal', false);
+        } else {
+            document.getElementById('user-nav').innerHTML = `<button class="btn-user" onclick="toggleModal('authModal', true)">Đăng nhập</button>`;
+            document.getElementById('user-info').style.display = 'none';
         }
+    });
 
-        function hienBank() {
-            document.getElementById('hinhQR').src = `https://img.vietqr.io/image/${MY_BANK}-${MY_STK}-compact2.png?amount=${g_gia}&addInfo=TNQ%20${g_ma}&accountName=${MY_NAME}`;
-            document.getElementById('step1').classList.add('hidden');
-            document.getElementById('stepBank').classList.remove('hidden');
+    function toggleModal(id, show = true) {
+        document.getElementById(id).style.display = show ? 'flex' : 'none';
+    }
+
+    function switchAuth() {
+        isLogin = !isLogin;
+        document.getElementById('authTitle').innerText = isLogin ? 'Đăng Nhập' : 'Đăng Ký';
+        document.getElementById('switchBtn').innerText = isLogin ? 'Chưa có tài khoản? Đăng ký ngay' : 'Đã có tài khoản? Đăng nhập';
+    }
+
+    function handleAuth() {
+        const email = document.getElementById('email').value;
+        const pass = document.getElementById('password').value;
+        if(isLogin) {
+            auth.signInWithEmailAndPassword(email, pass).catch(e => alert("Lỗi: " + e.message));
+        } else {
+            auth.createUserWithEmailAndPassword(email, pass).then(() => alert("Đăng ký thành công!")).catch(e => alert("Lỗi: " + e.message));
         }
+    }
 
-        function hienThe() {
-            document.getElementById('step1').classList.add('hidden');
-            document.getElementById('stepThe').classList.remove('hidden');
-        }
+    function logout() { auth.signOut(); }
+    
+    function checkOrder() {
+        const id = document.getElementById('orderId').value;
+        if(id === "TNQ123") alert("Đơn hàng đang chờ xử lý!");
+        else alert("Mã đơn không tồn tại!");
+    }
+</script>
 
-        function quayLaiThanhToan() {
-            document.getElementById('step1').classList.remove('hidden');
-            document.getElementById('stepBank').classList.add('hidden');
-            document.getElementById('stepThe').classList.add('hidden');
-        }
-
-        function dongPopup() {
-            document.getElementById('popupPayment').style.display = 'none';
-            document.getElementById('popupTuiMu').style.display = 'none';
-            document.getElementById('popupVongQuay').style.display = 'none';
-        }
-
-        function guiThe() {
-            const loai = document.getElementById('loaiThe').value;
-            const ma = document.getElementById('maThe').value;
-            const seri = document.getElementById('seriThe').value;
-            if(!ma || !seri) return alert("Nhập đủ thông tin!");
-
-            fetch(MY_WEBHOOK, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({content: `🚀 **TNQuangStore - ĐƠN MỚI!**\nLoại: ${g_ma}\nThẻ: ${loai}\nMã: \`${ma}\`\nSeri: \`${seri}\``})
-            }).then(() => { alert("Đã gửi! Admin sẽ gửi mã quà cho bạn sau khi check xong."); dongPopup(); });
-        }
-
-        const KHO_ACC = { "LUCKY-TNQ": "Chúc mừng! Bạn trúng Acc Blox Fruit Max Level!" };
-
-        function layAcc() {
-            const m = document.getElementById('inputMaDon').value.trim();
-            if(KHO_ACC[m]) {
-                document.getElementById('thongTinChiTiet').innerText = KHO_ACC[m];
-                document.getElementById('ketQuaAcc').classList.remove('hidden');
-            } else { alert("Mã không đúng!"); }
-        }
-    </script>
 </body>
 </html>
