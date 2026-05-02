@@ -34,7 +34,7 @@
         .card-info h3 { font-size: 16px; margin: 0 0 10px; height: 40px; color: var(--dark); }
         .price-tag { color: var(--price); font-size: 22px; font-weight: 800; margin-bottom: 15px; }
         .btn-buy { background: var(--primary); color: #fff; border: none; padding: 12px; border-radius: 10px; width: 100%; cursor: pointer; font-weight: 700; font-size: 14px; transition: 0.3s; }
-        .btn-buy:hover { background: #0056b3; letter-spacing: 1px; }
+        .btn-buy:hover { background: #0056b3; }
         .modal { display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); }
         .modal-content { background: #fff; margin: 5% auto; padding: 35px; border-radius: 20px; width: 100%; max-width: 400px; position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.3); }
         .modal-header { text-align: center; margin-bottom: 25px; }
@@ -42,61 +42,38 @@
         input, select { width: 100%; padding: 14px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 10px; font-family: inherit; font-size: 15px; box-sizing: border-box; }
         footer { background: var(--dark); color: #fff; padding: 40px 0; margin-top: 60px; text-align: center; }
 
-        /* ========== ADMIN PANEL ========== */
-        #admin-panel {
-            display: none;
-            background: #fff;
-            padding: 24px;
-            border-radius: 16px;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            border: 1.5px solid #e0e7ff;
-        }
+        /* ===== ADMIN PANEL ===== */
+        #admin-panel { display: none; background: #fff; padding: 24px; border-radius: 16px; margin-bottom: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border: 1.5px solid #e0e7ff; }
         #admin-panel h2 { margin: 0 0 20px; color: var(--primary); font-size: 20px; }
-        #admin-panel h3 { margin: 0 0 12px; font-size: 16px; color: var(--dark); }
         .admin-box { border: 1px solid #ddd; padding: 15px; border-radius: 10px; margin-bottom: 15px; }
-        .btn-tao { background: var(--primary); color: #fff; border: none; padding: 12px 20px; border-radius: 10px; cursor: pointer; font-weight: 700; font-size: 14px; transition: 0.3s; }
-        .btn-tao:hover { background: #0056b3; }
-        #post-form-area { display: none; border: 2px solid #2ecc71; padding: 15px; border-radius: 10px; margin-top: 10px; }
-        #form-title { color: #2ecc71; margin: 0 0 15px; font-size: 16px; }
-        .btn-post-green { background: #2ecc71; color: #fff; border: none; padding: 12px; border-radius: 10px; width: 100%; cursor: pointer; font-weight: 700; font-size: 14px; margin-bottom: 8px; }
-        .btn-post-red { background: #e74c3c; color: #fff; border: none; padding: 12px; border-radius: 10px; width: 100%; cursor: pointer; font-weight: 700; font-size: 14px; }
-        /* ================================= */
+        .admin-box h3 { margin: 0 0 12px; font-size: 16px; }
+        .btn-tao { background: var(--primary); color: #fff; border: none; padding: 12px 20px; border-radius: 10px; cursor: pointer; font-weight: 700; font-size: 14px; }
 
-        /* ========== DYNAMIC CATEGORIES ========== */
+        /* ===== FORM ĐĂNG BÀI ===== */
+        #post-form-area { display: none; border: 2px solid #2ecc71; padding: 15px; border-radius: 8px; background: white; margin-bottom: 20px; }
+        #post-form-area h3 { color: #2ecc71; margin-top: 0; }
+        .khu-vuc-hien-tai { background: #e8f8f5; padding: 10px; border-radius: 5px; margin-bottom: 15px; font-weight: bold; color: #16a085; }
+        .khu-vuc-hien-tai span { color: #e74c3c; }
+
+        /* ===== DYNAMIC CATEGORIES ===== */
         .category-section { margin-bottom: 40px; }
-        .category-header {
-            background: #fff;
-            border-radius: 12px;
-            padding: 15px 20px;
-            border-left: 6px solid var(--primary);
-            margin-bottom: 15px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+        .category-header { background: #fff; border-radius: 12px; padding: 15px 20px; border-left: 6px solid var(--primary); margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
         .category-header h2 { margin: 0; font-size: 20px; color: var(--dark); }
-        .btn-dangbai {
-            background: #2ecc71;
-            color: #fff;
-            border: none;
-            padding: 8px 18px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 700;
-            font-size: 13px;
-            white-space: nowrap;
-        }
-        .btn-dangbai:hover { background: #27ae60; }
-        .item-card { background: #fff; border-radius: 15px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08); border: 1px solid #eee; transition: 0.4s; }
+        .admin-cat-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+        .btn-dangbai { background: #2ecc71; color: #fff; border: none; padding: 8px 14px; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 13px; }
+        .btn-sua-dm { background: #f39c12; color: #fff; border: none; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 13px; }
+        .btn-xoa-dm { background: #e74c3c; color: #fff; border: none; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 13px; }
+        .item-card { background: #fff; border-radius: 15px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08); border: 1px solid #eee; transition: 0.4s; position: relative; }
         .item-card:hover { transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
         .item-card img { width: 100%; height: 180px; object-fit: cover; }
         .item-card-info { padding: 15px; text-align: center; }
         .item-card-info h4 { margin: 0 0 8px; font-size: 15px; color: var(--dark); }
         .item-card-info .item-price { color: var(--price); font-weight: 800; font-size: 20px; margin: 0 0 12px; }
         .item-card-info .btn-mua { background: var(--primary); color: #fff; border: none; padding: 10px; width: 100%; border-radius: 8px; cursor: pointer; font-weight: 700; }
-        /* ======================================== */
+        .admin-sp-btns { display: flex; gap: 6px; margin-top: 8px; }
+        .admin-sp-btns button { flex: 1; padding: 7px; border: none; border-radius: 7px; cursor: pointer; font-weight: 700; font-size: 12px; }
+        .btn-sua-sp { background: #f39c12; color: #fff; }
+        .btn-xoa-sp { background: #e74c3c; color: #fff; }
     </style>
 </head>
 <body>
@@ -108,7 +85,7 @@
             <input type="text" placeholder="Tìm kiếm tài khoản, trái ác quỷ...">
         </div>
         <div id="auth-area">
-            <button class="btn-buy" style="width:auto; padding: 10px 25px;" onclick="toggleModal('loginModal', true)">ĐĂNG NHẬP</button>
+            <button class="btn-buy" style="width:auto; padding:10px 25px;" onclick="toggleModal('loginModal', true)">ĐĂNG NHẬP</button>
         </div>
     </div>
 </header>
@@ -119,27 +96,30 @@
 
 <div class="container">
 
-    <!-- ========== ADMIN PANEL ========== -->
+    <!-- ADMIN PANEL -->
     <div id="admin-panel">
         <h2>🛠️ Quản Lý Cửa Hàng</h2>
-
         <div class="admin-box">
-            <h3>1. Tạo Tiêu Đề Lớn Mới</h3>
+            <h3>➕ Tạo Tiêu Đề Lớn Mới</h3>
             <input type="text" id="new-category-name" placeholder="Ví dụ: Acc VIP, Cày Thuê, Túi Mù...">
             <button class="btn-tao" onclick="taoTieuDeMoi()">TẠO TIÊU ĐỀ</button>
         </div>
 
+        <!-- FORM ĐĂNG BÀI / SỬA BÀI -->
         <div id="post-form-area">
-            <h3 id="form-title">Đăng Sản Phẩm Mới</h3>
+            <h3 id="form-title">Thêm Sản Phẩm Mới</h3>
+            <div class="khu-vuc-hien-tai">
+                📌 Đang đăng bài vào mục: <span id="display-category-name">VUI LÒNG CHỌN KHU VỰC</span>
+            </div>
             <input type="hidden" id="post-category">
-            <input type="text" id="post-title" placeholder="Tên sản phẩm (Acc blox fruit...)">
-            <input type="number" id="post-price" placeholder="Giá tiền (VNĐ)">
-            <input type="text" id="post-img" placeholder="Link ảnh sản phẩm">
-            <button class="btn-post-green" onclick="dangBaiViet()">ĐĂNG LÊN SHOP</button>
-            <button class="btn-post-red" onclick="dongForm()">HỦY BỎ</button>
+            <input type="hidden" id="edit-product-id">
+            <input type="text" id="post-title" placeholder="Tên sản phẩm (vd: Acc Blox Fruit Max)...">
+            <input type="number" id="post-price" placeholder="Giá tiền (VNĐ)...">
+            <input type="text" id="post-img" placeholder="Link ảnh sản phẩm...">
+            <button id="btn-submit-post" onclick="luuBaiViet()" style="background:#2ecc71; color:#fff; padding:12px; width:100%; border:none; border-radius:8px; font-weight:800; font-size:15px; cursor:pointer;">ĐĂNG LÊN SHOP</button>
+            <button onclick="dongForm()" style="background:#95a5a6; color:#fff; padding:12px; width:100%; border:none; border-radius:8px; font-weight:700; margin-top:8px; cursor:pointer;">HỦY BỎ</button>
         </div>
     </div>
-    <!-- =================================== -->
 
     <div class="banner-slider">
         <img src="https://i.ytimg.com/vi/z-i1pAF6FjE/maxresdefault.jpg" alt="Shop Banner">
@@ -157,7 +137,7 @@
             <div class="card-info">
                 <h3>Túi Mù Blox Fruit - Cấp 1 (Common)</h3>
                 <div class="price-tag">20,000 VNĐ</div>
-                <button class="btn-buy" onclick="buyBox(20000, 'Cấp 1')">MỞ NGAY</button>
+                <button class="btn-buy" onclick="buyBox(20000,'Cấp 1')">MỞ NGAY</button>
             </div>
         </div>
         <div class="card">
@@ -166,7 +146,7 @@
             <div class="card-info">
                 <h3>Túi Mù Blox Fruit - Cấp 2 (Rare)</h3>
                 <div class="price-tag">50,000 VNĐ</div>
-                <button class="btn-buy" onclick="buyBox(50000, 'Cấp 2')">MỞ NGAY</button>
+                <button class="btn-buy" onclick="buyBox(50000,'Cấp 2')">MỞ NGAY</button>
             </div>
         </div>
         <div class="card">
@@ -175,7 +155,7 @@
             <div class="card-info">
                 <h3>Túi Mù Blox Fruit - Cấp 3 (Legend)</h3>
                 <div class="price-tag">100,000 VNĐ</div>
-                <button class="btn-buy" onclick="buyBox(100000, 'Cấp 3')">MỞ NGAY</button>
+                <button class="btn-buy" onclick="buyBox(100000,'Cấp 3')">MỞ NGAY</button>
             </div>
         </div>
         <div class="card">
@@ -184,7 +164,7 @@
             <div class="card-info">
                 <h3>Túi Mù Siêu Cấp - Cấp 4 (KITSUNE)</h3>
                 <div class="price-tag">200,000 VNĐ</div>
-                <button class="btn-buy" onclick="buyBox(200000, 'Cấp 4')">MỞ NGAY</button>
+                <button class="btn-buy" onclick="buyBox(200000,'Cấp 4')">MỞ NGAY</button>
             </div>
         </div>
     </div>
@@ -211,7 +191,7 @@
         </div>
     </div>
 
-    <!-- Tiêu đề động từ Firestore hiển thị ở đây -->
+    <!-- TIÊU ĐỀ ĐỘNG TỪ FIRESTORE -->
     <div id="main-shop-display"></div>
 
 </div>
@@ -221,7 +201,7 @@
     <div class="modal-content">
         <span class="close" onclick="toggleModal('topupModal', false)">&times;</span>
         <div class="modal-header">
-            <h2 style="color: var(--primary)">🎫 NẠP THẺ CÀO</h2>
+            <h2 style="color:var(--primary)">🎫 NẠP THẺ CÀO</h2>
             <p>Hệ thống duyệt thẻ tự động từ 30s - 2p</p>
         </div>
         <select id="cardType">
@@ -288,35 +268,30 @@ function toggleModal(id, show) {
 auth.onAuthStateChanged(user => {
     const area = document.getElementById('auth-area');
     const adminPanel = document.getElementById('admin-panel');
-
     if(user) {
         isAdmin = user.email === ADMIN_EMAIL;
         if(isAdmin) adminPanel.style.display = 'block';
-
         db.collection("users").doc(user.email).onSnapshot(doc => {
             const data = doc.data() || {vnd: 0};
             area.innerHTML = `
-                <div style="display:flex; align-items:center; gap:15px">
+                <div style="display:flex;align-items:center;gap:15px">
                     <div style="text-align:right">
                         <b style="color:var(--primary)">${user.email.split('@')[0]}</b><br>
-                        <span style="color:#28a745; font-weight:700">${data.vnd.toLocaleString()}đ</span>
+                        <span style="color:#28a745;font-weight:700">${data.vnd.toLocaleString()}đ</span>
                     </div>
-                    <button class="btn-buy" style="width:auto; padding:8px 15px; background:#28a745" onclick="toggleModal('topupModal', true)">Nạp tiền</button>
-                    <i class="fas fa-sign-out-alt" onclick="auth.signOut()" style="cursor:pointer; color:#999; font-size:20px"></i>
-                </div>
-            `;
+                    <button class="btn-buy" style="width:auto;padding:8px 15px;background:#28a745" onclick="toggleModal('topupModal',true)">Nạp tiền</button>
+                    <i class="fas fa-sign-out-alt" onclick="auth.signOut()" style="cursor:pointer;color:#999;font-size:20px"></i>
+                </div>`;
         });
     } else {
         isAdmin = false;
         adminPanel.style.display = 'none';
-        area.innerHTML = `<button class="btn-buy" style="width:auto; padding:10px 25px;" onclick="toggleModal('loginModal', true)">ĐĂNG NHẬP</button>`;
+        area.innerHTML = `<button class="btn-buy" style="width:auto;padding:10px 25px;" onclick="toggleModal('loginModal',true)">ĐĂNG NHẬP</button>`;
     }
-
-    // Load trang chủ động sau khi biết quyền
     hienThiTrangChu();
 });
 
-// ===== ĐĂNG NHẬP / ĐĂNG KÝ =====
+// ===== ĐĂNG NHẬP =====
 async function authAction() {
     const e = document.getElementById('email').value;
     const p = document.getElementById('pass').value;
@@ -339,8 +314,7 @@ async function submitCard() {
         email: auth.currentUser.email,
         type: document.getElementById('cardType').value,
         value: parseInt(document.getElementById('cardValue').value),
-        pin: pin, seri: seri,
-        status: "Chờ duyệt",
+        pin, seri, status: "Chờ duyệt",
         timestamp: firebase.firestore.FieldValue.serverTimestamp()
     });
     alert("Thẻ đã được gửi! Vui lòng chờ Admin duyệt.");
@@ -380,21 +354,22 @@ function hienThiTrangChu() {
             const danhMuc = doc.data();
             const tenDM = danhMuc.ten;
 
-            // Nút đăng bài chỉ hiện với admin
-            const nutDangBai = isAdmin
-                ? `<button class="btn-dangbai" onclick="moFormDangBai('${tenDM}')">➕ Đăng bài</button>`
-                : '';
+            // Nút admin cho tiêu đề
+            const nutAdminDM = isAdmin ? `
+                <div class="admin-cat-btns">
+                    <button class="btn-dangbai" onclick="moFormDangBai('${tenDM}')">➕ Đăng bài</button>
+                    <button class="btn-sua-dm" onclick="suaTieuDe('${doc.id}','${tenDM}')">✏️ Sửa</button>
+                    <button class="btn-xoa-dm" onclick="xoaTieuDe('${doc.id}')">🗑️ Xóa</button>
+                </div>` : '';
 
-            const htmlKhuVuc = `
+            mainDisplay.innerHTML += `
                 <div class="category-section">
                     <div class="category-header">
                         <h2>🔥 ${tenDM.toUpperCase()}</h2>
-                        ${nutDangBai}
+                        ${nutAdminDM}
                     </div>
                     <div class="grid" id="grid-${doc.id}"></div>
-                </div>
-            `;
-            mainDisplay.innerHTML += htmlKhuVuc;
+                </div>`;
 
             // Load sản phẩm thuộc tiêu đề này
             db.collection("SanPham").where("khuVuc", "==", tenDM).onSnapshot(spSnapshot => {
@@ -403,6 +378,12 @@ function hienThiTrangChu() {
                 grid.innerHTML = "";
                 spSnapshot.forEach(spDoc => {
                     const sp = spDoc.data();
+                    // Nút sửa/xóa sản phẩm chỉ admin thấy
+                    const nutAdminSP = isAdmin ? `
+                        <div class="admin-sp-btns">
+                            <button class="btn-sua-sp" onclick="suaSanPham('${spDoc.id}','${sp.ten}',${sp.gia},'${sp.anh}','${sp.khuVuc}')">✏️ Sửa</button>
+                            <button class="btn-xoa-sp" onclick="xoaSanPham('${spDoc.id}')">🗑️ Xóa</button>
+                        </div>` : '';
                     grid.innerHTML += `
                         <div class="item-card">
                             <img src="${sp.anh}" onerror="this.src='https://via.placeholder.com/260x180?text=No+Image'">
@@ -410,9 +391,9 @@ function hienThiTrangChu() {
                                 <h4>${sp.ten}</h4>
                                 <p class="item-price">${Number(sp.gia).toLocaleString()} VNĐ</p>
                                 <button class="btn-mua">MUA NGAY</button>
+                                ${nutAdminSP}
                             </div>
-                        </div>
-                    `;
+                        </div>`;
                 });
             });
         });
@@ -423,7 +404,14 @@ function hienThiTrangChu() {
 function moFormDangBai(tenDanhMuc) {
     document.getElementById('post-form-area').style.display = 'block';
     document.getElementById('post-category').value = tenDanhMuc;
-    document.getElementById('form-title').innerText = "✏️ Đăng vào: " + tenDanhMuc.toUpperCase();
+    document.getElementById('display-category-name').innerText = tenDanhMuc.toUpperCase();
+    document.getElementById('edit-product-id').value = "";
+    document.getElementById('form-title').innerText = "Thêm Sản Phẩm Mới";
+    document.getElementById('btn-submit-post').innerText = "ĐĂNG LÊN SHOP";
+    document.getElementById('btn-submit-post').style.background = "#2ecc71";
+    document.getElementById('post-title').value = "";
+    document.getElementById('post-price').value = "";
+    document.getElementById('post-img').value = "";
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -431,23 +419,59 @@ function dongForm() {
     document.getElementById('post-form-area').style.display = 'none';
 }
 
-// ===== ĐĂNG BÀI LÊN FIREBASE =====
-function dangBaiViet() {
-    const ten    = document.getElementById('post-title').value.trim();
-    const gia    = document.getElementById('post-price').value;
-    const anh    = document.getElementById('post-img').value.trim();
+// ===== LƯU BÀI VIẾT (ĐĂNG MỚI HOẶC SỬA) =====
+function luuBaiViet() {
+    const idSua = document.getElementById('edit-product-id').value;
+    const ten = document.getElementById('post-title').value.trim();
+    const gia = document.getElementById('post-price').value;
+    const anh = document.getElementById('post-img').value.trim();
     const khuVuc = document.getElementById('post-category').value;
     if(!ten || !gia || !anh) return alert("Nhập đủ Tên, Giá, Ảnh đi!");
-    db.collection("SanPham").add({
-        ten, gia: Number(gia), anh, khuVuc,
-        ngayDang: firebase.firestore.FieldValue.serverTimestamp()
-    }).then(() => {
-        alert("✅ Đăng bài thành công vào: " + khuVuc);
-        dongForm();
-        document.getElementById('post-title').value = "";
-        document.getElementById('post-price').value = "";
-        document.getElementById('post-img').value = "";
-    });
+
+    if(idSua) {
+        // SỬA BÀI CŨ
+        db.collection("SanPham").doc(idSua).update({ ten, gia: Number(gia), anh })
+        .then(() => { alert("✅ Đã cập nhật thành công!"); dongForm(); });
+    } else {
+        // ĐĂNG BÀI MỚI
+        db.collection("SanPham").add({
+            ten, gia: Number(gia), anh, khuVuc,
+            ngayDang: firebase.firestore.FieldValue.serverTimestamp()
+        }).then(() => { alert("✅ Đăng bài thành công vào: " + khuVuc); dongForm(); });
+    }
+}
+
+// ===== SỬA / XÓA SẢN PHẨM =====
+function suaSanPham(id, ten, gia, anh, khuVuc) {
+    moFormDangBai(khuVuc);
+    document.getElementById('edit-product-id').value = id;
+    document.getElementById('post-title').value = ten;
+    document.getElementById('post-price').value = gia;
+    document.getElementById('post-img').value = anh;
+    document.getElementById('form-title').innerText = "✏️ Sửa Thông Tin Sản Phẩm";
+    document.getElementById('btn-submit-post').innerText = "LƯU CẬP NHẬT";
+    document.getElementById('btn-submit-post').style.background = "#f39c12";
+}
+
+function xoaSanPham(id) {
+    if(confirm("Chắc chắn xóa bài đăng này không?")) {
+        db.collection("SanPham").doc(id).delete().then(() => alert("✅ Đã xóa!"));
+    }
+}
+
+// ===== SỬA / XÓA TIÊU ĐỀ =====
+function suaTieuDe(id, tenCu) {
+    const tenMoi = prompt("Nhập tên mới cho tiêu đề:", tenCu);
+    if(tenMoi && tenMoi.trim() !== "") {
+        db.collection("DanhMuc").doc(id).update({ ten: tenMoi.trim() })
+        .then(() => alert("✅ Đã đổi tên tiêu đề!"));
+    }
+}
+
+function xoaTieuDe(id) {
+    if(confirm("⚠️ Xóa tiêu đề này? Các bài đăng bên trong sẽ bị mất chỗ ở!")) {
+        db.collection("DanhMuc").doc(id).delete().then(() => alert("✅ Đã xóa tiêu đề!"));
+    }
 }
 
 // ===== ĐẾM NGƯỢC FLASH SALE =====
