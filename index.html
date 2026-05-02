@@ -70,10 +70,17 @@
         .item-card-info h4 { margin: 0 0 8px; font-size: 15px; color: var(--dark); }
         .item-card-info .item-price { color: var(--price); font-weight: 800; font-size: 20px; margin: 0 0 12px; }
         .item-card-info .btn-mua { background: var(--primary); color: #fff; border: none; padding: 10px; width: 100%; border-radius: 8px; cursor: pointer; font-weight: 700; }
-        .admin-sp-btns { display: flex; gap: 6px; margin-top: 8px; }
-        .admin-sp-btns button { flex: 1; padding: 7px; border: none; border-radius: 7px; cursor: pointer; font-weight: 700; font-size: 12px; }
-        .btn-sua-sp { background: #f39c12; color: #fff; }
-        .btn-xoa-sp { background: #e74c3c; color: #fff; }
+
+        /* ===== NÚT SỬA/XÓA ADMIN (Gemini) ===== */
+        .admin-controls { position: absolute; top: 5px; right: 5px; display: flex; gap: 5px; z-index: 10; }
+        .btn-edit, .btn-delete { background: rgba(0,0,0,0.6); color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer; font-size: 12px; }
+        .btn-edit:hover { background: #f39c12; }
+        .btn-delete:hover { background: #e74c3c; }
+
+        /* ===== MODAL SỬA NHANH (Gemini) ===== */
+        #quick-edit-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 20px rgba(0,0,0,0.5); z-index: 9999; display: none; width: 320px; }
+        #quick-edit-modal h4 { margin: 0 0 15px; font-size: 16px; }
+        #quick-edit-modal input { margin-bottom: 10px; }
     </style>
 </head>
 <body>
@@ -94,6 +101,17 @@
     <marquee>🔥 Chào mừng đến với TN QUANG STORE - Hệ thống bán Acc Blox Fruit tự động, uy tín hàng đầu Việt Nam. Nạp thẻ chiết khấu cực thấp! 🚀</marquee>
 </div>
 
+<!-- MODAL SỬA NHANH -->
+<div id="quick-edit-modal">
+    <h4>📝 Chỉnh sửa bài đăng</h4>
+    <input type="hidden" id="edit-id">
+    <input type="text" id="edit-ten" placeholder="Tên sản phẩm">
+    <input type="number" id="edit-gia" placeholder="Giá tiền">
+    <input type="text" id="edit-anh" placeholder="Link ảnh">
+    <button onclick="luuCapNhat()" style="width:100%; background:#2ecc71; color:white; border:none; padding:10px; border-radius:8px; font-weight:700; cursor:pointer;">LƯU LẠI</button>
+    <button onclick="document.getElementById('quick-edit-modal').style.display='none'" style="width:100%; background:#95a5a6; color:white; border:none; padding:10px; border-radius:8px; margin-top:5px; cursor:pointer;">HỦY</button>
+</div>
+
 <div class="container">
 
     <!-- ADMIN PANEL -->
@@ -104,8 +122,6 @@
             <input type="text" id="new-category-name" placeholder="Ví dụ: Acc VIP, Cày Thuê, Túi Mù...">
             <button class="btn-tao" onclick="taoTieuDeMoi()">TẠO TIÊU ĐỀ</button>
         </div>
-
-        <!-- FORM ĐĂNG BÀI / SỬA BÀI -->
         <div id="post-form-area">
             <h3 id="form-title">Thêm Sản Phẩm Mới</h3>
             <div class="khu-vuc-hien-tai">
@@ -113,7 +129,7 @@
             </div>
             <input type="hidden" id="post-category">
             <input type="hidden" id="edit-product-id">
-            <input type="text" id="post-title" placeholder="Tên sản phẩm (vd: Acc Blox Fruit Max)...">
+            <input type="text" id="post-title" placeholder="Tên sản phẩm...">
             <input type="number" id="post-price" placeholder="Giá tiền (VNĐ)...">
             <input type="text" id="post-img" placeholder="Link ảnh sản phẩm...">
             <button id="btn-submit-post" onclick="luuBaiViet()" style="background:#2ecc71; color:#fff; padding:12px; width:100%; border:none; border-radius:8px; font-weight:800; font-size:15px; cursor:pointer;">ĐĂNG LÊN SHOP</button>
@@ -349,12 +365,10 @@ function hienThiTrangChu() {
     db.collection("DanhMuc").orderBy("ngayTao", "asc").onSnapshot(snapshot => {
         const mainDisplay = document.getElementById('main-shop-display');
         mainDisplay.innerHTML = "";
-
         snapshot.forEach(doc => {
             const danhMuc = doc.data();
             const tenDM = danhMuc.ten;
 
-            // Nút admin cho tiêu đề
             const nutAdminDM = isAdmin ? `
                 <div class="admin-cat-btns">
                     <button class="btn-dangbai" onclick="moFormDangBai('${tenDM}')">➕ Đăng bài</button>
@@ -371,27 +385,26 @@ function hienThiTrangChu() {
                     <div class="grid" id="grid-${doc.id}"></div>
                 </div>`;
 
-            // Load sản phẩm thuộc tiêu đề này
             db.collection("SanPham").where("khuVuc", "==", tenDM).onSnapshot(spSnapshot => {
                 const grid = document.getElementById(`grid-${doc.id}`);
                 if(!grid) return;
                 grid.innerHTML = "";
                 spSnapshot.forEach(spDoc => {
                     const sp = spDoc.data();
-                    // Nút sửa/xóa sản phẩm chỉ admin thấy
-                    const nutAdminSP = isAdmin ? `
-                        <div class="admin-sp-btns">
-                            <button class="btn-sua-sp" onclick="suaSanPham('${spDoc.id}','${sp.ten}',${sp.gia},'${sp.anh}','${sp.khuVuc}')">✏️ Sửa</button>
-                            <button class="btn-xoa-sp" onclick="xoaSanPham('${spDoc.id}')">🗑️ Xóa</button>
+                    // Nút sửa/xóa dạng icon góc - chỉ admin thấy
+                    const adminControls = isAdmin ? `
+                        <div class="admin-controls">
+                            <button class="btn-edit" onclick="moBangSua('${spDoc.id}','${sp.ten}',${sp.gia},'${sp.anh}')">✏️</button>
+                            <button class="btn-delete" onclick="xoaSanPham('${spDoc.id}')">🗑️</button>
                         </div>` : '';
                     grid.innerHTML += `
                         <div class="item-card">
+                            ${adminControls}
                             <img src="${sp.anh}" onerror="this.src='https://via.placeholder.com/260x180?text=No+Image'">
                             <div class="item-card-info">
                                 <h4>${sp.ten}</h4>
                                 <p class="item-price">${Number(sp.gia).toLocaleString()} VNĐ</p>
                                 <button class="btn-mua">MUA NGAY</button>
-                                ${nutAdminSP}
                             </div>
                         </div>`;
                 });
@@ -419,7 +432,7 @@ function dongForm() {
     document.getElementById('post-form-area').style.display = 'none';
 }
 
-// ===== LƯU BÀI VIẾT (ĐĂNG MỚI HOẶC SỬA) =====
+// ===== ĐĂNG / SỬA BÀI (form đăng bài) =====
 function luuBaiViet() {
     const idSua = document.getElementById('edit-product-id').value;
     const ten = document.getElementById('post-title').value.trim();
@@ -427,41 +440,50 @@ function luuBaiViet() {
     const anh = document.getElementById('post-img').value.trim();
     const khuVuc = document.getElementById('post-category').value;
     if(!ten || !gia || !anh) return alert("Nhập đủ Tên, Giá, Ảnh đi!");
-
     if(idSua) {
-        // SỬA BÀI CŨ
         db.collection("SanPham").doc(idSua).update({ ten, gia: Number(gia), anh })
-        .then(() => { alert("✅ Đã cập nhật thành công!"); dongForm(); });
+        .then(() => { alert("✅ Đã cập nhật!"); dongForm(); });
     } else {
-        // ĐĂNG BÀI MỚI
         db.collection("SanPham").add({
             ten, gia: Number(gia), anh, khuVuc,
             ngayDang: firebase.firestore.FieldValue.serverTimestamp()
-        }).then(() => { alert("✅ Đăng bài thành công vào: " + khuVuc); dongForm(); });
+        }).then(() => { alert("✅ Đăng thành công vào: " + khuVuc); dongForm(); });
     }
 }
 
-// ===== SỬA / XÓA SẢN PHẨM =====
-function suaSanPham(id, ten, gia, anh, khuVuc) {
-    moFormDangBai(khuVuc);
-    document.getElementById('edit-product-id').value = id;
-    document.getElementById('post-title').value = ten;
-    document.getElementById('post-price').value = gia;
-    document.getElementById('post-img').value = anh;
-    document.getElementById('form-title').innerText = "✏️ Sửa Thông Tin Sản Phẩm";
-    document.getElementById('btn-submit-post').innerText = "LƯU CẬP NHẬT";
-    document.getElementById('btn-submit-post').style.background = "#f39c12";
-}
-
+// ===== XÓA SẢN PHẨM (Gemini) =====
 function xoaSanPham(id) {
-    if(confirm("Chắc chắn xóa bài đăng này không?")) {
+    if(confirm("Xác nhận xóa vĩnh viễn món này?")) {
         db.collection("SanPham").doc(id).delete().then(() => alert("✅ Đã xóa!"));
     }
 }
 
-// ===== SỬA / XÓA TIÊU ĐỀ =====
+// ===== MỞ MODAL SỬA NHANH (Gemini) =====
+function moBangSua(id, ten, gia, anh) {
+    document.getElementById('quick-edit-modal').style.display = 'block';
+    document.getElementById('edit-id').value = id;
+    document.getElementById('edit-ten').value = ten;
+    document.getElementById('edit-gia').value = gia;
+    document.getElementById('edit-anh').value = anh;
+}
+
+// ===== LƯU CẬP NHẬT NHANH (Gemini) =====
+function luuCapNhat() {
+    const id = document.getElementById('edit-id').value;
+    const data = {
+        ten: document.getElementById('edit-ten').value,
+        gia: Number(document.getElementById('edit-gia').value),
+        anh: document.getElementById('edit-anh').value
+    };
+    db.collection("SanPham").doc(id).update(data).then(() => {
+        alert("✅ Cập nhật thành công!");
+        document.getElementById('quick-edit-modal').style.display = 'none';
+    });
+}
+
+// ===== SỬA / XÓA TIÊU ĐỀ (Gemini) =====
 function suaTieuDe(id, tenCu) {
-    const tenMoi = prompt("Nhập tên mới cho tiêu đề:", tenCu);
+    const tenMoi = prompt("Nhập tên tiêu đề mới:", tenCu);
     if(tenMoi && tenMoi.trim() !== "") {
         db.collection("DanhMuc").doc(id).update({ ten: tenMoi.trim() })
         .then(() => alert("✅ Đã đổi tên tiêu đề!"));
