@@ -26,13 +26,6 @@
         .section-title h2 { margin: 0; font-size: 20px; text-transform: uppercase; color: var(--dark); }
         .countdown { background: var(--price); color: #fff; padding: 5px 15px; border-radius: 5px; font-weight: bold; }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; margin-bottom: 50px; }
-        .card { background: #fff; border-radius: 15px; overflow: hidden; transition: 0.4s; border: 1px solid #eee; position: relative; }
-        .card:hover { transform: translateY(-10px); box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
-        .card-img { width: 100%; height: 180px; object-fit: cover; }
-        .badge { position: absolute; top: 10px; left: 10px; background: #ffc107; color: #000; padding: 4px 10px; border-radius: 5px; font-size: 12px; font-weight: 700; }
-        .card-info { padding: 20px; text-align: center; }
-        .card-info h3 { font-size: 16px; margin: 0 0 10px; height: 40px; color: var(--dark); }
-        .price-tag { color: var(--price); font-size: 22px; font-weight: 800; margin-bottom: 15px; }
         .btn-buy { background: var(--primary); color: #fff; border: none; padding: 12px; border-radius: 10px; width: 100%; cursor: pointer; font-weight: 700; font-size: 14px; transition: 0.3s; }
         .btn-buy:hover { background: #0056b3; }
         .modal { display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); }
@@ -48,8 +41,6 @@
         .admin-box { border: 1px solid #ddd; padding: 15px; border-radius: 10px; margin-bottom: 15px; }
         .admin-box h3 { margin: 0 0 12px; font-size: 16px; }
         .btn-tao { background: var(--primary); color: #fff; border: none; padding: 12px 20px; border-radius: 10px; cursor: pointer; font-weight: 700; font-size: 14px; }
-
-        /* ===== FORM ĐĂNG BÀI ===== */
         #post-form-area { display: none; border: 2px solid #2ecc71; padding: 15px; border-radius: 8px; background: white; margin-bottom: 20px; }
         #post-form-area h3 { color: #2ecc71; margin-top: 0; }
         .khu-vuc-hien-tai { background: #e8f8f5; padding: 10px; border-radius: 5px; margin-bottom: 15px; font-weight: bold; color: #16a085; }
@@ -70,14 +61,10 @@
         .item-card-info h4 { margin: 0 0 8px; font-size: 15px; color: var(--dark); }
         .item-card-info .item-price { color: var(--price); font-weight: 800; font-size: 20px; margin: 0 0 12px; }
         .item-card-info .btn-mua { background: var(--primary); color: #fff; border: none; padding: 10px; width: 100%; border-radius: 8px; cursor: pointer; font-weight: 700; }
-
-        /* ===== NÚT SỬA/XÓA ADMIN (Gemini) ===== */
         .admin-controls { position: absolute; top: 5px; right: 5px; display: flex; gap: 5px; z-index: 10; }
         .btn-edit, .btn-delete { background: rgba(0,0,0,0.6); color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer; font-size: 12px; }
         .btn-edit:hover { background: #f39c12; }
         .btn-delete:hover { background: #e74c3c; }
-
-        /* ===== MODAL SỬA NHANH (Gemini) ===== */
         #quick-edit-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 20px rgba(0,0,0,0.5); z-index: 9999; display: none; width: 320px; }
         #quick-edit-modal h4 { margin: 0 0 15px; font-size: 16px; }
         #quick-edit-modal input { margin-bottom: 10px; }
@@ -141,71 +128,15 @@
         <img src="https://i.ytimg.com/vi/z-i1pAF6FjE/maxresdefault.jpg" alt="Shop Banner">
     </div>
 
+    <!-- FLASH SALE - chỉ còn tiêu đề + nút đăng bài cho admin + grid từ Firestore -->
     <div class="section-title">
         <h2>🔥 FLASH SALE GIỜ VÀNG</h2>
-        <div class="countdown" id="timer">00:59:59</div>
-    </div>
-
-    <div class="grid">
-        <div class="card">
-            <span class="badge">GIÁ RẺ</span>
-            <img src="https://i.ytimg.com/vi/cHV24W43r-k/maxresdefault.jpg" class="card-img">
-            <div class="card-info">
-                <h3>Túi Mù Blox Fruit - Cấp 1 (Common)</h3>
-                <div class="price-tag">20,000 VNĐ</div>
-                <button class="btn-buy" onclick="buyBox(20000,'Cấp 1')">MỞ NGAY</button>
-            </div>
-        </div>
-        <div class="card">
-            <span class="badge">HẤP DẪN</span>
-            <img src="https://i.ytimg.com/vi/Bv2EnNWkZY8/maxresdefault.jpg" class="card-img">
-            <div class="card-info">
-                <h3>Túi Mù Blox Fruit - Cấp 2 (Rare)</h3>
-                <div class="price-tag">50,000 VNĐ</div>
-                <button class="btn-buy" onclick="buyBox(50000,'Cấp 2')">MỞ NGAY</button>
-            </div>
-        </div>
-        <div class="card">
-            <span class="badge">HUYỀN THOẠI</span>
-            <img src="https://i.ytimg.com/vi/TkAPiLvINn4/maxresdefault.jpg" class="card-img">
-            <div class="card-info">
-                <h3>Túi Mù Blox Fruit - Cấp 3 (Legend)</h3>
-                <div class="price-tag">100,000 VNĐ</div>
-                <button class="btn-buy" onclick="buyBox(100000,'Cấp 3')">MỞ NGAY</button>
-            </div>
-        </div>
-        <div class="card">
-            <span class="badge">MYTHICAL</span>
-            <img src="https://i.ytimg.com/vi/9w2-1VgG3fc/maxresdefault.jpg" class="card-img">
-            <div class="card-info">
-                <h3>Túi Mù Siêu Cấp - Cấp 4 (KITSUNE)</h3>
-                <div class="price-tag">200,000 VNĐ</div>
-                <button class="btn-buy" onclick="buyBox(200000,'Cấp 4')">MỞ NGAY</button>
-            </div>
+        <div style="display:flex; align-items:center; gap:10px;">
+            <div class="countdown" id="timer">00:59:59</div>
+            <button id="btn-flash-post" style="display:none;" class="btn-dangbai" onclick="moFormDangBai('FLASH SALE')">➕ Đăng bài</button>
         </div>
     </div>
-
-    <div class="section-title">
-        <h2>🔥 ACC BLOX FRUIT SIÊU CẤP</h2>
-    </div>
-    <div class="grid">
-        <div class="card">
-            <img src="https://i.ytimg.com/vi/5GdXiCcj8b0/maxresdefault.jpg" class="card-img">
-            <div class="card-info">
-                <h3>Acc Max Level + Full Melee + Dough V2</h3>
-                <div class="price-tag">150,000 VNĐ</div>
-                <button class="btn-buy">XEM CHI TIẾT</button>
-            </div>
-        </div>
-        <div class="card">
-            <img src="https://i.ytimg.com/vi/XsJS2qqogYM/maxresdefault.jpg" class="card-img">
-            <div class="card-info">
-                <h3>Acc Blox Fruit Rank Dragon Vĩnh Viễn</h3>
-                <div class="price-tag">500,000 VNĐ</div>
-                <button class="btn-buy">XEM CHI TIẾT</button>
-            </div>
-        </div>
-    </div>
+    <div class="grid" id="grid-flash-sale"></div>
 
     <!-- TIÊU ĐỀ ĐỘNG TỪ FIRESTORE -->
     <div id="main-shop-display"></div>
@@ -260,7 +191,6 @@
 </footer>
 
 <script>
-// ===== FIREBASE =====
 const firebaseConfig = {
     apiKey: "AIzaSyBfFejnht7HCJqjw95JFCpOMPR1HB3GSGU",
     authDomain: "tnquangstore.firebaseapp.com",
@@ -280,13 +210,16 @@ function toggleModal(id, show) {
     document.getElementById(id).style.display = show ? 'block' : 'none';
 }
 
-// ===== THEO DÕI ĐĂNG NHẬP =====
 auth.onAuthStateChanged(user => {
     const area = document.getElementById('auth-area');
     const adminPanel = document.getElementById('admin-panel');
+    const btnFlash = document.getElementById('btn-flash-post');
     if(user) {
         isAdmin = user.email === ADMIN_EMAIL;
-        if(isAdmin) adminPanel.style.display = 'block';
+        if(isAdmin) {
+            adminPanel.style.display = 'block';
+            btnFlash.style.display = 'inline-block';
+        }
         db.collection("users").doc(user.email).onSnapshot(doc => {
             const data = doc.data() || {vnd: 0};
             area.innerHTML = `
@@ -302,12 +235,13 @@ auth.onAuthStateChanged(user => {
     } else {
         isAdmin = false;
         adminPanel.style.display = 'none';
+        btnFlash.style.display = 'none';
         area.innerHTML = `<button class="btn-buy" style="width:auto;padding:10px 25px;" onclick="toggleModal('loginModal',true)">ĐĂNG NHẬP</button>`;
     }
     hienThiTrangChu();
+    hienThiFlashSale();
 });
 
-// ===== ĐĂNG NHẬP =====
 async function authAction() {
     const e = document.getElementById('email').value;
     const p = document.getElementById('pass').value;
@@ -321,7 +255,6 @@ async function authAction() {
     toggleModal('loginModal', false);
 }
 
-// ===== NẠP THẺ =====
 async function submitCard() {
     const pin = document.getElementById('pin').value;
     const seri = document.getElementById('seri').value;
@@ -337,17 +270,32 @@ async function submitCard() {
     toggleModal('topupModal', false);
 }
 
-// ===== MUA TÚI MÙ =====
-async function buyBox(price, tier) {
-    if(!auth.currentUser) return toggleModal('loginModal', true);
-    const userRef = db.collection("users").doc(auth.currentUser.email);
-    const userData = (await userRef.get()).data();
-    if(userData.vnd < price) return alert("Bạn không đủ tiền! Nạp thêm để mở túi mù.");
-    await userRef.update({ vnd: userData.vnd - price });
-    alert(`🎉 Chúc mừng! Bạn đã mở thành công Túi Mù ${tier}.`);
+// ===== FLASH SALE - load từ Firestore =====
+function hienThiFlashSale() {
+    db.collection("SanPham").where("khuVuc", "==", "FLASH SALE").onSnapshot(spSnapshot => {
+        const grid = document.getElementById('grid-flash-sale');
+        grid.innerHTML = "";
+        spSnapshot.forEach(spDoc => {
+            const sp = spDoc.data();
+            const adminControls = isAdmin ? `
+                <div class="admin-controls">
+                    <button class="btn-edit" onclick="moBangSua('${spDoc.id}','${sp.ten}',${sp.gia},'${sp.anh}')">✏️</button>
+                    <button class="btn-delete" onclick="xoaSanPham('${spDoc.id}')">🗑️</button>
+                </div>` : '';
+            grid.innerHTML += `
+                <div class="item-card">
+                    ${adminControls}
+                    <img src="${sp.anh}" onerror="this.src='https://via.placeholder.com/260x180?text=No+Image'">
+                    <div class="item-card-info">
+                        <h4>${sp.ten}</h4>
+                        <p class="item-price">${Number(sp.gia).toLocaleString()} VNĐ</p>
+                        <button class="btn-mua">MUA NGAY</button>
+                    </div>
+                </div>`;
+        });
+    });
 }
 
-// ===== TẠO TIÊU ĐỀ MỚI =====
 function taoTieuDeMoi() {
     const tenDM = document.getElementById('new-category-name').value.trim();
     if(!tenDM) return alert("Nhập tên tiêu đề đã!");
@@ -360,7 +308,6 @@ function taoTieuDeMoi() {
     });
 }
 
-// ===== HIỂN THỊ TRANG CHỦ ĐỘNG =====
 function hienThiTrangChu() {
     db.collection("DanhMuc").orderBy("ngayTao", "asc").onSnapshot(snapshot => {
         const mainDisplay = document.getElementById('main-shop-display');
@@ -368,14 +315,12 @@ function hienThiTrangChu() {
         snapshot.forEach(doc => {
             const danhMuc = doc.data();
             const tenDM = danhMuc.ten;
-
             const nutAdminDM = isAdmin ? `
                 <div class="admin-cat-btns">
                     <button class="btn-dangbai" onclick="moFormDangBai('${tenDM}')">➕ Đăng bài</button>
                     <button class="btn-sua-dm" onclick="suaTieuDe('${doc.id}','${tenDM}')">✏️ Sửa</button>
                     <button class="btn-xoa-dm" onclick="xoaTieuDe('${doc.id}')">🗑️ Xóa</button>
                 </div>` : '';
-
             mainDisplay.innerHTML += `
                 <div class="category-section">
                     <div class="category-header">
@@ -384,14 +329,12 @@ function hienThiTrangChu() {
                     </div>
                     <div class="grid" id="grid-${doc.id}"></div>
                 </div>`;
-
             db.collection("SanPham").where("khuVuc", "==", tenDM).onSnapshot(spSnapshot => {
                 const grid = document.getElementById(`grid-${doc.id}`);
                 if(!grid) return;
                 grid.innerHTML = "";
                 spSnapshot.forEach(spDoc => {
                     const sp = spDoc.data();
-                    // Nút sửa/xóa dạng icon góc - chỉ admin thấy
                     const adminControls = isAdmin ? `
                         <div class="admin-controls">
                             <button class="btn-edit" onclick="moBangSua('${spDoc.id}','${sp.ten}',${sp.gia},'${sp.anh}')">✏️</button>
@@ -413,7 +356,6 @@ function hienThiTrangChu() {
     });
 }
 
-// ===== MỞ FORM ĐĂNG BÀI =====
 function moFormDangBai(tenDanhMuc) {
     document.getElementById('post-form-area').style.display = 'block';
     document.getElementById('post-category').value = tenDanhMuc;
@@ -432,7 +374,6 @@ function dongForm() {
     document.getElementById('post-form-area').style.display = 'none';
 }
 
-// ===== ĐĂNG / SỬA BÀI (form đăng bài) =====
 function luuBaiViet() {
     const idSua = document.getElementById('edit-product-id').value;
     const ten = document.getElementById('post-title').value.trim();
@@ -451,14 +392,12 @@ function luuBaiViet() {
     }
 }
 
-// ===== XÓA SẢN PHẨM (Gemini) =====
 function xoaSanPham(id) {
     if(confirm("Xác nhận xóa vĩnh viễn món này?")) {
         db.collection("SanPham").doc(id).delete().then(() => alert("✅ Đã xóa!"));
     }
 }
 
-// ===== MỞ MODAL SỬA NHANH (Gemini) =====
 function moBangSua(id, ten, gia, anh) {
     document.getElementById('quick-edit-modal').style.display = 'block';
     document.getElementById('edit-id').value = id;
@@ -467,7 +406,6 @@ function moBangSua(id, ten, gia, anh) {
     document.getElementById('edit-anh').value = anh;
 }
 
-// ===== LƯU CẬP NHẬT NHANH (Gemini) =====
 function luuCapNhat() {
     const id = document.getElementById('edit-id').value;
     const data = {
@@ -481,7 +419,6 @@ function luuCapNhat() {
     });
 }
 
-// ===== SỬA / XÓA TIÊU ĐỀ (Gemini) =====
 function suaTieuDe(id, tenCu) {
     const tenMoi = prompt("Nhập tên tiêu đề mới:", tenCu);
     if(tenMoi && tenMoi.trim() !== "") {
@@ -496,7 +433,6 @@ function xoaTieuDe(id) {
     }
 }
 
-// ===== ĐẾM NGƯỢC FLASH SALE =====
 let time = 3600 * 59;
 setInterval(() => {
     let h = Math.floor(time/3600);
