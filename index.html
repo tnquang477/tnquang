@@ -9,7 +9,6 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;700&display=swap" rel="stylesheet">
-
     <style>
         :root { --primary: #007bff; --dark: #1a1a1a; --price: #ff4d4d; --bg: #f4f7f6; }
         body { font-family: 'Quicksand', sans-serif; background: var(--bg); margin: 0; overflow-x: hidden; }
@@ -40,8 +39,20 @@
         .modal-content { background: #fff; margin: 5% auto; padding: 35px; border-radius: 20px; width: 100%; max-width: 400px; position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.3); }
         .modal-header { text-align: center; margin-bottom: 25px; }
         .close { position: absolute; right: 20px; top: 15px; font-size: 28px; cursor: pointer; color: #999; }
-        input, select { width: 100%; padding: 14px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 10px; font-family: inherit; font-size: 15px; }
+        input, select { width: 100%; padding: 14px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 10px; font-family: inherit; font-size: 15px; box-sizing: border-box; }
         footer { background: var(--dark); color: #fff; padding: 40px 0; margin-top: 60px; text-align: center; }
+
+        /* ========== ĐĂNG BÀI ADMIN ========== */
+        #admin-post-area { background: #fff; border-radius: 16px; padding: 24px; margin-bottom: 40px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border: 1.5px solid #e0e7ff; display: none; }
+        #admin-post-area h3 { margin: 0 0 20px; font-size: 18px; color: var(--primary); display: flex; align-items: center; gap: 8px; }
+        #admin-post-area .post-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        #admin-post-area .post-grid input,
+        #admin-post-area .post-grid select { margin-bottom: 0; }
+        #admin-post-area .full-width { grid-column: 1 / -1; }
+        #admin-post-area .img-preview { width: 100%; height: 160px; object-fit: cover; border-radius: 10px; margin-top: 8px; display: none; border: 1px solid #eee; }
+        #admin-post-area .btn-post { background: linear-gradient(135deg, #007bff, #0056b3); color: #fff; border: none; padding: 14px; border-radius: 10px; width: 100%; cursor: pointer; font-weight: 800; font-size: 15px; margin-top: 16px; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        #admin-post-area .btn-post:hover { opacity: 0.9; transform: translateY(-2px); }
+        /* ===================================== */
     </style>
 </head>
 <body>
@@ -63,6 +74,30 @@
 </div>
 
 <div class="container">
+
+    <!-- KHUNG ĐĂNG BÀI ADMIN -->
+    <div id="admin-post-area">
+        <h3>📝 ĐĂNG SẢN PHẨM MỚI</h3>
+        <div class="post-grid">
+            <input type="text" id="post-title" placeholder="Tên sản phẩm" class="full-width">
+            <input type="number" id="post-price" placeholder="Giá (VNĐ)">
+            <select id="post-badge">
+                <option value="">-- Nhãn --</option>
+                <option value="GIÁ RẺ">GIÁ RẺ</option>
+                <option value="HẤP DẪN">HẤP DẪN</option>
+                <option value="HUYỀN THOẠI">HUYỀN THOẠI</option>
+                <option value="MYTHICAL">MYTHICAL</option>
+                <option value="HOT">HOT</option>
+                <option value="MỚI">MỚI</option>
+            </select>
+            <input type="text" id="post-img" placeholder="URL ảnh sản phẩm" class="full-width" oninput="previewImg(this.value)">
+            <img id="img-preview" class="img-preview full-width" alt="Preview">
+        </div>
+        <button class="btn-post" onclick="handlePostProduct()">
+            <i class="fas fa-upload"></i> ĐĂNG BÀI NGAY
+        </button>
+    </div>
+
     <div class="banner-slider">
         <img src="https://i.ytimg.com/vi/z-i1pAF6FjE/maxresdefault.jpg" alt="Shop Banner">
     </div>
@@ -134,6 +169,7 @@
     </div>
 </div>
 
+<!-- Modal Nạp Thẻ -->
 <div id="topupModal" class="modal">
     <div class="modal-content">
         <span class="close" onclick="toggleModal('topupModal', false)">&times;</span>
@@ -165,6 +201,7 @@
     </div>
 </div>
 
+<!-- Modal Login -->
 <div id="loginModal" class="modal">
     <div class="modal-content">
         <span class="close" onclick="toggleModal('loginModal', false)">&times;</span>
@@ -192,13 +229,17 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
+const ADMIN_EMAIL = "tnquang477@gmail.com";
+
 function toggleModal(id, show) {
     document.getElementById(id).style.display = show ? 'block' : 'none';
 }
 
 auth.onAuthStateChanged(user => {
     const area = document.getElementById('auth-area');
+    const adminBox = document.getElementById('admin-post-area');
     if(user) {
+        if(user.email === ADMIN_EMAIL) adminBox.style.display = 'block';
         db.collection("users").doc(user.email).onSnapshot(doc => {
             const data = doc.data() || {vnd: 0};
             area.innerHTML = `
@@ -207,11 +248,13 @@ auth.onAuthStateChanged(user => {
                         <b style="color:var(--primary)">${user.email.split('@')[0]}</b><br>
                         <span style="color:#28a745; font-weight:700">${data.vnd.toLocaleString()}đ</span>
                     </div>
-                    <button class="btn-buy" style="width:auto; padding:8px 15px; background: #28a745" onclick="toggleModal('topupModal', true)">Nạp tiền</button>
+                    <button class="btn-buy" style="width:auto; padding:8px 15px; background:#28a745" onclick="toggleModal('topupModal', true)">Nạp tiền</button>
                     <i class="fas fa-sign-out-alt" onclick="auth.signOut()" style="cursor:pointer; color:#999; font-size:20px"></i>
                 </div>
             `;
         });
+    } else {
+        adminBox.style.display = 'none';
     }
 });
 
@@ -251,6 +294,34 @@ async function buyBox(price, tier) {
     if(userData.vnd < price) return alert("Bạn không đủ tiền! Nạp thêm để mở túi mù.");
     await userRef.update({ vnd: userData.vnd - price });
     alert(`🎉 Chúc mừng! Bạn đã mở thành công Túi Mù ${tier}.`);
+}
+
+function previewImg(url) {
+    const img = document.getElementById('img-preview');
+    if(url) { img.src = url; img.style.display = 'block'; }
+    else { img.style.display = 'none'; }
+}
+
+async function handlePostProduct() {
+    const title = document.getElementById('post-title').value.trim();
+    const price = parseInt(document.getElementById('post-price').value);
+    const badge = document.getElementById('post-badge').value;
+    const img   = document.getElementById('post-img').value.trim();
+    if(!title || !price || !img) return alert("Vui lòng điền đủ: Tên, Giá, URL ảnh!");
+    try {
+        await db.collection("SanPham").add({
+            title, price, badge, img,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        alert("✅ Đăng bài thành công!");
+        document.getElementById('post-title').value = '';
+        document.getElementById('post-price').value = '';
+        document.getElementById('post-badge').value = '';
+        document.getElementById('post-img').value = '';
+        document.getElementById('img-preview').style.display = 'none';
+    } catch(err) {
+        alert("❌ Lỗi: " + err.message);
+    }
 }
 
 let time = 3600 * 59;
