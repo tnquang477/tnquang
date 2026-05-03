@@ -8,112 +8,116 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        :root { --primary: #007bff; --dark: #1a1a1a; --price: #ff4d4d; --bg: #f5f6fa; }
-        body { font-family: 'Quicksand', sans-serif; background: var(--bg); color: #333; overflow-x: hidden; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        body { background-color: #f8f9fa; color: #333; line-height: 1.5; }
         a { text-decoration: none; color: inherit; }
         ul { list-style: none; }
 
         /* ===== HEADER ===== */
-        .header { display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 10px 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.07); position: sticky; top: 0; z-index: 999; }
-        .logo { font-size: 22px; font-weight: 800; color: var(--primary); display: flex; align-items: center; gap: 8px; }
-        .search-container { flex: 1; margin: 0 20px; }
-        .search-container input { width: 100%; padding: 10px 18px; border-radius: 25px; border: 1px solid #ddd; outline: none; font-family: inherit; font-size: 14px; }
-        .search-container input:focus { border-color: var(--primary); }
+        .header { background: #fff; padding: 10px 20px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 1px 5px rgba(0,0,0,0.07); position: sticky; top: 0; z-index: 1000; }
+        .header-left { display: flex; align-items: center; gap: 20px; }
+        .logo { font-weight: 800; font-size: 20px; color: #111; display: flex; align-items: center; gap: 6px; }
+        .logo i { color: #0d6efd; }
+        .search-box { display: flex; align-items: center; background: #f0f2f5; border-radius: 20px; padding: 5px 15px; width: 280px; }
+        .search-box input { border: none; background: transparent; outline: none; padding: 5px; width: 100%; font-size: 14px; }
+        .search-box i { color: #888; }
 
-        /* ===== USER NAV + DROPDOWN ===== */
-        .user-nav { position: relative; display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 6px 10px; border-radius: 8px; transition: 0.2s; }
-        .user-nav:hover { background: #f0f0f0; }
-        .user-avatar { width: 38px; height: 38px; background: #dce8ff; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--primary); font-size: 16px; }
-        .user-info .username { font-weight: 700; font-size: 13px; display: block; }
-        .user-info .balance { color: #28a745; font-weight: 700; font-size: 13px; }
-        .btn-login { background: var(--primary); color: #fff; border: none; padding: 10px 22px; border-radius: 10px; cursor: pointer; font-weight: 700; font-size: 14px; font-family: inherit; }
+        /* ===== USER ACTION ===== */
+        .user-action { position: relative; display: flex; align-items: center; gap: 15px; cursor: pointer; }
+        .user-balance { font-weight: 700; color: #0d6efd; font-size: 14px; }
+        .avatar-btn { display: flex; align-items: center; gap: 8px; padding: 5px; border-radius: 5px; transition: 0.2s; }
+        .avatar-btn:hover { background: #f0f2f5; }
+        .avatar-circle { width: 35px; height: 35px; background: #e9ecef; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid #ddd; }
+        .avatar-circle i { color: #666; font-size: 18px; }
 
-        .dropdown-menu { position: absolute; top: 110%; right: 0; background: #fff; width: 260px; border-radius: 12px; box-shadow: 0 8px 25px rgba(0,0,0,0.12); opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.3s ease; border: 1px solid #eee; z-index: 9999; }
-        .dropdown-menu.active { opacity: 1; visibility: visible; transform: translateY(0); }
-        .dropdown-header { padding: 15px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #eee; background: #f8f9ff; border-radius: 12px 12px 0 0; }
-        .menu-list { padding: 8px 0; }
-        .menu-list li a { display: flex; align-items: center; gap: 12px; padding: 10px 18px; font-size: 14px; transition: 0.2s; }
-        .menu-list li a:hover { background: #f0f5ff; color: var(--primary); }
-        .menu-list li a i { width: 20px; text-align: center; color: #888; }
-        .menu-list li a:hover i { color: var(--primary); }
-        .menu-logout { border-top: 1px solid #eee; padding-top: 5px; }
-        .menu-logout a:hover { color: #dc3545 !important; background: #fff5f5 !important; }
-        .menu-logout a:hover i { color: #dc3545 !important; }
+        /* ===== DROPDOWN ===== */
+        .dropdown-menu { position: absolute; top: calc(100% + 10px); right: 0; background: #fff; width: 220px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 1px solid #eaeaea; opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.2s ease; z-index: 1001; }
+        .dropdown-menu.show { opacity: 1; visibility: visible; transform: translateY(0); }
+        .dropdown-menu::before { content: ''; position: absolute; top: -6px; right: 20px; width: 12px; height: 12px; background: #fff; transform: rotate(45deg); border-left: 1px solid #eaeaea; border-top: 1px solid #eaeaea; }
+        .dropdown-menu ul li a { display: flex; align-items: center; gap: 12px; padding: 12px 15px; font-size: 14px; border-bottom: 1px solid #f5f5f5; transition: 0.2s; }
+        .dropdown-menu ul li a:hover { background: #f8f9fa; color: #0d6efd; padding-left: 20px; }
+        .dropdown-menu ul li:last-child a { border-bottom: none; color: #dc3545; }
+        .dropdown-menu ul li a i { width: 16px; text-align: center; color: #6c757d; }
+        .dropdown-menu ul li:last-child a i { color: #dc3545; }
 
         /* ===== MARQUEE ===== */
-        .marquee-news { background: #fff; padding: 8px 0; border-bottom: 1px solid #eee; font-size: 13px; font-weight: 500; }
+        .marquee-news { background: #fff; padding: 7px 0; border-bottom: 1px solid #eee; font-size: 13px; font-weight: 500; }
 
         /* ===== CONTAINER ===== */
         .container { max-width: 1200px; margin: 20px auto; padding: 0 15px; }
 
         /* ===== BANNER ===== */
-        .banner-slider { width: 100%; height: 300px; border-radius: 16px; overflow: hidden; box-shadow: 0 8px 20px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        .banner-slider { width: 100%; height: 280px; border-radius: 12px; overflow: hidden; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
         .banner-slider img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* ===== FLASH SALE TITLE ===== */
-        .section-title { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: #fff; padding: 14px 18px; border-radius: 12px; border-left: 5px solid var(--primary); box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
-        .section-title h2 { margin: 0; font-size: 18px; text-transform: uppercase; color: var(--dark); }
-        .countdown { background: var(--price); color: #fff; padding: 5px 14px; border-radius: 6px; font-weight: bold; font-size: 14px; }
+        /* ===== SECTION ===== */
+        .section { background: #fff; border-radius: 10px; padding: 20px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #eee; flex-wrap: wrap; gap: 10px; }
+        .section-title { font-size: 17px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+        .section-title.flash-sale { color: #d63031; }
+        .admin-cat-btns { display: flex; gap: 8px; }
+        .btn-dangbai { background: #2ecc71; color: #fff; border: none; padding: 7px 13px; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 13px; }
+        .btn-sua-dm { background: #f39c12; color: #fff; border: none; padding: 7px 11px; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 13px; }
+        .btn-xoa-dm { background: #e74c3c; color: #fff; border: none; padding: 7px 11px; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 13px; }
+
+        /* ===== FLASH SALE COUNTDOWN ===== */
+        .flash-header { display: flex; align-items: center; gap: 12px; }
+        .countdown { background: #d63031; color: #fff; padding: 4px 12px; border-radius: 6px; font-weight: bold; font-size: 14px; }
 
         /* ===== GRID SẢN PHẨM ===== */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; margin-bottom: 30px; }
-        .item-card { background: #fff; border-radius: 14px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.06); border: 1px solid #eee; transition: 0.3s; position: relative; }
-        .item-card:hover { transform: translateY(-6px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-        .item-card img { width: 100%; height: 170px; object-fit: cover; }
-        .item-card-info { padding: 14px; text-align: center; }
-        .item-card-info h4 { margin: 0 0 6px; font-size: 14px; color: var(--dark); }
-        .item-price { color: var(--price); font-weight: 800; font-size: 18px; margin: 0 0 6px; }
-        .btn-mua { background: var(--primary); color: #fff; border: none; padding: 9px; width: 100%; border-radius: 8px; cursor: pointer; font-weight: 700; font-family: inherit; font-size: 13px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; }
+        .item-card { border: 1px solid #f0f0f0; border-radius: 10px; overflow: hidden; background: #fff; transition: 0.3s; position: relative; }
+        .item-card:hover { box-shadow: 0 5px 15px rgba(0,0,0,0.08); transform: translateY(-3px); }
+        .item-card img { width: 100%; height: 160px; object-fit: cover; }
+        .item-card-info { padding: 12px; text-align: center; }
+        .item-card-info h4 { font-size: 14px; margin: 0 0 5px; color: #222; }
+        .item-price { color: #d63031; font-weight: 800; font-size: 17px; margin: 0 0 5px; }
+        .btn-mua { background: #0d6efd; color: #fff; border: none; padding: 8px; width: 100%; border-radius: 7px; cursor: pointer; font-weight: 700; font-size: 13px; }
+        .btn-mua:hover { background: #0056b3; }
         .admin-controls { position: absolute; top: 6px; right: 6px; display: flex; gap: 4px; z-index: 10; }
         .btn-edit, .btn-delete { background: rgba(0,0,0,0.55); color: #fff; border: none; border-radius: 5px; padding: 4px 8px; cursor: pointer; font-size: 12px; }
         .btn-edit:hover { background: #f39c12; }
         .btn-delete:hover { background: #e74c3c; }
 
-        /* ===== DANH MỤC DẠNG LƯỚI (Gemini style) ===== */
-        .category-section { margin-bottom: 30px; background: #fff; padding: 20px; border-radius: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
-        .category-header-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 5px; }
-        .category-title { font-size: 17px; font-weight: 800; color: var(--dark); }
-        .category-desc { font-size: 13px; color: #999; margin-bottom: 15px; }
-        .admin-cat-btns { display: flex; gap: 8px; }
-        .btn-dangbai { background: #2ecc71; color: #fff; border: none; padding: 7px 13px; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 13px; font-family: inherit; }
-        .btn-sua-dm { background: #f39c12; color: #fff; border: none; padding: 7px 11px; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 13px; font-family: inherit; }
-        .btn-xoa-dm { background: #e74c3c; color: #fff; border: none; padding: 7px 11px; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 13px; font-family: inherit; }
-
         /* ===== ADMIN PANEL ===== */
-        #admin-panel { display: none; background: #fff; padding: 20px; border-radius: 14px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.07); border: 1.5px solid #d0e2ff; }
-        #admin-panel h2 { margin: 0 0 18px; color: var(--primary); font-size: 18px; }
-        .admin-box { border: 1px solid #eee; padding: 14px; border-radius: 10px; margin-bottom: 12px; }
+        #admin-panel { display: none; background: #fff; padding: 20px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); border: 1.5px solid #cfe2ff; }
+        #admin-panel h2 { margin: 0 0 16px; color: #0d6efd; font-size: 18px; }
+        .admin-box { border: 1px solid #eee; padding: 14px; border-radius: 8px; margin-bottom: 12px; }
         .admin-box h3 { margin: 0 0 10px; font-size: 15px; }
-        .btn-tao { background: var(--primary); color: #fff; border: none; padding: 11px 18px; border-radius: 10px; cursor: pointer; font-weight: 700; font-family: inherit; }
-        input, select, textarea { width: 100%; padding: 12px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 10px; font-family: inherit; font-size: 14px; box-sizing: border-box; }
+        .btn-tao { background: #0d6efd; color: #fff; border: none; padding: 11px 18px; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 14px; }
+        input, select, textarea { width: 100%; padding: 11px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; box-sizing: border-box; }
         #post-form-area { display: none; border: 2px solid #2ecc71; padding: 15px; border-radius: 10px; background: #fff; }
         #post-form-area h3 { color: #2ecc71; margin: 0 0 12px; }
-        .khu-vuc-hien-tai { background: #e8f8f5; padding: 10px; border-radius: 8px; margin-bottom: 12px; font-weight: 700; color: #16a085; font-size: 14px; }
+        .khu-vuc-hien-tai { background: #e8f8f5; padding: 10px; border-radius: 7px; margin-bottom: 12px; font-weight: 700; color: #16a085; font-size: 14px; }
         .khu-vuc-hien-tai span { color: #e74c3c; }
 
         /* ===== MODAL SỬA NHANH ===== */
-        #quick-edit-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #fff; padding: 22px; border-radius: 14px; box-shadow: 0 0 30px rgba(0,0,0,0.2); z-index: 9999; display: none; width: 320px; max-height: 90vh; overflow-y: auto; }
+        #quick-edit-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #fff; padding: 22px; border-radius: 12px; box-shadow: 0 0 30px rgba(0,0,0,0.15); z-index: 9999; display: none; width: 320px; max-height: 90vh; overflow-y: auto; }
         #quick-edit-modal h4 { margin: 0 0 14px; font-size: 16px; }
 
         /* ===== MODAL ĐĂNG NHẬP / NẠP THẺ ===== */
-        .modal { display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); }
-        .modal-content { background: #fff; margin: 6% auto; padding: 30px; border-radius: 18px; width: 100%; max-width: 380px; position: relative; box-shadow: 0 15px 40px rgba(0,0,0,0.2); }
-        .modal-header { text-align: center; margin-bottom: 22px; }
-        .close { position: absolute; right: 18px; top: 14px; font-size: 26px; cursor: pointer; color: #aaa; }
+        .modal { display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(3px); }
+        .modal-content { background: #fff; margin: 7% auto; padding: 28px; border-radius: 14px; width: 100%; max-width: 370px; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
+        .modal-header { text-align: center; margin-bottom: 20px; }
+        .close { position: absolute; right: 16px; top: 12px; font-size: 24px; cursor: pointer; color: #aaa; }
 
-        footer { background: var(--dark); color: #fff; padding: 35px 0; margin-top: 50px; text-align: center; font-size: 14px; }
+        /* ===== NÚT ĐĂNG NHẬP ===== */
+        .btn-login { background: #0d6efd; color: #fff; border: none; padding: 9px 20px; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 14px; }
+
+        footer { background: #1a1a1a; color: #fff; padding: 30px 0; margin-top: 40px; text-align: center; font-size: 13px; }
     </style>
 </head>
 <body>
 
-<!-- HEADER MỚI -->
+<!-- HEADER -->
 <header class="header">
-    <a href="#" class="logo"><i class="fas fa-ship"></i> TN QUANG STORE</a>
-    <div class="search-container">
-        <input type="text" placeholder="🔍 Tìm kiếm acc, dịch vụ...">
+    <div class="header-left">
+        <div class="logo"><i class="fas fa-ship"></i> TN QUANG STORE</div>
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="Tìm acc, dịch vụ...">
+        </div>
     </div>
     <div id="auth-area">
         <button class="btn-login" onclick="toggleModal('loginModal', true)">ĐĂNG NHẬP</button>
@@ -132,8 +136,8 @@
     <input type="number" id="edit-gia" placeholder="Giá tiền">
     <input type="text" id="edit-anh" placeholder="Link ảnh">
     <textarea id="edit-list-acc" placeholder="Danh sách Acc: User|Pass (Mỗi dòng 1 acc)" style="height:80px;"></textarea>
-    <button onclick="luuCapNhat()" style="width:100%; background:#2ecc71; color:#fff; border:none; padding:11px; border-radius:8px; font-weight:700; cursor:pointer; font-family:inherit;">LƯU LẠI</button>
-    <button onclick="document.getElementById('quick-edit-modal').style.display='none'" style="width:100%; background:#95a5a6; color:#fff; border:none; padding:11px; border-radius:8px; font-weight:700; margin-top:8px; cursor:pointer; font-family:inherit;">HỦY</button>
+    <button onclick="luuCapNhat()" style="width:100%;background:#2ecc71;color:#fff;border:none;padding:11px;border-radius:8px;font-weight:700;cursor:pointer;">LƯU LẠI</button>
+    <button onclick="document.getElementById('quick-edit-modal').style.display='none'" style="width:100%;background:#95a5a6;color:#fff;border:none;padding:11px;border-radius:8px;font-weight:700;margin-top:8px;cursor:pointer;">HỦY</button>
 </div>
 
 <div class="container">
@@ -157,8 +161,8 @@
             <input type="number" id="post-price" placeholder="Giá tiền (VNĐ)...">
             <input type="text" id="post-img" placeholder="Link ảnh sản phẩm...">
             <textarea id="post-list-acc" placeholder="Nhập danh sách Acc: User|Pass (Mỗi dòng 1 acc)" style="height:80px;"></textarea>
-            <button id="btn-submit-post" onclick="luuBaiViet()" style="background:#2ecc71; color:#fff; padding:12px; width:100%; border:none; border-radius:8px; font-weight:800; font-size:15px; cursor:pointer; font-family:inherit;">ĐĂNG LÊN SHOP</button>
-            <button onclick="dongForm()" style="background:#95a5a6; color:#fff; padding:12px; width:100%; border:none; border-radius:8px; font-weight:700; margin-top:8px; cursor:pointer; font-family:inherit;">HỦY BỎ</button>
+            <button id="btn-submit-post" onclick="luuBaiViet()" style="background:#2ecc71;color:#fff;padding:12px;width:100%;border:none;border-radius:8px;font-weight:800;font-size:15px;cursor:pointer;">ĐĂNG LÊN SHOP</button>
+            <button onclick="dongForm()" style="background:#95a5a6;color:#fff;padding:12px;width:100%;border:none;border-radius:8px;font-weight:700;margin-top:8px;cursor:pointer;">HỦY BỎ</button>
         </div>
     </div>
 
@@ -168,14 +172,16 @@
     </div>
 
     <!-- FLASH SALE -->
-    <div class="section-title">
-        <h2>🔥 FLASH SALE GIỜ VÀNG</h2>
-        <div style="display:flex; align-items:center; gap:10px;">
-            <div class="countdown" id="timer">00:59:59</div>
+    <div class="section">
+        <div class="section-header">
+            <div class="flash-header">
+                <div class="section-title flash-sale">🔥 FLASH SALE GIỜ VÀNG</div>
+                <div class="countdown" id="timer">00:59:59</div>
+            </div>
             <button id="btn-flash-post" style="display:none;" class="btn-dangbai" onclick="moFormDangBai('FLASH SALE')">➕ Đăng bài</button>
         </div>
+        <div class="grid" id="grid-flash-sale"></div>
     </div>
-    <div class="grid" id="grid-flash-sale"></div>
 
     <!-- TIÊU ĐỀ ĐỘNG TỪ FIRESTORE -->
     <div id="main-shop-display"></div>
@@ -187,8 +193,8 @@
     <div class="modal-content">
         <span class="close" onclick="toggleModal('topupModal', false)">&times;</span>
         <div class="modal-header">
-            <h2 style="color:var(--primary)">🎫 NẠP THẺ CÀO</h2>
-            <p style="color:#888; font-size:13px;">Hệ thống duyệt thẻ tự động từ 30s - 2p</p>
+            <h2 style="color:#0d6efd;">🎫 NẠP THẺ CÀO</h2>
+            <p style="color:#888;font-size:13px;">Hệ thống duyệt thẻ tự động 30s - 2p</p>
         </div>
         <select id="cardType">
             <option value="Viettel">Viettel</option>
@@ -249,23 +255,14 @@ function toggleModal(id, show) {
     document.getElementById(id).style.display = show ? 'block' : 'none';
 }
 
-// ===== DROPDOWN MENU (Gemini style) =====
-const userBtn = document.getElementById('auth-area');
-document.addEventListener('click', function(e) {
-    const menu = document.getElementById('userDropdown');
-    if(menu && !menu.contains(e.target) && !userBtn.contains(e.target)) {
-        menu.classList.remove('active');
-    }
-});
-
 // ===== RENDER CARD =====
 function renderCard(spDoc) {
     const sp = spDoc.data();
     const id = spDoc.id;
     const soLuong = sp.listAcc ? sp.listAcc.length : 0;
     const txtSoLuong = soLuong > 0
-        ? `<span style="color:#28a745; font-weight:700; font-size:13px;">Còn lại: ${soLuong} acc</span>`
-        : `<span style="color:#dc3545; font-weight:700; font-size:13px;">HẾT HÀNG</span>`;
+        ? `<span style="color:#28a745;font-weight:700;font-size:13px;">Còn lại: ${soLuong} acc</span>`
+        : `<span style="color:#dc3545;font-weight:700;font-size:13px;">HẾT HÀNG</span>`;
     const adminControls = isAdmin ? `
         <div class="admin-controls">
             <button class="btn-edit" onclick="moBangSua('${id}','${sp.ten.replace(/'/g,"\\'")}',${sp.gia},'${sp.anh}')">✏️</button>
@@ -274,11 +271,11 @@ function renderCard(spDoc) {
     return `
         <div class="item-card">
             ${adminControls}
-            <img src="${sp.anh}" onerror="this.src='https://via.placeholder.com/260x170?text=No+Image'">
+            <img src="${sp.anh}" onerror="this.src='https://via.placeholder.com/200x160?text=No+Image'">
             <div class="item-card-info">
                 <h4>${sp.ten}</h4>
                 <p class="item-price">${Number(sp.gia).toLocaleString()} VNĐ</p>
-                <p style="margin:0 0 10px;">${txtSoLuong}</p>
+                <p style="margin:0 0 8px;">${txtSoLuong}</p>
                 <button class="btn-mua">MUA NGAY</button>
             </div>
         </div>`;
@@ -298,42 +295,33 @@ auth.onAuthStateChanged(user => {
             const data = doc.data() || {vnd: 0};
             const ten = user.email.split('@')[0];
             const bal = data.vnd.toLocaleString();
+
             area.innerHTML = `
-                <div class="user-nav" id="userBtn">
-                    <div class="user-avatar"><i class="fas fa-user"></i></div>
-                    <div class="user-info">
-                        <span class="username">${ten}</span>
-                        <span class="balance">${bal}đ</span>
+                <div class="user-action" id="userActionArea">
+                    <div class="user-balance">${bal} VNĐ</div>
+                    <div class="avatar-btn">
+                        <div class="avatar-circle"><i class="fas fa-user"></i></div>
+                        <i class="fas fa-chevron-down" style="font-size:12px;color:#666;"></i>
                     </div>
-                    <div class="dropdown-menu" id="userDropdown">
-                        <div class="dropdown-header">
-                            <div class="user-avatar"><i class="fas fa-user"></i></div>
-                            <div class="user-info">
-                                <span class="username">${ten}</span>
-                                <span class="balance">${bal}đ</span>
-                            </div>
-                        </div>
-                        <ul class="menu-list">
-                            <li><a href="#"><i class="fas fa-user-circle"></i> Thông tin cá nhân</a></li>
-                            <li><a href="#"><i class="fas fa-box-open"></i> Lịch sử mua hàng</a></li>
-                            <li><a href="#"><i class="fas fa-money-bill-wave"></i> Nạp tiền</a></li>
+                    <div class="dropdown-menu" id="dropdownMenu">
+                        <ul>
+                            <li><a href="#"><i class="fas fa-user-circle"></i> ${ten}</a></li>
+                            <li><a href="#"><i class="fas fa-history"></i> Lịch sử mua hàng</a></li>
+                            <li><a href="#"><i class="fas fa-wallet"></i> Biến động số dư</a></li>
                             <li><a href="#" onclick="toggleModal('topupModal',true)"><i class="fas fa-credit-card"></i> Nạp thẻ cào</a></li>
-                        </ul>
-                        <ul class="menu-list menu-logout">
                             <li><a href="#" onclick="auth.signOut()"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a></li>
                         </ul>
                     </div>
                 </div>`;
 
-            // Gắn sự kiện dropdown sau khi render
-            const uBtn = document.getElementById('userBtn');
-            const uMenu = document.getElementById('userDropdown');
-            uBtn.addEventListener('click', function(e) {
+            // Dropdown logic (Gemini style)
+            const uArea = document.getElementById('userActionArea');
+            const uMenu = document.getElementById('dropdownMenu');
+            uArea.addEventListener('click', function(e) {
                 e.stopPropagation();
-                uMenu.classList.toggle('active');
+                uMenu.classList.toggle('show');
             });
-            uMenu.addEventListener('click', function(e) { e.stopPropagation(); });
-            document.addEventListener('click', function() { uMenu.classList.remove('active'); });
+            document.addEventListener('click', function() { uMenu.classList.remove('show'); });
         });
     } else {
         isAdmin = false;
@@ -397,11 +385,11 @@ function hienThiTrangChu() {
                     <button class="btn-xoa-dm" onclick="xoaTieuDe('${doc.id}')">🗑️</button>
                 </div>` : '';
             main.innerHTML += `
-                <div class="category-section">
-                    <div class="category-header-row">
+                <div class="section">
+                    <div class="section-header">
                         <div>
-                            <div class="category-title">🔥 ${tenDM.toUpperCase()}</div>
-                            <div class="category-desc">Nhấn MUA NGAY để xem chi tiết</div>
+                            <div class="section-title">🔥 ${tenDM.toUpperCase()}</div>
+                            <div style="font-size:12px;color:#888;margin-top:3px;">Nhấn MUA NGAY để xem chi tiết</div>
                         </div>
                         ${nutAdmin}
                     </div>
