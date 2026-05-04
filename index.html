@@ -3,198 +3,245 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TN QUANG STORE - Thế Giới Blox Fruit</title>
+    <title>TN QUANG STORE</title>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
-        body { background-color: #f4f6f9; color: #333; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+        body { background: #f4f6f9; color: #333; }
         a { text-decoration: none; color: inherit; }
         ul { list-style: none; }
 
-        /* ===== HEADER DARK MODE (CHỈ SỬA PHẦN NÀY) ===== */
-        .header { 
-            background: #111827; /* Màu nền tối chuẩn video */
-            padding: 12px 5%; 
-            display: flex; 
-            align-items: center; 
-            justify-content: space-between; 
-            position: sticky; 
-            top: 0; 
-            z-index: 9999; 
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-            color: #fff;
-        }
-        .logo-container { display: flex; align-items: center; gap: 10px; }
-        .logo-img { width: 35px; height: 35px; background: #3b82f6; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 900; font-size: 14px; }
-        .logo-text { font-size: 16px; font-weight: 800; color: #fff; display: flex; flex-direction: column; line-height: 1.1; }
-        .logo-text span { color: #3b82f6; font-size: 12px; }
-        
-        .search-container { flex: 0 1 400px; margin: 0 20px; position: relative; }
-        .search-container input { width: 100%; padding: 9px 15px 9px 40px; border-radius: 6px; border: 1px solid #374151; outline: none; background: #1f2937; font-size: 13px; color: #fff; }
-        .search-container i { position: absolute; left: 15px; top: 11px; color: #9ca3af; }
-        
-        .user-area { display: flex; align-items: center; gap: 15px; }
-        .balance-box { display: flex; flex-direction: column; align-items: flex-end; line-height: 1.2; }
-        .balance-amount { font-weight: 700; color: #fff; font-size: 15px; }
-        .balance-currency { font-size: 11px; color: #9ca3af; font-weight: 600; }
-        
-        .avatar-trigger { display: flex; align-items: center; gap: 8px; cursor: pointer; position: relative; padding: 5px; }
-        .avatar-icon { width: 30px; height: 30px; border-radius: 50%; background: #374151; display: flex; align-items: center; justify-content: center; color: #fff; border: 1px solid #4b5563; }
-        .avatar-trigger i.fa-chevron-down { font-size: 10px; color: #9ca3af; }
+        /* ===== HEADER ===== */
+        .header { background: #fff; padding: 10px 20px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 9999; box-shadow: 0 1px 4px rgba(0,0,0,0.08); gap: 12px; }
+        .logo-area { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+        .logo-box { width: 36px; height: 36px; background: #1a56db; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 800; font-size: 12px; }
+        .logo-text { font-size: 13px; font-weight: 800; line-height: 1.2; }
+        .logo-text span { color: #1a56db; display: block; }
+        .btn-naptien { background: #e53e3e; color: #fff; border: none; padding: 7px 14px; border-radius: 6px; font-weight: 700; font-size: 13px; cursor: pointer; white-space: nowrap; flex-shrink: 0; }
+        .search-wrap { flex: 1; max-width: 400px; position: relative; }
+        .search-wrap input { width: 100%; padding: 9px 15px 9px 38px; border: 1px solid #e2e8f0; border-radius: 6px; background: #f8fafc; font-size: 14px; outline: none; }
+        .search-wrap i { position: absolute; left: 13px; top: 11px; color: #a0aec0; font-size: 14px; }
 
-        /* MENU DROPDOWN CHUẨN TN QUANG STORE */
-        .dropdown-content { 
-            position: absolute; top: calc(100% + 10px); right: 0; width: 200px; 
-            background: #1f2937; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); 
-            display: none; flex-direction: column; overflow: hidden; border: 1px solid #374151; 
-            z-index: 10000; 
-        }
-        .dropdown-content.active { display: flex; }
-        .dropdown-header { padding: 10px 15px; border-bottom: 1px solid #374151; display: flex; align-items: center; gap: 10px; background: #262f3f; }
-        .dropdown-header i { color: #9ca3af; font-size: 16px; }
-        .dropdown-header span { font-size: 13px; font-weight: 600; color: #e5e7eb; }
-        
-        .dropdown-content a { padding: 10px 15px; font-size: 13px; display: flex; align-items: center; gap: 12px; color: #e5e7eb; transition: 0.2s; }
-        .dropdown-content a:hover { background: #374151; color: #3b82f6; }
-        
-        /* Icon màu chuẩn video */
-        .dropdown-content a i { width: 16px; text-align: center; color: #9ca3af; font-size: 14px; }
-        .dropdown-content a .fa-credit-card { color: #f87171; }
-        .dropdown-content a.logout-btn i { color: #ef4444; }
-        .dropdown-content a.logout-btn { color: #ef4444; }
-        .divider { height: 1px; background: #374151; margin: 4px 0; }
-        
-        .btn-login { background: #3b82f6; color: #fff; border: none; padding: 8px 18px; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 13px; }
-        @media (max-width: 768px) { .search-container { display: none; } .balance-box { display: none; } }
+        /* ===== USER BALANCE + DROPDOWN ===== */
+        .user-right { position: relative; flex-shrink: 0; }
+        .balance-trigger { display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 6px 10px; border: 1px solid #e2e8f0; border-radius: 6px; background: #f8fafc; }
+        .balance-trigger i.fa-wallet { color: #1a56db; }
+        .balance-trigger .bal-text { font-weight: 700; font-size: 14px; color: #1a202c; }
+        .balance-trigger i.fa-chevron-down { font-size: 11px; color: #718096; }
+        .btn-login { background: #1a56db; color: #fff; border: none; padding: 9px 18px; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 14px; }
 
-        /* GIỮ NGUYÊN CÁC PHẦN CÒN LẠI */
-        .marquee-news { background: #fff; padding: 7px 0; border-bottom: 1px solid #eee; font-size: 13px; font-weight: 500; }
-        .container { max-width: 1200px; margin: 20px auto; padding: 0 15px; }
-        .banner-slider { width: 100%; height: 280px; border-radius: 12px; overflow: hidden; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
-        .banner-slider img { width: 100%; height: 100%; object-fit: cover; }
-        .section { background: #fff; border-radius: 10px; padding: 20px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
-        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #eee; flex-wrap: wrap; gap: 10px; }
-        .section-title { font-size: 17px; font-weight: 700; }
-        .section-title.flash-sale { color: #d63031; }
-        .flash-header { display: flex; align-items: center; gap: 12px; }
-        .countdown { background: #d63031; color: #fff; padding: 4px 12px; border-radius: 6px; font-weight: bold; font-size: 14px; }
-        .admin-cat-btns { display: flex; gap: 8px; }
-        .btn-dangbai { background: #2ecc71; color: #fff; border: none; padding: 7px 13px; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 13px; }
-        .btn-sua-dm { background: #f39c12; color: #fff; border: none; padding: 7px 11px; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 13px; }
-        .btn-xoa-dm { background: #e74c3c; color: #fff; border: none; padding: 7px 11px; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 13px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; }
-        .item-card { border: 1px solid #f0f0f0; border-radius: 10px; overflow: hidden; background: #fff; transition: 0.3s; position: relative; }
-        .item-card:hover { box-shadow: 0 5px 15px rgba(0,0,0,0.08); transform: translateY(-3px); }
-        .item-card img { width: 100%; height: 160px; object-fit: cover; }
-        .item-card-info { padding: 12px; text-align: center; }
-        .item-card-info h4 { font-size: 14px; margin: 0 0 5px; color: #222; }
-        .item-price { color: #d63031; font-weight: 800; font-size: 17px; margin: 0 0 5px; }
-        .btn-mua { background: #007bff; color: #fff; border: none; padding: 8px; width: 100%; border-radius: 7px; cursor: pointer; font-weight: 700; font-size: 13px; }
-        .admin-controls { position: absolute; top: 6px; right: 6px; display: flex; gap: 4px; z-index: 10; }
-        .btn-edit, .btn-delete { background: rgba(0,0,0,0.55); color: #fff; border: none; border-radius: 5px; padding: 4px 8px; cursor: pointer; font-size: 12px; }
+        .dropdown-menu { position: absolute; top: calc(100% + 8px); right: 0; background: #fff; width: 220px; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.12); border: 1px solid #e2e8f0; display: none; z-index: 10000; overflow: hidden; }
+        .dropdown-menu.show { display: block; }
+        .drop-user-info { padding: 14px 15px; border-bottom: 1px solid #f0f0f0; background: #f8fafc; }
+        .drop-user-info .d-name { font-weight: 700; font-size: 14px; color: #1a202c; }
+        .drop-user-info .d-bal { color: #2ecc71; font-weight: 700; font-size: 14px; }
+        .drop-links a { display: flex; align-items: center; gap: 11px; padding: 11px 15px; font-size: 14px; color: #4a5568; border-bottom: 1px solid #f5f5f5; transition: 0.15s; }
+        .drop-links a:hover { background: #f7fafc; color: #1a56db; }
+        .drop-links a i { width: 16px; text-align: center; color: #a0aec0; font-size: 14px; }
+        .drop-links a:hover i { color: #1a56db; }
+        .drop-links a.logout { color: #e53e3e; border-bottom: none; }
+        .drop-links a.logout i { color: #e53e3e; }
+        .drop-links a.logout:hover { background: #fff5f5; }
+
+        /* ===== MARQUEE ===== */
+        .marquee-bar { background: #fff; padding: 7px 0; border-bottom: 1px solid #eee; font-size: 13px; color: #555; }
+
+        /* ===== CONTAINER ===== */
+        .container { max-width: 1100px; margin: 0 auto; padding: 20px 15px; }
+
+        /* ===== BANNER ===== */
+        .banner { width: 100%; height: 260px; border-radius: 12px; overflow: hidden; margin-bottom: 24px; }
+        .banner img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* ===== FLASH SALE ===== */
+        .flash-box { background: #fff; border-radius: 10px; padding: 18px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .flash-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; flex-wrap: wrap; gap: 10px; }
+        .flash-title { display: flex; align-items: center; gap: 8px; font-size: 18px; font-weight: 800; color: #e53e3e; }
+        .flash-right { display: flex; align-items: center; gap: 8px; }
+        .timer-blocks { display: flex; gap: 4px; }
+        .timer-block { background: #1a202c; color: #fff; padding: 4px 8px; border-radius: 4px; font-weight: 700; font-size: 14px; min-width: 30px; text-align: center; }
+
+        /* ===== SECTION ===== */
+        .section { background: #fff; border-radius: 10px; padding: 18px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .section-head { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; }
+        .section-title { font-size: 16px; font-weight: 800; color: #1a202c; }
+        .section-desc { font-size: 13px; color: #888; margin-top: 2px; }
+        .admin-cat-btns { display: flex; gap: 6px; }
+        .btn-dangbai { background: #2ecc71; color: #fff; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 12px; }
+        .btn-sua-dm { background: #f39c12; color: #fff; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 12px; }
+        .btn-xoa-dm { background: #e53e3e; color: #fff; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 12px; }
+
+        /* ===== GRID SẢN PHẨM DẠNG POSTER ===== */
+        .grid-poster { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 14px; }
+        .card-poster { border-radius: 10px; overflow: hidden; background: #fff; border: 1px solid #f0f0f0; transition: 0.25s; position: relative; cursor: pointer; }
+        .card-poster:hover { transform: translateY(-4px); box-shadow: 0 6px 20px rgba(0,0,0,0.1); }
+        .card-poster .poster-img { width: 100%; aspect-ratio: 3/4; object-fit: cover; display: block; background: #e9ecef; }
+        .card-poster .poster-name { padding: 8px; font-size: 12px; font-weight: 600; color: #2d3748; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .card-poster .poster-price { padding: 0 8px 8px; font-size: 13px; font-weight: 800; color: #e53e3e; text-align: center; }
+        .card-poster .poster-stock { padding: 0 8px 8px; font-size: 11px; text-align: center; font-weight: 600; }
+        .admin-controls { position: absolute; top: 5px; right: 5px; display: flex; gap: 3px; z-index: 5; }
+        .btn-edit, .btn-delete { background: rgba(0,0,0,0.6); color: #fff; border: none; border-radius: 4px; padding: 3px 7px; cursor: pointer; font-size: 11px; }
         .btn-edit:hover { background: #f39c12; }
-        .btn-delete:hover { background: #e74c3c; }
-        #admin-panel { display: none; background: #fff; padding: 20px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); border: 1.5px solid #cfe2ff; }
-        #admin-panel h2 { margin: 0 0 16px; color: #007bff; font-size: 18px; }
-        .admin-box { border: 1px solid #eee; padding: 14px; border-radius: 8px; margin-bottom: 12px; }
-        .admin-box h3 { margin: 0 0 10px; font-size: 15px; }
-        .btn-tao { background: #007bff; color: #fff; border: none; padding: 11px 18px; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 14px; }
-        input, select, textarea { width: 100%; padding: 11px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; box-sizing: border-box; }
-        #post-form-area { display: none; border: 2px solid #2ecc71; padding: 15px; border-radius: 10px; background: #fff; }
-        #post-form-area h3 { color: #2ecc71; margin: 0 0 12px; }
-        .khu-vuc-hien-tai { background: #e8f8f5; padding: 10px; border-radius: 7px; margin-bottom: 12px; font-weight: 700; color: #16a085; font-size: 14px; }
-        .khu-vuc-hien-tai span { color: #e74c3c; }
-        #quick-edit-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #fff; padding: 22px; border-radius: 12px; box-shadow: 0 0 30px rgba(0,0,0,0.15); z-index: 9999; display: none; width: 320px; max-height: 90vh; overflow-y: auto; }
-        #quick-edit-modal h4 { margin: 0 0 14px; font-size: 16px; }
-        .modal { display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(3px); }
-        .modal-content { background: #fff; margin: 7% auto; padding: 28px; border-radius: 14px; width: 100%; max-width: 370px; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
-        .modal-header { text-align: center; margin-bottom: 20px; }
-        .close { position: absolute; right: 16px; top: 12px; font-size: 24px; cursor: pointer; color: #aaa; }
-        footer { background: #1a1a1a; color: #fff; padding: 30px 0; margin-top: 40px; text-align: center; font-size: 13px; }
+        .btn-delete:hover { background: #e53e3e; }
+
+        /* ===== ADMIN PANEL ===== */
+        #admin-panel { display: none; background: #fff; padding: 18px; border-radius: 10px; margin-bottom: 20px; border: 2px solid #bee3f8; }
+        #admin-panel h2 { margin: 0 0 14px; color: #1a56db; font-size: 16px; }
+        .admin-box { border: 1px solid #e2e8f0; padding: 14px; border-radius: 8px; margin-bottom: 12px; }
+        .admin-box h3 { margin: 0 0 10px; font-size: 14px; }
+        .btn-tao { background: #1a56db; color: #fff; border: none; padding: 10px 16px; border-radius: 7px; cursor: pointer; font-weight: 700; font-size: 13px; }
+        input, select, textarea { width: 100%; padding: 10px 12px; margin-bottom: 10px; border: 1px solid #e2e8f0; border-radius: 7px; font-size: 14px; box-sizing: border-box; outline: none; }
+        input:focus, select:focus, textarea:focus { border-color: #1a56db; }
+        #post-form-area { display: none; border: 2px solid #2ecc71; padding: 14px; border-radius: 8px; background: #f0fff4; }
+        #post-form-area h3 { color: #27ae60; margin: 0 0 10px; font-size: 15px; }
+        .khu-vuc-hien-tai { background: #e8f8f5; padding: 9px 12px; border-radius: 6px; margin-bottom: 10px; font-weight: 700; color: #16a085; font-size: 13px; }
+        .khu-vuc-hien-tai span { color: #e53e3e; }
+
+        /* ===== MODAL SỬA NHANH ===== */
+        #quick-edit-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%); background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 0 30px rgba(0,0,0,0.15); z-index: 99999; display: none; width: 310px; max-height: 90vh; overflow-y: auto; }
+        #quick-edit-modal h4 { margin: 0 0 14px; font-size: 15px; }
+
+        /* ===== MODAL ===== */
+        .modal { display: none; position: fixed; z-index: 99998; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.45); backdrop-filter: blur(3px); }
+        .modal-box { background: #fff; margin: 8% auto; padding: 28px; border-radius: 14px; width: 90%; max-width: 360px; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
+        .modal-box h2 { margin: 0 0 5px; font-size: 20px; }
+        .modal-box p { color: #888; font-size: 13px; margin-bottom: 18px; }
+        .modal-close { position: absolute; right: 15px; top: 13px; font-size: 22px; cursor: pointer; color: #aaa; background: none; border: none; }
+
+        /* ===== POPULAR PRODUCTS (dạng list) ===== */
+        .popular-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .popular-item { display: flex; align-items: center; gap: 10px; padding: 10px; border: 1px solid #f0f0f0; border-radius: 8px; background: #fafafa; cursor: pointer; transition: 0.2s; }
+        .popular-item:hover { border-color: #1a56db; background: #f0f4ff; }
+        .popular-item img { width: 36px; height: 36px; border-radius: 8px; object-fit: cover; flex-shrink: 0; }
+        .popular-item .p-info { flex: 1; min-width: 0; }
+        .popular-item .p-name { font-size: 12px; font-weight: 700; color: #2d3748; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .popular-item .p-price { font-size: 12px; color: #e53e3e; font-weight: 700; }
+
+        /* ===== FOOTER ===== */
+        footer { background: #1a202c; color: #a0aec0; padding: 30px 20px; margin-top: 30px; }
+        .footer-inner { max-width: 1100px; margin: auto; }
+        .footer-logo { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+        .footer-logo .f-icon { color: #1a56db; font-size: 18px; }
+        .footer-logo .f-name { color: #fff; font-weight: 800; font-size: 15px; }
+        .footer-desc { font-size: 13px; margin-bottom: 6px; }
+        .footer-online { font-size: 12px; display: flex; gap: 10px; align-items: center; margin-bottom: 20px; }
+        .dot-online { width: 8px; height: 8px; background: #2ecc71; border-radius: 50%; display: inline-block; }
+        .footer-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+        .footer-col h4 { color: #fff; font-size: 13px; font-weight: 700; margin-bottom: 10px; }
+        .footer-col a { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #a0aec0; margin-bottom: 7px; transition: 0.2s; }
+        .footer-col a:hover { color: #fff; }
+        .footer-col a i { width: 14px; font-size: 12px; }
+        .footer-bottom { border-top: 1px solid #2d3748; padding-top: 15px; font-size: 12px; text-align: center; }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 600px) {
+            .search-wrap { display: none; }
+            .grid-poster { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+            .popular-grid { grid-template-columns: 1fr; }
+            .footer-cols { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
 
+<!-- HEADER -->
 <header class="header">
-    <div class="logo-container">
-        <div class="logo-img">TN</div>
+    <div class="logo-area">
+        <div class="logo-box">TN</div>
         <div class="logo-text">TN QUANG <span>STORE</span></div>
     </div>
-    <div class="search-container">
+
+    <button class="btn-naptien" onclick="toggleModal('topupModal', true)">Nạp Tiền</button>
+
+    <div class="search-wrap">
         <i class="fas fa-search"></i>
-        <input type="text" placeholder="Tìm acc, dịch vụ...">
+        <input type="text" placeholder="Tìm game, sản phẩm...">
     </div>
-    <div id="auth-area">
-        <button class="btn-login" onclick="toggleModal('loginModal', true)">ĐĂNG NHẬP</button>
+
+    <div class="user-right" id="auth-area">
+        <button class="btn-login" onclick="toggleModal('loginModal', true)">Đăng nhập</button>
     </div>
 </header>
 
-<div class="marquee-news">
+<div class="marquee-bar">
     <marquee>🔥 Chào mừng đến với TN QUANG STORE - Hệ thống bán Acc Blox Fruit tự động, uy tín hàng đầu Việt Nam! 🚀</marquee>
 </div>
 
+<!-- MODAL SỬA NHANH -->
 <div id="quick-edit-modal">
-    <h4>📝 Chỉnh sửa bài đăng</h4>
+    <h4>📝 Chỉnh sửa sản phẩm</h4>
     <input type="hidden" id="edit-id">
     <input type="text" id="edit-ten" placeholder="Tên sản phẩm">
     <input type="number" id="edit-gia" placeholder="Giá tiền">
     <input type="text" id="edit-anh" placeholder="Link ảnh">
-    <textarea id="edit-list-acc" placeholder="Danh sách Acc: User|Pass (Mỗi dòng 1 acc)" style="height:80px;"></textarea>
-    <button onclick="luuCapNhat()" style="width:100%;background:#2ecc71;color:#fff;border:none;padding:11px;border-radius:8px;font-weight:700;cursor:pointer;">LƯU LẠI</button>
-    <button onclick="document.getElementById('quick-edit-modal').style.display='none'" style="width:100%;background:#95a5a6;color:#fff;border:none;padding:11px;border-radius:8px;font-weight:700;margin-top:8px;cursor:pointer;">HỦY</button>
+    <textarea id="edit-list-acc" placeholder="Danh sách Acc: User|Pass (Mỗi dòng 1 acc)" style="height:75px;"></textarea>
+    <button onclick="luuCapNhat()" style="width:100%;background:#2ecc71;color:#fff;border:none;padding:10px;border-radius:7px;font-weight:700;cursor:pointer;margin-bottom:8px;">LƯU LẠI</button>
+    <button onclick="document.getElementById('quick-edit-modal').style.display='none'" style="width:100%;background:#718096;color:#fff;border:none;padding:10px;border-radius:7px;font-weight:700;cursor:pointer;">HỦY</button>
 </div>
 
 <div class="container">
+
+    <!-- ADMIN PANEL -->
     <div id="admin-panel">
         <h2>🛠️ Quản Lý Cửa Hàng</h2>
         <div class="admin-box">
-            <h3>➕ Tạo Tiêu Đề Lớn Mới</h3>
+            <h3>➕ Tạo Danh Mục Mới</h3>
             <input type="text" id="new-category-name" placeholder="Ví dụ: Acc VIP, Cày Thuê, Túi Mù...">
-            <button class="btn-tao" onclick="taoTieuDeMoi()">TẠO TIÊU ĐỀ</button>
+            <button class="btn-tao" onclick="taoTieuDeMoi()">TẠO DANH MỤC</button>
         </div>
         <div id="post-form-area">
-            <h3 id="form-title">Thêm Sản Phẩm Mới</h3>
-            <div class="khu-vuc-hien-tai">
-                📌 Đang đăng bài vào mục: <span id="display-category-name">VUI LÒNG CHỌN KHU VỰC</span>
-            </div>
+            <h3 id="form-title">Thêm Sản Phẩm</h3>
+            <div class="khu-vuc-hien-tai">📌 Đang đăng vào: <span id="display-category-name">CHƯA CHỌN</span></div>
             <input type="hidden" id="post-category">
             <input type="hidden" id="edit-product-id">
             <input type="text" id="post-title" placeholder="Tên sản phẩm...">
             <input type="number" id="post-price" placeholder="Giá tiền (VNĐ)...">
             <input type="text" id="post-img" placeholder="Link ảnh sản phẩm...">
-            <textarea id="post-list-acc" placeholder="Nhập danh sách Acc: User|Pass (Mỗi dòng 1 acc)" style="height:80px;"></textarea>
-            <button id="btn-submit-post" onclick="luuBaiViet()" style="background:#2ecc71;color:#fff;padding:12px;width:100%;border:none;border-radius:8px;font-weight:800;font-size:15px;cursor:pointer;">ĐĂNG LÊN SHOP</button>
-            <button onclick="dongForm()" style="background:#95a5a6;color:#fff;padding:12px;width:100%;border:none;border-radius:8px;font-weight:700;margin-top:8px;cursor:pointer;">HỦY BỎ</button>
+            <textarea id="post-list-acc" placeholder="Danh sách Acc: User|Pass (Mỗi dòng 1 acc)" style="height:75px;"></textarea>
+            <button id="btn-submit-post" onclick="luuBaiViet()" style="background:#2ecc71;color:#fff;padding:11px;width:100%;border:none;border-radius:7px;font-weight:800;font-size:14px;cursor:pointer;margin-bottom:8px;">ĐĂNG LÊN SHOP</button>
+            <button onclick="dongForm()" style="background:#718096;color:#fff;padding:11px;width:100%;border:none;border-radius:7px;font-weight:700;cursor:pointer;">HỦY BỎ</button>
         </div>
     </div>
 
-    <div class="banner-slider">
+    <!-- BANNER -->
+    <div class="banner">
         <img src="https://i.ytimg.com/vi/z-i1pAF6FjE/maxresdefault.jpg" alt="Banner">
     </div>
 
-    <div class="section">
-        <div class="section-header">
-            <div class="flash-header">
-                <div class="section-title flash-sale">🔥 FLASH SALE GIỜ VÀNG</div>
-                <div class="countdown" id="timer">00:59:59</div>
+    <!-- FLASH SALE -->
+    <div class="flash-box">
+        <div class="flash-head">
+            <div class="flash-title">
+                <i class="fas fa-bolt"></i> FLASH SALE
             </div>
-            <button id="btn-flash-post" style="display:none;" class="btn-dangbai" onclick="moFormDangBai('FLASH SALE')">➕ Đăng bài</button>
+            <div class="flash-right">
+                <div class="timer-blocks">
+                    <div class="timer-block" id="t-h">00</div>
+                    <div class="timer-block" id="t-m">59</div>
+                    <div class="timer-block" id="t-s">59</div>
+                </div>
+                <button id="btn-flash-post" style="display:none;" class="btn-dangbai" onclick="moFormDangBai('FLASH SALE')">➕ Đăng</button>
+            </div>
         </div>
-        <div class="grid" id="grid-flash-sale"></div>
+        <div class="grid-poster" id="grid-flash-sale">
+            <div style="grid-column:1/-1;text-align:center;padding:20px;color:#aaa;font-size:13px;">Chưa có sản phẩm flash sale</div>
+        </div>
     </div>
+
+    <!-- DANH MỤC ĐỘNG -->
     <div id="main-shop-display"></div>
+
 </div>
 
+<!-- Modal Nạp Thẻ -->
 <div id="topupModal" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="toggleModal('topupModal', false)">&times;</span>
-        <div class="modal-header">
-            <h2 style="color:#007bff;">🎫 NẠP THẺ CÀO</h2>
-            <p style="color:#888;font-size:13px;">Hệ thống duyệt thẻ tự động 30s - 2p</p>
-        </div>
+    <div class="modal-box">
+        <button class="modal-close" onclick="toggleModal('topupModal',false)">&times;</button>
+        <h2>🎫 Nạp Thẻ Cào</h2>
+        <p>Hệ thống duyệt thẻ tự động 30s - 2p</p>
         <select id="cardType">
             <option value="Viettel">Viettel</option>
             <option value="Vinaphone">Vinaphone</option>
@@ -202,35 +249,63 @@
             <option value="Garena">Garena (Khuyên dùng)</option>
             <option value="Zing">Zing</option>
             <option value="Vcoin">Vcoin</option>
-            <option value="Gate">Gate</option>
         </select>
         <select id="cardValue">
             <option value="10000">10,000đ</option>
             <option value="20000">20,000đ</option>
             <option value="50000">50,000đ</option>
             <option value="100000">100,000đ</option>
-            <option value="200000">20,000đ</option>
+            <option value="200000">200,000đ</option>
             <option value="500000">500,000đ</option>
             <option value="1000000">1,000,000đ</option>
         </select>
-        <input type="text" id="pin" placeholder="Mã số thẻ (PIN)">
+        <input type="text" id="pin" placeholder="Mã PIN thẻ cào">
         <input type="text" id="seri" placeholder="Số Seri thẻ">
         <button class="btn-tao" style="width:100%;" onclick="submitCard()">GỬI THẺ NGAY</button>
     </div>
 </div>
 
+<!-- Modal Login -->
 <div id="loginModal" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="toggleModal('loginModal', false)">&times;</span>
-        <div class="modal-header"><h2>🔐 ĐĂNG NHẬP</h2></div>
-        <input type="email" id="email" placeholder="Email đăng nhập">
+    <div class="modal-box">
+        <button class="modal-close" onclick="toggleModal('loginModal',false)">&times;</button>
+        <h2>Đăng nhập</h2>
+        <p>Chào mừng trở lại TN QUANG STORE</p>
+        <input type="email" id="email" placeholder="Địa chỉ email">
         <input type="password" id="pass" placeholder="Mật khẩu">
         <button class="btn-tao" style="width:100%;" onclick="authAction()">XÁC NHẬN</button>
     </div>
 </div>
 
+<!-- FOOTER -->
 <footer>
-    <p>&copy; 2026 TN QUANG STORE. All rights reserved.</p>
+    <div class="footer-inner">
+        <div class="footer-logo">
+            <i class="fas fa-ship f-icon"></i>
+            <span class="f-name">TN QUANG STORE</span>
+        </div>
+        <div class="footer-desc">Shop bán Acc Blox Fruit, Dịch vụ PREMIUM ... an toàn - uy tín - chất lượng</div>
+        <div class="footer-online">
+            <span>⏰ Hoạt động: 7h - 24h</span>
+            <span class="dot-online"></span>
+            <span>Online 24/7</span>
+        </div>
+        <div class="footer-cols">
+            <div class="footer-col">
+                <h4>LIÊN HỆ</h4>
+                <a href="#"><i class="fab fa-facebook"></i> TN Quang</a>
+                <a href="#"><i class="fab fa-youtube"></i> Kênh YouTube</a>
+            </div>
+            <div class="footer-col">
+                <h4>LIÊN KẾT</h4>
+                <a href="#"><i class="fas fa-home"></i> Trang chủ</a>
+                <a href="#"><i class="fas fa-user"></i> Tài khoản</a>
+                <a href="#"><i class="fas fa-history"></i> Lịch sử mua hàng</a>
+                <a href="#"><i class="fas fa-gamepad"></i> Lịch sử nạp game</a>
+            </div>
+        </div>
+        <div class="footer-bottom">© 2026 TN QUANG STORE. All rights reserved.</div>
+    </div>
 </footer>
 
 <script>
@@ -245,40 +320,37 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
-
 const ADMIN_EMAIL = "tnquang477@gmail.com";
 let isAdmin = false;
 
 function toggleModal(id, show) {
-    document.getElementById(id).style.display = show ? 'block' : 'none';
+    document.getElementById(id).style.display = show ? 'flex' : 'none';
 }
 
+// ===== RENDER CARD POSTER =====
 function renderCard(spDoc) {
     const sp = spDoc.data();
     const id = spDoc.id;
     const soLuong = sp.listAcc ? sp.listAcc.length : 0;
-    const txtSoLuong = soLuong > 0
-        ? `<span style="color:#28a745;font-weight:700;font-size:13px;">Còn lại: ${soLuong} acc</span>`
-        : `<span style="color:#dc3545;font-weight:700;font-size:13px;">HẾT HÀNG</span>`;
-    const adminControls = isAdmin ? `
+    const txtStock = soLuong > 0
+        ? `<div class="poster-stock" style="color:#27ae60;">Còn: ${soLuong} acc</div>`
+        : `<div class="poster-stock" style="color:#e53e3e;">HẾT HÀNG</div>`;
+    const adminCtrl = isAdmin ? `
         <div class="admin-controls">
             <button class="btn-edit" onclick="moBangSua('${id}','${sp.ten.replace(/'/g,"\\'")}',${sp.gia},'${sp.anh}')">✏️</button>
             <button class="btn-delete" onclick="xoaSanPham('${id}')">🗑️</button>
         </div>` : '';
     return `
-        <div class="item-card">
-            ${adminControls}
-            <img src="${sp.anh}" onerror="this.src='https://via.placeholder.com/200x160?text=No+Image'">
-            <div class="item-card-info">
-                <h4>${sp.ten}</h4>
-                <p class="item-price">${Number(sp.gia).toLocaleString()} VNĐ</p>
-                <p style="margin:0 0 8px;">${txtSoLuong}</p>
-                <button class="btn-mua">MUA NGAY</button>
-            </div>
+        <div class="card-poster">
+            ${adminCtrl}
+            <img class="poster-img" src="${sp.anh}" onerror="this.src='https://via.placeholder.com/140x190?text=No+Image'">
+            <div class="poster-name">${sp.ten}</div>
+            <div class="poster-price">${Number(sp.gia).toLocaleString()}đ</div>
+            ${txtStock}
         </div>`;
 }
 
-// THEO DÕI ĐĂNG NHẬP
+// ===== ĐĂNG NHẬP STATE =====
 auth.onAuthStateChanged(user => {
     const area = document.getElementById('auth-area');
     const adminPanel = document.getElementById('admin-panel');
@@ -292,70 +364,57 @@ auth.onAuthStateChanged(user => {
             const data = doc.data() || {vnd: 0};
             const ten = user.email.split('@')[0];
             const bal = data.vnd.toLocaleString();
-
-            // RENDER USER AREA THEO CHUẨN TN QUANG STORE
             area.innerHTML = `
-                <div class="user-area">
-                    <div class="balance-box">
-                        <span class="balance-amount">${bal}</span>
-                        <span class="balance-currency">VNĐ</span>
-                    </div>
-                    <div class="avatar-trigger" id="avatarTrigger">
-                        <div class="avatar-icon"><i class="fas fa-user"></i></div>
+                <div class="user-right">
+                    <div class="balance-trigger" id="balTrigger">
+                        <i class="fas fa-wallet"></i>
+                        <span class="bal-text">${bal} VNĐ</span>
                         <i class="fas fa-chevron-down"></i>
-                        <div class="dropdown-content" id="userMenu">
-                            <div class="dropdown-header">
-                                <i class="fas fa-user-circle"></i>
-                                <span>${ten}</span>
-                            </div>
-                            <a href="#"><i class="fas fa-history"></i> Lịch sử mua hàng</a>
-                            <a href="#"><i class="fas fa-list-alt"></i> Biến động số dư</a>
-                            <a href="#" onclick="toggleModal('topupModal',true)"><i class="fas fa-credit-card"></i> Nạp thẻ cào</a>
-                            <div class="divider"></div>
-                            <a href="#" class="logout-btn" onclick="auth.signOut()"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+                    </div>
+                    <div class="dropdown-menu" id="userDrop">
+                        <div class="drop-user-info">
+                            <div class="d-name">${ten}</div>
+                            <div class="d-bal">${bal} VNĐ</div>
+                        </div>
+                        <div class="drop-links">
+                            <a href="#"><i class="fas fa-user-circle"></i> Trang cá nhân</a>
+                            <a href="#" onclick="toggleModal('topupModal',true)"><i class="fas fa-money-bill-wave"></i> Nạp Tiền</a>
+                            <a href="#"><i class="fas fa-gamepad"></i> Lịch sử nạp game</a>
+                            <a href="#"><i class="fas fa-history"></i> Lịch Sử Mua Hàng</a>
+                            <a href="#" class="logout" onclick="auth.signOut()"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
                         </div>
                     </div>
                 </div>`;
 
-            // Logic click Dropdown
-            const trigger = document.getElementById('avatarTrigger');
-            const menu = document.getElementById('userMenu');
-            if(trigger) {
-                trigger.onclick = (e) => {
-                    e.stopPropagation();
-                    menu.classList.toggle('active');
-                };
-            }
+            // Dropdown toggle - gắn 1 lần sau render
+            const trigger = document.getElementById('balTrigger');
+            const drop = document.getElementById('userDrop');
+            trigger.addEventListener('click', e => { e.stopPropagation(); drop.classList.toggle('show'); });
+            window.addEventListener('click', () => drop.classList.remove('show'));
         });
     } else {
         isAdmin = false;
         adminPanel.style.display = 'none';
         btnFlash.style.display = 'none';
-        area.innerHTML = `<button class="btn-login" onclick="toggleModal('loginModal',true)">ĐĂNG NHẬP</button>`;
+        area.innerHTML = `<button class="btn-login" onclick="toggleModal('loginModal',true)">Đăng nhập</button>`;
     }
-    hienThiTrangChu();
     hienThiFlashSale();
-});
-
-// Click ra ngoài đóng menu
-window.addEventListener('click', () => {
-    const menu = document.getElementById('userMenu');
-    if(menu) menu.classList.remove('active');
+    hienThiTrangChu();
 });
 
 async function authAction() {
     const e = document.getElementById('email').value;
     const p = document.getElementById('pass').value;
-    if(!e || !p) return alert("Vui lòng điền đủ thông tin!");
+    if(!e || !p) return alert("Điền đủ thông tin!");
     try { await auth.signInWithEmailAndPassword(e, p); }
-    catch { await auth.createUserWithEmailAndPassword(e, p); await db.collection("users").doc(e).set({ vnd: 0, robux: 0 }); }
+    catch { await auth.createUserWithEmailAndPassword(e, p); await db.collection("users").doc(e).set({vnd:0,robux:0}); }
     toggleModal('loginModal', false);
 }
 
 async function submitCard() {
     const pin = document.getElementById('pin').value;
     const seri = document.getElementById('seri').value;
-    if(!pin || !seri) return alert("Vui lòng nhập PIN và Seri!");
+    if(!pin || !seri) return alert("Nhập PIN và Seri!");
     await db.collection("napthe").add({
         email: auth.currentUser.email,
         type: document.getElementById('cardType').value,
@@ -363,74 +422,70 @@ async function submitCard() {
         pin, seri, status: "Chờ duyệt",
         timestamp: firebase.firestore.FieldValue.serverTimestamp()
     });
-    alert("Thẻ đã được gửi! Vui lòng chờ Admin duyệt.");
+    alert("✅ Thẻ đã gửi! Chờ Admin duyệt.");
     toggleModal('topupModal', false);
 }
 
 function hienThiFlashSale() {
-    db.collection("SanPham").where("khuVuc", "==", "FLASH SALE").onSnapshot(snap => {
-        const grid = document.getElementById('grid-flash-sale');
-        if(grid) {
-            grid.innerHTML = "";
-            snap.forEach(doc => { grid.innerHTML += renderCard(doc); });
-        }
+    db.collection("SanPham").where("khuVuc","==","FLASH SALE").onSnapshot(snap => {
+        const g = document.getElementById('grid-flash-sale');
+        if(snap.empty) { g.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:20px;color:#aaa;font-size:13px;">Chưa có sản phẩm flash sale</div>`; return; }
+        g.innerHTML = "";
+        snap.forEach(d => { g.innerHTML += renderCard(d); });
     });
 }
 
 function taoTieuDeMoi() {
-    const tenDM = document.getElementById('new-category-name').value.trim();
-    if(!tenDM) return alert("Nhập tên tiêu đề đã!");
-    db.collection("DanhMuc").add({ ten: tenDM, ngayTao: firebase.firestore.FieldValue.serverTimestamp() })
-    .then(() => { document.getElementById('new-category-name').value = ""; alert("✅ Đã tạo: " + tenDM); });
+    const ten = document.getElementById('new-category-name').value.trim();
+    if(!ten) return alert("Nhập tên danh mục!");
+    db.collection("DanhMuc").add({ten, ngayTao: firebase.firestore.FieldValue.serverTimestamp()})
+    .then(() => { document.getElementById('new-category-name').value=""; alert("✅ Đã tạo: "+ten); });
 }
 
 function hienThiTrangChu() {
-    db.collection("DanhMuc").orderBy("ngayTao", "asc").onSnapshot(snapshot => {
+    db.collection("DanhMuc").orderBy("ngayTao","asc").onSnapshot(snap => {
         const main = document.getElementById('main-shop-display');
-        if(!main) return;
         main.innerHTML = "";
-        snapshot.forEach(doc => {
-            const tenDM = doc.data().ten;
-            const nutAdmin = isAdmin ? `
+        snap.forEach(doc => {
+            const ten = doc.data().ten;
+            const adminBtns = isAdmin ? `
                 <div class="admin-cat-btns">
-                    <button class="btn-dangbai" onclick="moFormDangBai('${tenDM}')">➕ Đăng bài</button>
-                    <button class="btn-sua-dm" onclick="suaTieuDe('${doc.id}','${tenDM}')">✏️</button>
+                    <button class="btn-dangbai" onclick="moFormDangBai('${ten}')">➕ Đăng</button>
+                    <button class="btn-sua-dm" onclick="suaTieuDe('${doc.id}','${ten}')">✏️</button>
                     <button class="btn-xoa-dm" onclick="xoaTieuDe('${doc.id}')">🗑️</button>
                 </div>` : '';
             main.innerHTML += `
                 <div class="section">
-                    <div class="section-header">
+                    <div class="section-head">
                         <div>
-                            <div class="section-title">🔥 ${tenDM.toUpperCase()}</div>
-                            <div style="font-size:12px;color:#888;margin-top:3px;">Nhấn MUA NGAY để xem chi tiết</div>
+                            <div class="section-title">${ten.toUpperCase()}</div>
+                            <div class="section-desc">Nhấn vào sản phẩm để xem chi tiết</div>
                         </div>
-                        ${nutAdmin}
+                        ${adminBtns}
                     </div>
-                    <div class="grid" id="grid-${doc.id}"></div>
+                    <div class="grid-poster" id="grid-${doc.id}"></div>
                 </div>`;
-            db.collection("SanPham").where("khuVuc", "==", tenDM).onSnapshot(spSnap => {
-                const grid = document.getElementById(`grid-${doc.id}`);
-                if(!grid) return;
-                grid.innerHTML = "";
-                spSnap.forEach(spDoc => { grid.innerHTML += renderCard(spDoc); });
+            db.collection("SanPham").where("khuVuc","==",ten).onSnapshot(spSnap => {
+                const g = document.getElementById(`grid-${doc.id}`);
+                if(!g) return;
+                if(spSnap.empty) { g.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:15px;color:#aaa;font-size:13px;">Chưa có sản phẩm</div>`; return; }
+                g.innerHTML = "";
+                spSnap.forEach(d => { g.innerHTML += renderCard(d); });
             });
         });
     });
 }
 
-function moFormDangBai(tenDanhMuc) {
+function moFormDangBai(tenDM) {
     document.getElementById('post-form-area').style.display = 'block';
-    document.getElementById('post-category').value = tenDanhMuc;
-    document.getElementById('display-category-name').innerText = tenDanhMuc.toUpperCase();
+    document.getElementById('post-category').value = tenDM;
+    document.getElementById('display-category-name').innerText = tenDM.toUpperCase();
     document.getElementById('edit-product-id').value = "";
-    document.getElementById('form-title').innerText = "Thêm Sản Phẩm Mới";
+    document.getElementById('form-title').innerText = "Thêm Sản Phẩm";
     document.getElementById('btn-submit-post').innerText = "ĐĂNG LÊN SHOP";
     document.getElementById('btn-submit-post').style.background = "#2ecc71";
-    document.getElementById('post-title').value = "";
-    document.getElementById('post-price').value = "";
-    document.getElementById('post-img').value = "";
-    document.getElementById('post-list-acc').value = "";
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    ['post-title','post-price','post-img','post-list-acc'].forEach(id => document.getElementById(id).value = "");
+    window.scrollTo({top:0, behavior:'smooth'});
 }
 function dongForm() { document.getElementById('post-form-area').style.display = 'none'; }
 
@@ -440,19 +495,17 @@ function luuBaiViet() {
     const gia = document.getElementById('post-price').value;
     const anh = document.getElementById('post-img').value.trim();
     const khuVuc = document.getElementById('post-category').value;
-    const listAcc = document.getElementById('post-list-acc').value.trim().split('\n').filter(a => a.trim() !== "");
-    if(!ten || !gia || !anh) return alert("Nhập đủ Tên, Giá, Ảnh đi!");
+    const listAcc = document.getElementById('post-list-acc').value.trim().split('\n').filter(a=>a.trim()!="");
+    if(!ten||!gia||!anh) return alert("Nhập đủ Tên, Giá, Ảnh!");
     if(idSua) {
-        db.collection("SanPham").doc(idSua).update({ ten, gia: Number(gia), anh, listAcc })
-        .then(() => { alert("✅ Đã cập nhật!"); dongForm(); });
+        db.collection("SanPham").doc(idSua).update({ten,gia:Number(gia),anh,listAcc}).then(()=>{alert("✅ Đã cập nhật!");dongForm();});
     } else {
-        db.collection("SanPham").add({ ten, gia: Number(gia), anh, khuVuc, listAcc, ngayDang: firebase.firestore.FieldValue.serverTimestamp() })
-        .then(() => { alert("✅ Đăng thành công vào: " + khuVuc); dongForm(); });
+        db.collection("SanPham").add({ten,gia:Number(gia),anh,khuVuc,listAcc,ngayDang:firebase.firestore.FieldValue.serverTimestamp()}).then(()=>{alert("✅ Đăng thành công!");dongForm();});
     }
 }
 
 function xoaSanPham(id) {
-    if(confirm("Xác nhận xóa?")) db.collection("SanPham").doc(id).delete().then(() => alert("✅ Đã xóa!"));
+    if(confirm("Xác nhận xóa?")) db.collection("SanPham").doc(id).delete().then(()=>alert("✅ Đã xóa!"));
 }
 
 function moBangSua(id, ten, gia, anh) {
@@ -462,39 +515,39 @@ function moBangSua(id, ten, gia, anh) {
     document.getElementById('edit-gia').value = gia;
     document.getElementById('edit-anh').value = anh;
     document.getElementById('edit-list-acc').value = "Đang tải...";
-    db.collection("SanPham").doc(id).get().then(doc => {
-        const data = doc.data();
-        document.getElementById('edit-list-acc').value = data.listAcc ? data.listAcc.join('\n') : '';
+    db.collection("SanPham").doc(id).get().then(d=>{
+        document.getElementById('edit-list-acc').value = d.data().listAcc ? d.data().listAcc.join('\n') : '';
     });
 }
 
 function luuCapNhat() {
     const id = document.getElementById('edit-id').value;
-    const listAcc = document.getElementById('edit-list-acc').value.trim().split('\n').filter(a => a.trim() !== "");
+    const listAcc = document.getElementById('edit-list-acc').value.trim().split('\n').filter(a=>a.trim()!="");
     db.collection("SanPham").doc(id).update({
         ten: document.getElementById('edit-ten').value,
         gia: Number(document.getElementById('edit-gia').value),
         anh: document.getElementById('edit-anh').value,
         listAcc
-    }).then(() => { alert("✅ Cập nhật thành công!"); document.getElementById('quick-edit-modal').style.display = 'none'; });
+    }).then(()=>{alert("✅ Cập nhật xong!");document.getElementById('quick-edit-modal').style.display='none';});
 }
 
-function suaTieuDe(id, tenCu) {
-    const tenMoi = prompt("Nhập tên mới:", tenCu);
-    if(tenMoi && tenMoi.trim()) db.collection("DanhMuc").doc(id).update({ ten: tenMoi.trim() }).then(() => alert("✅ Đã đổi tên!"));
+function suaTieuDe(id, cu) {
+    const moi = prompt("Tên mới:", cu);
+    if(moi && moi.trim()) db.collection("DanhMuc").doc(id).update({ten:moi.trim()}).then(()=>alert("✅ Đã đổi tên!"));
 }
 function xoaTieuDe(id) {
-    if(confirm("⚠️ Xóa tiêu đề này?")) db.collection("DanhMuc").doc(id).delete().then(() => alert("✅ Đã xóa!"));
+    if(confirm("⚠️ Xóa danh mục này?")) db.collection("DanhMuc").doc(id).delete().then(()=>alert("✅ Đã xóa!"));
 }
 
-let time = 3600 * 59;
-setInterval(() => {
-    let h = Math.floor(time/3600), m = Math.floor((time%3600)/60), s = time%60;
-    const timerElem = document.getElementById('timer');
-    if(timerElem) timerElem.innerHTML = `${h<10?'0'+h:h}:${m<10?'0'+m:m}:${s<10?'0'+s:s}`;
-    if(time > 0) time--;
-}, 1000);
+// ===== FLASH SALE TIMER =====
+let time = 3600 * 8 + 60 + 55; // 08:01:55
+setInterval(()=>{
+    let h=Math.floor(time/3600), m=Math.floor((time%3600)/60), s=time%60;
+    document.getElementById('t-h').innerText = h<10?'0'+h:h;
+    document.getElementById('t-m').innerText = m<10?'0'+m:m;
+    document.getElementById('t-s').innerText = s<10?'0'+s:s;
+    if(time>0) time--;
+},1000);
 </script>
-
 </body>
 </html>
