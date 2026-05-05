@@ -11,28 +11,25 @@
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
         body { background: #f4f6f9; color: #333; }
-        a { text-decoration: none; color: inherit; }
+        a { text-decoration: none; color: inherit; cursor: pointer; }
         ul { list-style: none; }
 
         /* ===== HEADER ===== */
         .header { background: #fff; padding: 10px 20px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 9999; box-shadow: 0 1px 4px rgba(0,0,0,0.08); gap: 12px; }
-        .logo-area { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+        .logo-area { display: flex; align-items: center; gap: 8px; flex-shrink: 0; cursor: pointer; }
         .logo-box { width: 36px; height: 36px; background: #1a56db; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 800; font-size: 12px; }
         .logo-text { font-size: 13px; font-weight: 800; line-height: 1.2; }
         .logo-text span { color: #1a56db; display: block; }
-        .btn-naptien { background: #e53e3e; color: #fff; border: none; padding: 7px 14px; border-radius: 6px; font-weight: 700; font-size: 13px; cursor: pointer; white-space: nowrap; flex-shrink: 0; }
+        .btn-naptien-header { background: #e53e3e; color: #fff; border: none; padding: 7px 14px; border-radius: 6px; font-weight: 700; font-size: 13px; cursor: pointer; white-space: nowrap; flex-shrink: 0; }
         .search-wrap { flex: 1; max-width: 400px; position: relative; }
         .search-wrap input { width: 100%; padding: 9px 15px 9px 38px; border: 1px solid #e2e8f0; border-radius: 6px; background: #f8fafc; font-size: 14px; outline: none; }
         .search-wrap i { position: absolute; left: 13px; top: 11px; color: #a0aec0; font-size: 14px; }
-
-        /* ===== USER BALANCE + DROPDOWN ===== */
         .user-right { position: relative; flex-shrink: 0; }
         .balance-trigger { display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 6px 10px; border: 1px solid #e2e8f0; border-radius: 6px; background: #f8fafc; }
         .balance-trigger i.fa-wallet { color: #1a56db; }
         .balance-trigger .bal-text { font-weight: 700; font-size: 14px; color: #1a202c; }
         .balance-trigger i.fa-chevron-down { font-size: 11px; color: #718096; }
         .btn-login { background: #1a56db; color: #fff; border: none; padding: 9px 18px; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 14px; }
-
         .dropdown-menu { position: absolute; top: calc(100% + 8px); right: 0; background: #fff; width: 220px; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.12); border: 1px solid #e2e8f0; display: none; z-index: 10000; overflow: hidden; }
         .dropdown-menu.show { display: block; }
         .drop-user-info { padding: 14px 15px; border-bottom: 1px solid #f0f0f0; background: #f8fafc; }
@@ -40,7 +37,7 @@
         .drop-user-info .d-bal { color: #2ecc71; font-weight: 700; font-size: 14px; }
         .drop-links a { display: flex; align-items: center; gap: 11px; padding: 11px 15px; font-size: 14px; color: #4a5568; border-bottom: 1px solid #f5f5f5; transition: 0.15s; }
         .drop-links a:hover { background: #f7fafc; color: #1a56db; }
-        .drop-links a i { width: 16px; text-align: center; color: #a0aec0; font-size: 14px; }
+        .drop-links a i { width: 16px; text-align: center; color: #a0aec0; }
         .drop-links a:hover i { color: #1a56db; }
         .drop-links a.logout { color: #e53e3e; border-bottom: none; }
         .drop-links a.logout i { color: #e53e3e; }
@@ -49,22 +46,20 @@
         /* ===== MARQUEE ===== */
         .marquee-bar { background: #fff; padding: 7px 0; border-bottom: 1px solid #eee; font-size: 13px; color: #555; }
 
-        /* ===== CONTAINER ===== */
-        .container { max-width: 1100px; margin: 0 auto; padding: 20px 15px; }
+        /* ===== PAGES ===== */
+        .page { display: none; }
+        .page.active { display: block; }
 
-        /* ===== BANNER ===== */
+        /* ===== HOME PAGE ===== */
+        .container { max-width: 1100px; margin: 0 auto; padding: 20px 15px; }
         .banner { width: 100%; height: 260px; border-radius: 12px; overflow: hidden; margin-bottom: 24px; }
         .banner img { width: 100%; height: 100%; object-fit: cover; }
-
-        /* ===== FLASH SALE ===== */
         .flash-box { background: #fff; border-radius: 10px; padding: 18px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
         .flash-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; flex-wrap: wrap; gap: 10px; }
         .flash-title { display: flex; align-items: center; gap: 8px; font-size: 18px; font-weight: 800; color: #e53e3e; }
         .flash-right { display: flex; align-items: center; gap: 8px; }
         .timer-blocks { display: flex; gap: 4px; }
         .timer-block { background: #1a202c; color: #fff; padding: 4px 8px; border-radius: 4px; font-weight: 700; font-size: 14px; min-width: 30px; text-align: center; }
-
-        /* ===== SECTION ===== */
         .section { background: #fff; border-radius: 10px; padding: 18px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
         .section-head { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; }
         .section-title { font-size: 16px; font-weight: 800; color: #1a202c; }
@@ -73,19 +68,156 @@
         .btn-dangbai { background: #2ecc71; color: #fff; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 12px; }
         .btn-sua-dm { background: #f39c12; color: #fff; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 12px; }
         .btn-xoa-dm { background: #e53e3e; color: #fff; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 12px; }
-
-        /* ===== GRID SẢN PHẨM DẠNG POSTER ===== */
-        .grid-poster { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 14px; }
+        .grid-poster { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; }
         .card-poster { border-radius: 10px; overflow: hidden; background: #fff; border: 1px solid #f0f0f0; transition: 0.25s; position: relative; cursor: pointer; }
         .card-poster:hover { transform: translateY(-4px); box-shadow: 0 6px 20px rgba(0,0,0,0.1); }
         .card-poster .poster-img { width: 100%; aspect-ratio: 3/4; object-fit: cover; display: block; background: #e9ecef; }
-        .card-poster .poster-name { padding: 8px; font-size: 12px; font-weight: 600; color: #2d3748; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .card-poster .poster-price { padding: 0 8px 8px; font-size: 13px; font-weight: 800; color: #e53e3e; text-align: center; }
-        .card-poster .poster-stock { padding: 0 8px 8px; font-size: 11px; text-align: center; font-weight: 600; }
+        .card-poster .poster-name { padding: 7px 6px 3px; font-size: 12px; font-weight: 600; color: #2d3748; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .card-poster .poster-price { padding: 0 6px 5px; font-size: 12px; font-weight: 800; color: #e53e3e; text-align: center; }
+        .card-poster .poster-stock { padding: 0 6px 7px; font-size: 11px; text-align: center; font-weight: 600; }
         .admin-controls { position: absolute; top: 5px; right: 5px; display: flex; gap: 3px; z-index: 5; }
         .btn-edit, .btn-delete { background: rgba(0,0,0,0.6); color: #fff; border: none; border-radius: 4px; padding: 3px 7px; cursor: pointer; font-size: 11px; }
         .btn-edit:hover { background: #f39c12; }
         .btn-delete:hover { background: #e53e3e; }
+
+        /* ===== ACCOUNT LAYOUT ===== */
+        .account-layout { max-width: 1100px; margin: 20px auto; padding: 0 15px; display: grid; grid-template-columns: 220px 1fr; gap: 20px; }
+        .account-sidebar { background: #fff; border-radius: 10px; padding: 0; box-shadow: 0 1px 3px rgba(0,0,0,0.05); height: fit-content; overflow: hidden; }
+        .sidebar-user { padding: 16px; border-bottom: 1px solid #f0f0f0; }
+        .sidebar-user .s-bal { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+        .sidebar-user .s-bal i { color: #1a56db; font-size: 16px; }
+        .sidebar-user .s-bal-amount { font-weight: 700; color: #1a56db; font-size: 15px; }
+        .sidebar-user .s-name { display: flex; align-items: center; gap: 8px; }
+        .sidebar-user .s-name i { color: #718096; }
+        .sidebar-user .s-name span { font-weight: 600; font-size: 14px; color: #2d3748; }
+        .sidebar-section-label { padding: 12px 16px 6px; font-size: 11px; font-weight: 700; color: #a0aec0; text-transform: uppercase; letter-spacing: 0.5px; }
+        .sidebar-link { display: flex; align-items: center; gap: 10px; padding: 10px 16px; font-size: 14px; color: #4a5568; transition: 0.15s; cursor: pointer; border-left: 3px solid transparent; }
+        .sidebar-link:hover { background: #f7fafc; color: #1a56db; }
+        .sidebar-link.active { background: #ebf4ff; color: #1a56db; border-left-color: #1a56db; font-weight: 700; }
+        .sidebar-link i { width: 16px; text-align: center; color: #a0aec0; font-size: 14px; }
+        .sidebar-link.active i { color: #1a56db; }
+        .sidebar-link:hover i { color: #1a56db; }
+        .account-content { background: #fff; border-radius: 10px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); min-height: 400px; }
+        .page-heading { font-size: 20px; font-weight: 800; color: #1a202c; margin-bottom: 5px; }
+        .page-heading-underline { width: 40px; height: 3px; background: #1a56db; border-radius: 2px; margin-bottom: 20px; }
+        .page-sub { font-size: 13px; color: #888; margin-bottom: 20px; }
+
+        /* ===== THÔNG TIN CÁ NHÂN ===== */
+        .info-card { border: 1px solid #e2e8f0; border-radius: 10px; padding: 20px; margin-bottom: 16px; }
+        .info-card-title { display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+        .info-card-title i { color: #1a56db; font-size: 18px; }
+        .info-card-sub { font-size: 13px; color: #888; margin-bottom: 16px; }
+        .info-field { padding: 14px 16px; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 10px; display: flex; align-items: center; gap: 12px; }
+        .info-field i { color: #a0aec0; width: 18px; text-align: center; }
+        .info-field-content { flex: 1; }
+        .info-field-label { font-size: 11px; color: #a0aec0; text-transform: uppercase; font-weight: 600; margin-bottom: 2px; }
+        .info-field-value { font-size: 14px; font-weight: 600; color: #2d3748; }
+        .pwd-input-wrap { position: relative; margin-bottom: 12px; }
+        .pwd-input-wrap input { width: 100%; padding: 12px 42px 12px 14px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14px; outline: none; box-sizing: border-box; margin: 0; }
+        .pwd-input-wrap input:focus { border-color: #1a56db; }
+        .pwd-input-wrap .pwd-toggle { position: absolute; right: 14px; top: 13px; color: #a0aec0; cursor: pointer; }
+        .pwd-label { font-size: 13px; font-weight: 600; color: #e53e3e; margin-bottom: 6px; }
+        .pwd-hint { background: #ebf4ff; border: 1px solid #bee3f8; border-radius: 8px; padding: 12px 14px; font-size: 13px; color: #2b6cb0; margin-bottom: 14px; display: flex; align-items: flex-start; gap: 8px; }
+        .btn-update-pwd { background: #1a56db; color: #fff; border: none; padding: 13px; width: 100%; border-radius: 8px; font-weight: 700; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+
+        /* ===== LỊCH SỬ MUA HÀNG ===== */
+        .note-box { background: #ebf4ff; border: 1px solid #bee3f8; border-radius: 8px; padding: 14px; margin-bottom: 18px; font-size: 13px; color: #2b6cb0; }
+        .note-box strong { display: block; margin-bottom: 6px; color: #1a56db; }
+        .search-filter { display: flex; gap: 10px; margin-bottom: 18px; }
+        .search-filter input { flex: 1; padding: 10px 14px; border: 1px solid #e2e8f0; border-radius: 7px; font-size: 14px; outline: none; }
+        .btn-search { background: #1a56db; color: #fff; border: none; padding: 10px 18px; border-radius: 7px; font-weight: 700; cursor: pointer; font-size: 14px; white-space: nowrap; }
+        .order-item { display: flex; align-items: center; gap: 14px; padding: 14px 0; border-bottom: 1px solid #f0f0f0; }
+        .order-item:last-child { border-bottom: none; }
+        .order-img { width: 48px; height: 48px; border-radius: 8px; object-fit: cover; flex-shrink: 0; background: #e9ecef; }
+        .order-info { flex: 1; min-width: 0; }
+        .order-name { font-size: 14px; font-weight: 700; color: #2d3748; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .order-code { font-size: 12px; color: #a0aec0; margin-bottom: 3px; }
+        .order-date { font-size: 12px; color: #a0aec0; }
+        .order-right { text-align: right; flex-shrink: 0; }
+        .order-price { font-size: 14px; font-weight: 700; color: #1a202c; margin-bottom: 6px; }
+        .badge { padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+        .badge-success { background: #c6f6d5; color: #27ae60; }
+        .badge-refund { background: #fed7d7; color: #e53e3e; }
+        .badge-pending { background: #fefcbf; color: #d69e2e; }
+        .qty-badge { background: #e2e8f0; color: #4a5568; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; margin-left: 6px; }
+        .empty-state { text-align: center; padding: 50px 20px; }
+        .empty-state i { font-size: 48px; color: #e2e8f0; margin-bottom: 12px; }
+        .empty-state p { color: #a0aec0; font-size: 14px; margin-bottom: 16px; }
+        .btn-buy-now { background: #1a56db; color: #fff; border: none; padding: 10px 24px; border-radius: 7px; cursor: pointer; font-weight: 700; font-size: 14px; }
+
+        /* ===== BIẾN ĐỘNG SỐ DƯ ===== */
+        .transaction-item { padding: 16px 0; border-bottom: 1px solid #f0f0f0; }
+        .transaction-item:last-child { border-bottom: none; }
+        .trans-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+        .trans-desc { font-size: 14px; font-weight: 600; color: #2d3748; flex: 1; margin-right: 10px; }
+        .trans-amount { font-size: 14px; font-weight: 800; white-space: nowrap; }
+        .trans-amount.plus { color: #27ae60; }
+        .trans-amount.minus { color: #e53e3e; }
+        .trans-badge { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 4px; white-space: nowrap; }
+        .trans-badge.cong { background: #c6f6d5; color: #27ae60; }
+        .trans-badge.tru { background: #fed7d7; color: #e53e3e; }
+        .trans-date { font-size: 12px; color: #a0aec0; margin-bottom: 8px; }
+        .trans-balance { display: flex; align-items: center; gap: 10px; background: #f8fafc; border-radius: 7px; padding: 10px 14px; }
+        .trans-bal-item { text-align: center; flex: 1; }
+        .trans-bal-label { font-size: 11px; color: #a0aec0; margin-bottom: 3px; }
+        .trans-bal-value { font-size: 13px; font-weight: 700; color: #2d3748; }
+        .trans-arrow { color: #a0aec0; font-size: 14px; }
+
+        /* ===== NẠP TIỀN NGÂN HÀNG ===== */
+        .guide-box { background: #fff8f0; border: 1px solid #fed7aa; border-radius: 8px; padding: 16px; margin-bottom: 18px; }
+        .guide-box .guide-title { font-weight: 700; font-size: 14px; color: #c05621; margin-bottom: 8px; }
+        .guide-box .guide-text { font-size: 13px; color: #7b341e; line-height: 1.6; }
+        .guide-box ul { padding-left: 16px; margin-top: 6px; }
+        .guide-box ul li { font-size: 13px; color: #7b341e; margin-bottom: 4px; list-style: disc; }
+        .bank-card { border: 1px solid #e2e8f0; border-radius: 10px; padding: 20px; margin-bottom: 18px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: 0.2s; }
+        .bank-card:hover { border-color: #1a56db; background: #f0f4ff; }
+        .bank-card .bank-name-big { font-size: 22px; font-weight: 900; color: #1a56db; }
+        .bank-card .bank-auto { background: #c6f6d5; color: #27ae60; padding: 3px 10px; border-radius: 4px; font-size: 12px; font-weight: 700; }
+        .qr-section { border: 1px solid #e2e8f0; border-radius: 10px; padding: 20px; }
+        .bank-info-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #f0f0f0; }
+        .bank-info-row:last-child { border-bottom: none; }
+        .bank-info-label { font-size: 13px; color: #718096; }
+        .bank-info-value { font-size: 14px; font-weight: 700; color: #2d3748; display: flex; align-items: center; gap: 8px; }
+        .bank-info-value.red { color: #e53e3e; }
+        .btn-copy { background: none; border: none; cursor: pointer; color: #1a56db; font-size: 14px; padding: 2px; }
+        .bank-header-row { display: flex; align-items: center; gap: 10px; padding: 14px 0; margin-bottom: 10px; border-bottom: 1px solid #f0f0f0; }
+        .bank-logo-text { font-size: 16px; font-weight: 900; color: #1a56db; }
+
+        /* ===== NẠP THẺ CÀO ===== */
+        .warning-box { background: #fff8f0; border: 1px solid #fed7aa; border-radius: 8px; padding: 14px; margin-bottom: 20px; display: flex; gap: 10px; }
+        .warning-box i { color: #dd6b20; flex-shrink: 0; margin-top: 2px; }
+        .warning-box .w-title { font-weight: 700; color: #c05621; font-size: 14px; margin-bottom: 4px; }
+        .warning-box .w-text { font-size: 13px; color: #7b341e; }
+        .carrier-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 18px; }
+        .carrier-btn { border: 2px solid #e2e8f0; border-radius: 8px; padding: 10px; text-align: center; cursor: pointer; transition: 0.2s; font-size: 13px; font-weight: 700; color: #4a5568; }
+        .carrier-btn:hover, .carrier-btn.selected { border-color: #1a56db; background: #ebf4ff; color: #1a56db; }
+        .carrier-btn .carrier-logo { font-size: 16px; font-weight: 900; display: block; margin-bottom: 4px; }
+        .denom-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 18px; }
+        .denom-btn { border: 2px solid #e2e8f0; border-radius: 7px; padding: 10px 6px; text-align: center; cursor: pointer; font-size: 13px; font-weight: 700; color: #4a5568; transition: 0.2s; }
+        .denom-btn:hover, .denom-btn.selected { border-color: #1a56db; background: #ebf4ff; color: #1a56db; }
+        .form-label { font-size: 13px; font-weight: 700; color: #2d3748; margin-bottom: 6px; }
+        .form-label span { color: #e53e3e; }
+        .form-input { width: 100%; padding: 12px 14px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14px; outline: none; margin-bottom: 14px; box-sizing: border-box; }
+        .form-input:focus { border-color: #1a56db; }
+        .amount-display { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; text-align: center; margin-bottom: 14px; }
+        .amount-display .ad-label { font-size: 12px; color: #a0aec0; margin-bottom: 6px; }
+        .amount-display .ad-amount { font-size: 24px; font-weight: 800; color: #27ae60; }
+        .amount-display .ad-discount { font-size: 12px; color: #a0aec0; margin-top: 4px; }
+        .btn-submit-card { background: #1a56db; color: #fff; border: none; padding: 14px; width: 100%; border-radius: 8px; font-weight: 700; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .card-history-title { font-size: 15px; font-weight: 700; color: #2d3748; margin: 24px 0 14px; display: flex; align-items: center; gap: 8px; }
+        .card-history-item { border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px; margin-bottom: 10px; }
+        .ch-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .ch-carrier { font-weight: 700; font-size: 14px; color: #2d3748; }
+        .ch-date { font-size: 12px; color: #a0aec0; }
+        .ch-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .ch-field-label { font-size: 11px; color: #a0aec0; text-transform: uppercase; font-weight: 600; margin-bottom: 2px; }
+        .ch-field-value { font-size: 13px; font-weight: 600; color: #2d3748; }
+        .ch-field-value.red { color: #e53e3e; }
+        .ch-field-value.green { color: #27ae60; }
+
+        /* ===== HOÁ ĐƠN ===== */
+        .invoice-warning { background: #fff8f0; border: 1px solid #fed7aa; border-radius: 8px; padding: 14px; margin-bottom: 18px; font-size: 13px; color: #7b341e; }
+        .invoice-warning i { color: #dd6b20; margin-right: 6px; }
 
         /* ===== ADMIN PANEL ===== */
         #admin-panel { display: none; background: #fff; padding: 18px; border-radius: 10px; margin-bottom: 20px; border: 2px solid #bee3f8; }
@@ -105,20 +237,12 @@
         #quick-edit-modal h4 { margin: 0 0 14px; font-size: 15px; }
 
         /* ===== MODAL ===== */
-        .modal { display: none; position: fixed; z-index: 99998; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.45); backdrop-filter: blur(3px); }
-        .modal-box { background: #fff; margin: 8% auto; padding: 28px; border-radius: 14px; width: 90%; max-width: 360px; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
+        .modal { display: none; position: fixed; z-index: 99998; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.45); backdrop-filter: blur(3px); align-items: center; justify-content: center; }
+        .modal.open { display: flex; }
+        .modal-box { background: #fff; padding: 28px; border-radius: 14px; width: 90%; max-width: 360px; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
         .modal-box h2 { margin: 0 0 5px; font-size: 20px; }
         .modal-box p { color: #888; font-size: 13px; margin-bottom: 18px; }
         .modal-close { position: absolute; right: 15px; top: 13px; font-size: 22px; cursor: pointer; color: #aaa; background: none; border: none; }
-
-        /* ===== POPULAR PRODUCTS (dạng list) ===== */
-        .popular-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .popular-item { display: flex; align-items: center; gap: 10px; padding: 10px; border: 1px solid #f0f0f0; border-radius: 8px; background: #fafafa; cursor: pointer; transition: 0.2s; }
-        .popular-item:hover { border-color: #1a56db; background: #f0f4ff; }
-        .popular-item img { width: 36px; height: 36px; border-radius: 8px; object-fit: cover; flex-shrink: 0; }
-        .popular-item .p-info { flex: 1; min-width: 0; }
-        .popular-item .p-name { font-size: 12px; font-weight: 700; color: #2d3748; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .popular-item .p-price { font-size: 12px; color: #e53e3e; font-weight: 700; }
 
         /* ===== FOOTER ===== */
         footer { background: #1a202c; color: #a0aec0; padding: 30px 20px; margin-top: 30px; }
@@ -136,12 +260,13 @@
         .footer-col a i { width: 14px; font-size: 12px; }
         .footer-bottom { border-top: 1px solid #2d3748; padding-top: 15px; font-size: 12px; text-align: center; }
 
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 600px) {
+        @media (max-width: 700px) {
             .search-wrap { display: none; }
-            .grid-poster { grid-template-columns: repeat(3, 1fr); gap: 10px; }
-            .popular-grid { grid-template-columns: 1fr; }
-            .footer-cols { grid-template-columns: 1fr; }
+            .account-layout { grid-template-columns: 1fr; }
+            .account-sidebar { display: none; }
+            .grid-poster { grid-template-columns: repeat(3, 1fr); }
+            .denom-grid { grid-template-columns: repeat(2, 1fr); }
+            .carrier-grid { grid-template-columns: repeat(3, 1fr); }
         }
     </style>
 </head>
@@ -149,20 +274,17 @@
 
 <!-- HEADER -->
 <header class="header">
-    <div class="logo-area">
+    <div class="logo-area" onclick="showPage('home')">
         <div class="logo-box">TN</div>
         <div class="logo-text">TN QUANG <span>STORE</span></div>
     </div>
-
-    <button class="btn-naptien" onclick="toggleModal('topupModal', true)">Nạp Tiền</button>
-
+    <button class="btn-naptien-header" onclick="showPage('nap-the')">Nạp Tiền</button>
     <div class="search-wrap">
         <i class="fas fa-search"></i>
         <input type="text" placeholder="Tìm game, sản phẩm...">
     </div>
-
-    <div class="user-right" id="auth-area">
-        <button class="btn-login" onclick="toggleModal('loginModal', true)">Đăng nhập</button>
+    <div id="auth-area">
+        <button class="btn-login" onclick="openModal('loginModal')">Đăng nhập</button>
     </div>
 </header>
 
@@ -177,131 +299,370 @@
     <input type="text" id="edit-ten" placeholder="Tên sản phẩm">
     <input type="number" id="edit-gia" placeholder="Giá tiền">
     <input type="text" id="edit-anh" placeholder="Link ảnh">
-    <textarea id="edit-list-acc" placeholder="Danh sách Acc: User|Pass (Mỗi dòng 1 acc)" style="height:75px;"></textarea>
+    <textarea id="edit-list-acc" placeholder="Danh sách Acc: User|Pass" style="height:75px;"></textarea>
     <button onclick="luuCapNhat()" style="width:100%;background:#2ecc71;color:#fff;border:none;padding:10px;border-radius:7px;font-weight:700;cursor:pointer;margin-bottom:8px;">LƯU LẠI</button>
     <button onclick="document.getElementById('quick-edit-modal').style.display='none'" style="width:100%;background:#718096;color:#fff;border:none;padding:10px;border-radius:7px;font-weight:700;cursor:pointer;">HỦY</button>
 </div>
 
-<div class="container">
-
-    <!-- ADMIN PANEL -->
-    <div id="admin-panel">
-        <h2>🛠️ Quản Lý Cửa Hàng</h2>
-        <div class="admin-box">
-            <h3>➕ Tạo Danh Mục Mới</h3>
-            <input type="text" id="new-category-name" placeholder="Ví dụ: Acc VIP, Cày Thuê, Túi Mù...">
-            <button class="btn-tao" onclick="taoTieuDeMoi()">TẠO DANH MỤC</button>
-        </div>
-        <div id="post-form-area">
-            <h3 id="form-title">Thêm Sản Phẩm</h3>
-            <div class="khu-vuc-hien-tai">📌 Đang đăng vào: <span id="display-category-name">CHƯA CHỌN</span></div>
-            <input type="hidden" id="post-category">
-            <input type="hidden" id="edit-product-id">
-            <input type="text" id="post-title" placeholder="Tên sản phẩm...">
-            <input type="number" id="post-price" placeholder="Giá tiền (VNĐ)...">
-            <input type="text" id="post-img" placeholder="Link ảnh sản phẩm...">
-            <textarea id="post-list-acc" placeholder="Danh sách Acc: User|Pass (Mỗi dòng 1 acc)" style="height:75px;"></textarea>
-            <button id="btn-submit-post" onclick="luuBaiViet()" style="background:#2ecc71;color:#fff;padding:11px;width:100%;border:none;border-radius:7px;font-weight:800;font-size:14px;cursor:pointer;margin-bottom:8px;">ĐĂNG LÊN SHOP</button>
-            <button onclick="dongForm()" style="background:#718096;color:#fff;padding:11px;width:100%;border:none;border-radius:7px;font-weight:700;cursor:pointer;">HỦY BỎ</button>
-        </div>
-    </div>
-
-    <!-- BANNER -->
-    <div class="banner">
-        <img src="https://i.ytimg.com/vi/z-i1pAF6FjE/maxresdefault.jpg" alt="Banner">
-    </div>
-
-    <!-- FLASH SALE -->
-    <div class="flash-box">
-        <div class="flash-head">
-            <div class="flash-title">
-                <i class="fas fa-bolt"></i> FLASH SALE
+<!-- ==================== PAGE: HOME ==================== -->
+<div id="page-home" class="page active">
+    <div class="container">
+        <div id="admin-panel">
+            <h2>🛠️ Quản Lý Cửa Hàng</h2>
+            <div class="admin-box">
+                <h3>➕ Tạo Danh Mục Mới</h3>
+                <input type="text" id="new-category-name" placeholder="Ví dụ: Acc VIP, Cày Thuê...">
+                <button class="btn-tao" onclick="taoTieuDeMoi()">TẠO DANH MỤC</button>
             </div>
-            <div class="flash-right">
-                <div class="timer-blocks">
-                    <div class="timer-block" id="t-h">00</div>
-                    <div class="timer-block" id="t-m">59</div>
-                    <div class="timer-block" id="t-s">59</div>
+            <div id="post-form-area">
+                <h3 id="form-title">Thêm Sản Phẩm</h3>
+                <div class="khu-vuc-hien-tai">📌 Đang đăng vào: <span id="display-category-name">CHƯA CHỌN</span></div>
+                <input type="hidden" id="post-category">
+                <input type="hidden" id="edit-product-id">
+                <input type="text" id="post-title" placeholder="Tên sản phẩm...">
+                <input type="number" id="post-price" placeholder="Giá tiền (VNĐ)...">
+                <input type="text" id="post-img" placeholder="Link ảnh sản phẩm...">
+                <textarea id="post-list-acc" placeholder="Danh sách Acc: User|Pass (Mỗi dòng 1 acc)" style="height:75px;"></textarea>
+                <button id="btn-submit-post" onclick="luuBaiViet()" style="background:#2ecc71;color:#fff;padding:11px;width:100%;border:none;border-radius:7px;font-weight:800;font-size:14px;cursor:pointer;margin-bottom:8px;">ĐĂNG LÊN SHOP</button>
+                <button onclick="dongForm()" style="background:#718096;color:#fff;padding:11px;width:100%;border:none;border-radius:7px;font-weight:700;cursor:pointer;">HỦY BỎ</button>
+            </div>
+        </div>
+
+        <div class="banner">
+            <img src="https://i.ytimg.com/vi/z-i1pAF6FjE/maxresdefault.jpg" alt="Banner">
+        </div>
+
+        <div class="flash-box">
+            <div class="flash-head">
+                <div class="flash-title"><i class="fas fa-bolt"></i> FLASH SALE</div>
+                <div class="flash-right">
+                    <div class="timer-blocks">
+                        <div class="timer-block" id="t-h">08</div>
+                        <div class="timer-block" id="t-m">01</div>
+                        <div class="timer-block" id="t-s">55</div>
+                    </div>
+                    <button id="btn-flash-post" style="display:none;" class="btn-dangbai" onclick="moFormDangBai('FLASH SALE')">➕ Đăng</button>
                 </div>
-                <button id="btn-flash-post" style="display:none;" class="btn-dangbai" onclick="moFormDangBai('FLASH SALE')">➕ Đăng</button>
+            </div>
+            <div class="grid-poster" id="grid-flash-sale">
+                <div style="grid-column:1/-1;text-align:center;padding:20px;color:#aaa;font-size:13px;">Chưa có sản phẩm flash sale</div>
             </div>
         </div>
-        <div class="grid-poster" id="grid-flash-sale">
-            <div style="grid-column:1/-1;text-align:center;padding:20px;color:#aaa;font-size:13px;">Chưa có sản phẩm flash sale</div>
+
+        <div id="main-shop-display"></div>
+    </div>
+</div>
+
+<!-- ==================== PAGE: ACCOUNT (có sidebar) ==================== -->
+<div id="page-account" class="page">
+    <div class="account-layout">
+        <!-- SIDEBAR -->
+        <div class="account-sidebar">
+            <div class="sidebar-user">
+                <div class="s-bal">
+                    <i class="fas fa-wallet"></i>
+                    <span class="s-bal-amount" id="sb-balance">0đ</span>
+                </div>
+                <div class="s-name">
+                    <i class="fas fa-user"></i>
+                    <span id="sb-name">User</span>
+                </div>
+            </div>
+
+            <div class="sidebar-section-label">NGƯỜI DÙNG</div>
+            <div class="sidebar-link active" id="sl-profile" onclick="showSubPage('profile')">
+                <i class="fas fa-user-circle"></i> Thông tin cá nhân
+            </div>
+            <div class="sidebar-link" id="sl-lichsu-napgame" onclick="showSubPage('lichsu-napgame')">
+                <i class="fas fa-gamepad"></i> Lịch sử nạp game
+            </div>
+            <div class="sidebar-link" id="sl-lichsu-muahang" onclick="showSubPage('lichsu-muahang')">
+                <i class="fas fa-history"></i> Lịch sử mua hàng
+            </div>
+            <div class="sidebar-link" id="sl-bien-dong" onclick="showSubPage('bien-dong')">
+                <i class="fas fa-dollar-sign"></i> Biến động số dư
+            </div>
+
+            <div class="sidebar-section-label">NẠP TIỀN</div>
+            <div class="sidebar-link" id="sl-ngan-hang" onclick="showSubPage('ngan-hang')">
+                <i class="fas fa-university"></i> Ngân hàng
+            </div>
+            <div class="sidebar-link" id="sl-the-cao" onclick="showSubPage('the-cao')">
+                <i class="fas fa-credit-card"></i> Thẻ cào
+            </div>
+            <div class="sidebar-link" id="sl-hoa-don" onclick="showSubPage('hoa-don')">
+                <i class="fas fa-file-invoice"></i> Hoá đơn
+            </div>
         </div>
-    </div>
 
-    <!-- DANH MỤC ĐỘNG -->
-    <div id="main-shop-display"></div>
+        <!-- MAIN CONTENT -->
+        <div class="account-content">
 
-</div>
+            <!-- THÔNG TIN CÁ NHÂN -->
+            <div id="sub-profile" class="sub-page">
+                <div class="page-heading">Thông Tin Cá Nhân</div>
+                <div class="page-heading-underline"></div>
+                <div class="page-sub">Quản lý thông tin tài khoản và bảo mật của bạn</div>
 
-<!-- Modal Nạp Thẻ -->
-<div id="topupModal" class="modal">
-    <div class="modal-box">
-        <button class="modal-close" onclick="toggleModal('topupModal',false)">&times;</button>
-        <h2>🎫 Nạp Thẻ Cào</h2>
-        <p>Hệ thống duyệt thẻ tự động 30s - 2p</p>
-        <select id="cardType">
-            <option value="Viettel">Viettel</option>
-            <option value="Vinaphone">Vinaphone</option>
-            <option value="Mobifone">Mobifone</option>
-            <option value="Garena">Garena (Khuyên dùng)</option>
-            <option value="Zing">Zing</option>
-            <option value="Vcoin">Vcoin</option>
-        </select>
-        <select id="cardValue">
-            <option value="10000">10,000đ</option>
-            <option value="20000">20,000đ</option>
-            <option value="50000">50,000đ</option>
-            <option value="100000">100,000đ</option>
-            <option value="200000">200,000đ</option>
-            <option value="500000">500,000đ</option>
-            <option value="1000000">1,000,000đ</option>
-        </select>
-        <input type="text" id="pin" placeholder="Mã PIN thẻ cào">
-        <input type="text" id="seri" placeholder="Số Seri thẻ">
-        <button class="btn-tao" style="width:100%;" onclick="submitCard()">GỬI THẺ NGAY</button>
-    </div>
-</div>
+                <div class="info-card">
+                    <div class="info-card-title"><i class="fas fa-user-circle"></i> Thông tin tài khoản</div>
+                    <div class="info-card-sub">Thông tin cơ bản của bạn</div>
+                    <div class="info-field">
+                        <i class="fas fa-at"></i>
+                        <div class="info-field-content">
+                            <div class="info-field-label">TÊN ĐĂNG NHẬP</div>
+                            <div class="info-field-value" id="profile-username">-</div>
+                        </div>
+                    </div>
+                    <div class="info-field">
+                        <i class="fas fa-envelope"></i>
+                        <div class="info-field-content">
+                            <div class="info-field-label">ĐỊA CHỈ EMAIL</div>
+                            <div class="info-field-value" id="profile-email">-</div>
+                        </div>
+                    </div>
+                    <div class="info-field">
+                        <i class="fas fa-calendar"></i>
+                        <div class="info-field-content">
+                            <div class="info-field-label">THỜI GIAN ĐĂNG KÝ</div>
+                            <div class="info-field-value" id="profile-created">-</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-card-title"><i class="fas fa-shield-alt"></i> Đổi mật khẩu</div>
+                    <div class="info-card-sub">Cập nhật mật khẩu để bảo vệ tài khoản</div>
+                    <div class="pwd-label">Mật khẩu hiện tại <span style="color:#e53e3e">*</span></div>
+                    <div class="pwd-input-wrap">
+                        <input type="password" id="pwd-current" placeholder="Nhập mật khẩu hiện tại">
+                        <i class="fas fa-eye pwd-toggle" onclick="togglePwd('pwd-current', this)"></i>
+                    </div>
+                    <div class="pwd-label">Mật khẩu mới <span style="color:#e53e3e">*</span></div>
+                    <div class="pwd-input-wrap">
+                        <input type="password" id="pwd-new" placeholder="Nhập mật khẩu mới">
+                        <i class="fas fa-eye pwd-toggle" onclick="togglePwd('pwd-new', this)"></i>
+                    </div>
+                    <div class="pwd-label">Xác nhận mật khẩu mới <span style="color:#e53e3e">*</span></div>
+                    <div class="pwd-input-wrap" style="margin-bottom:14px;">
+                        <input type="password" id="pwd-confirm" placeholder="Nhập lại mật khẩu mới">
+                        <i class="fas fa-eye pwd-toggle" onclick="togglePwd('pwd-confirm', this)"></i>
+                    </div>
+                    <div class="pwd-hint"><i class="fas fa-info-circle"></i> Mật khẩu nên có ít nhất 6 ký tự, bao gồm chữ hoa, chữ thường và số để đảm bảo an toàn.</div>
+                    <button class="btn-update-pwd" onclick="doiMatKhau()"><i class="fas fa-lock"></i> Cập nhật mật khẩu</button>
+                </div>
+            </div>
+
+            <!-- LỊCH SỬ NẠP GAME -->
+            <div id="sub-lichsu-napgame" class="sub-page" style="display:none;">
+                <div class="page-heading">Lịch sử nạp game</div>
+                <div class="page-heading-underline"></div>
+                <div class="search-filter">
+                    <input type="text" id="search-napgame" placeholder="Nhập thông tin tìm kiếm,...">
+                    <button class="btn-search">Tìm kiếm</button>
+                </div>
+                <div id="list-napgame">
+                    <div class="empty-state"><i class="fas fa-gamepad"></i><p>Chưa có lịch sử nạp game</p></div>
+                </div>
+            </div>
+
+            <!-- LỊCH SỬ MUA HÀNG -->
+            <div id="sub-lichsu-muahang" class="sub-page" style="display:none;">
+                <div class="page-heading">Lịch sử mua hàng</div>
+                <div class="page-heading-underline"></div>
+                <div class="note-box">
+                    <strong>⚠️ Lưu ý:</strong>
+                    Hãy sao lưu toàn bộ tài khoản đã mua nhé, tránh trường hợp shop bị lỗi và không thể xem lại đơn hàng.<br>
+                    Sau khi mua tài khoản thành công hãy kiểm tra gói và đổi thông tin tài khoản của bạn để bảo mật tốt hơn, tránh các trường hợp đáng tiếc có thể xảy ra!
+                </div>
+                <div class="search-filter">
+                    <input type="text" id="search-muahang" placeholder="Nhập thông tin tìm kiếm,...">
+                    <button class="btn-search">Tìm kiếm</button>
+                </div>
+                <div id="list-muahang">
+                    <div class="empty-state"><i class="fas fa-shopping-bag"></i><p>Chưa có lịch sử mua hàng</p><button class="btn-buy-now" onclick="showPage('home')">Mua hàng ngay</button></div>
+                </div>
+            </div>
+
+            <!-- BIẾN ĐỘNG SỐ DƯ -->
+            <div id="sub-bien-dong" class="sub-page" style="display:none;">
+                <div class="page-heading">Biến động số dư</div>
+                <div class="page-heading-underline"></div>
+                <div class="page-sub">Lịch sử các giao dịch thay đổi số dư trong tài khoản của bạn</div>
+                <div id="list-bien-dong">
+                    <div class="empty-state"><i class="fas fa-chart-line"></i><p>Chưa có giao dịch nào</p></div>
+                </div>
+            </div>
+
+            <!-- NGÂN HÀNG -->
+            <div id="sub-ngan-hang" class="sub-page" style="display:none;">
+                <div class="page-heading">Nạp tiền</div>
+                <div class="page-heading-underline"></div>
+
+                <div class="guide-box">
+                    <div class="guide-title">📋 Hướng dẫn nạp tiền theo hoá đơn (cách 1)</div>
+                    <div class="guide-text">
+                        Bạn tạo hoá đơn với số tiền cần nạp => Sau đó chuyển tiền theo đúng số tài khoản và nội dung như trên màn hình hiển thị!
+                        <ul>
+                            <li>Hệ thống sẽ tự cộng tiền vào tài khoản của bạn sau khoảng 1 phút nên bắt buộc cần nhập đúng nội dung chuyển khoản!</li>
+                            <li>Nếu sai nội dung hoặc sau 10p chưa được cộng tiền thì liên hệ ADMIN!</li>
+                            <li>Không hỗ trợ hoàn tiền, chỉ nạp đủ số tiền cần dùng.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div style="font-weight:700;font-size:14px;margin-bottom:12px;">🏦 Nạp tiền theo hoá đơn</div>
+                <div class="bank-card">
+                    <div class="bank-name-big">ACB</div>
+                    <div class="bank-auto">Tự động</div>
+                </div>
+
+                <div class="guide-box" style="margin-top:16px;">
+                    <div class="guide-title">📋 Hướng dẫn nạp tiền theo cú pháp (cách 2)</div>
+                    <div class="guide-text">
+                        Quét QR - Chuyển tiền theo đúng số tài khoản và nội dung ở phía dưới
+                        <ul>
+                            <li>Hệ thống sẽ tự cộng tiền vào tài khoản của bạn sau khoảng 1 phút nên bắt buộc cần nhập đúng nội dung chuyển khoản!</li>
+                            <li>Nếu sai nội dung hoặc sau 10p chưa được cộng tiền thì liên hệ ADMIN!</li>
+                            <li>Không hỗ trợ hoàn tiền, chỉ nạp đủ số tiền cần dùng.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div style="font-weight:700;font-size:14px;margin-bottom:12px;">📲 Nạp tiền theo cú pháp</div>
+                <div class="qr-section">
+                    <div class="bank-header-row">
+                        <div class="bank-logo-text">ACB</div>
+                        <span style="font-size:14px;font-weight:600;color:#2d3748;">ACB</span>
+                    </div>
+                    <div class="bank-info-row">
+                        <span class="bank-info-label">Số tài khoản</span>
+                        <span class="bank-info-value">16535551 <button class="btn-copy" onclick="copyText('16535551')"><i class="fas fa-copy"></i></button></span>
+                    </div>
+                    <div class="bank-info-row">
+                        <span class="bank-info-label">Chủ tài khoản</span>
+                        <span class="bank-info-value">NGUYEN TUAN ANH</span>
+                    </div>
+                    <div class="bank-info-row">
+                        <span class="bank-info-label">Ngân hàng</span>
+                        <span class="bank-info-value">ACB</span>
+                    </div>
+                    <div class="bank-info-row">
+                        <span class="bank-info-label">Nội dung chuyển khoản</span>
+                        <span class="bank-info-value red" id="noi-dung-ck">TNQ<span id="ck-code"></span> <button class="btn-copy" onclick="copyText(document.getElementById('noi-dung-ck').innerText)"><i class="fas fa-copy"></i></button></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- THẺ CÀO -->
+            <div id="sub-the-cao" class="sub-page" style="display:none;">
+                <div class="page-heading">Nạp Thẻ Cào</div>
+                <div class="page-heading-underline"></div>
+
+                <div class="warning-box">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <div>
+                        <div class="w-title">Lưu ý quan trọng</div>
+                        <div class="w-text">NẠP THẺ SẼ CHIẾT KHẤU 20% GIÁ TRỊ THẺ. Ví dụ: 100k thẻ cào = 80K tiền shop.<br>NẾU BẠN NHẬP SAI MỆNH GIÁ, THÌ SẼ KHÔNG NHẬN ĐƯỢC TIỀN!</div>
+                    </div>
+                </div>
+
+                <div style="font-weight:700;font-size:14px;margin-bottom:10px;">🗂️ Thông tin thẻ cào</div>
+                <div style="font-size:13px;color:#718096;margin-bottom:10px;">Chọn nhà mạng <span style="color:#e53e3e">*</span> Đã được sắp xếp theo thứ tự ưu tiên!</div>
+
+                <div class="carrier-grid" id="carrier-grid">
+                    <div class="carrier-btn selected" onclick="selectCarrier(this,'Garena')"><span class="carrier-logo" style="color:#e53e3e;">G</span>GARENA</div>
+                    <div class="carrier-btn" onclick="selectCarrier(this,'Zing')"><span class="carrier-logo" style="color:#0066cc;">Z</span>Zing</div>
+                    <div class="carrier-btn" onclick="selectCarrier(this,'Viettel')"><span class="carrier-logo" style="color:#e53e3e;">V</span>Viettel</div>
+                    <div class="carrier-btn" onclick="selectCarrier(this,'Vinaphone')"><span class="carrier-logo" style="color:#1a56db;">Vi</span>Vinaphone</div>
+                    <div class="carrier-btn" onclick="selectCarrier(this,'Mobifone')"><span class="carrier-logo" style="color:#e86c00;">M</span>Mobifone</div>
+                    <div class="carrier-btn" onclick="selectCarrier(this,'Vietnamobile')"><span class="carrier-logo" style="color:#cc0000;">Vm</span>Vietnamobile</div>
+                </div>
+
+                <div style="font-size:13px;color:#718096;margin-bottom:10px;">Chọn mệnh giá <span style="color:#e53e3e">*</span></div>
+                <div class="denom-grid" id="denom-grid">
+                    <div class="denom-btn" onclick="selectDenom(this,10000)">10.000đ</div>
+                    <div class="denom-btn" onclick="selectDenom(this,20000)">20.000đ</div>
+                    <div class="denom-btn" onclick="selectDenom(this,30000)">30.000đ</div>
+                    <div class="denom-btn" onclick="selectDenom(this,50000)">50.000đ</div>
+                    <div class="denom-btn" onclick="selectDenom(this,100000)">100.000đ</div>
+                    <div class="denom-btn" onclick="selectDenom(this,200000)">200.000đ</div>
+                    <div class="denom-btn" onclick="selectDenom(this,500000)">500.000đ</div>
+                    <div class="denom-btn" onclick="selectDenom(this,1000000)">1.000.000đ</div>
+                </div>
+
+                <div class="form-label">Mã Seri <span>*</span></div>
+                <input type="text" id="card-seri" class="form-input" placeholder="Nhập số seri trên thẻ">
+                <div class="form-label">Mã Thẻ <span>*</span></div>
+                <input type="text" id="card-pin" class="form-input" placeholder="Nhập mã thẻ cào">
+
+                <div class="amount-display">
+                    <div class="ad-label">Số tiền thực nhận</div>
+                    <div class="ad-amount" id="amount-display">0đ</div>
+                    <div class="ad-discount">Chiết khấu: 20%</div>
+                </div>
+
+                <button class="btn-submit-card" onclick="submitTheCao()">
+                    <i class="fas fa-paper-plane"></i> Nạp Thẻ Ngay
+                </button>
+
+                <div class="card-history-title"><i class="fas fa-history"></i> Lịch sử nạp thẻ</div>
+                <div id="the-cao-history">
+                    <div style="text-align:center;padding:20px;color:#a0aec0;font-size:13px;">Chưa có lịch sử</div>
+                </div>
+            </div>
+
+            <!-- HOÁ ĐƠN -->
+            <div id="sub-hoa-don" class="sub-page" style="display:none;">
+                <div class="page-heading">Hoá Đơn</div>
+                <div class="page-heading-underline"></div>
+                <div class="invoice-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    Mỗi hoá đơn chỉ tồn tại trong 15 phút tính từ thời gian tạo, vui lòng thực hiện thanh toán sau khi tạo hoá đơn.
+                </div>
+                <div id="list-hoa-don">
+                    <div class="empty-state">
+                        <i class="fas fa-file-invoice" style="font-size:48px;color:#e2e8f0;display:block;margin-bottom:12px;"></i>
+                        <p>Chưa có hoá đơn nào</p>
+                        <button class="btn-buy-now" onclick="showSubPage('ngan-hang')">Mua hàng ngay</button>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- end account-content -->
+    </div><!-- end account-layout -->
+</div><!-- end page-account -->
 
 <!-- Modal Login -->
 <div id="loginModal" class="modal">
     <div class="modal-box">
-        <button class="modal-close" onclick="toggleModal('loginModal',false)">&times;</button>
+        <button class="modal-close" onclick="closeModal('loginModal')">&times;</button>
         <h2>Đăng nhập</h2>
         <p>Chào mừng trở lại TN QUANG STORE</p>
         <input type="email" id="email" placeholder="Địa chỉ email">
         <input type="password" id="pass" placeholder="Mật khẩu">
-        <button class="btn-tao" style="width:100%;" onclick="authAction()">XÁC NHẬN</button>
+        <button class="btn-tao" style="width:100%;padding:12px;" onclick="authAction()">XÁC NHẬN</button>
     </div>
 </div>
 
 <!-- FOOTER -->
 <footer>
     <div class="footer-inner">
-        <div class="footer-logo">
-            <i class="fas fa-ship f-icon"></i>
-            <span class="f-name">TN QUANG STORE</span>
-        </div>
+        <div class="footer-logo"><i class="fas fa-ship f-icon"></i><span class="f-name">TN QUANG STORE</span></div>
         <div class="footer-desc">Shop bán Acc Blox Fruit, Dịch vụ PREMIUM ... an toàn - uy tín - chất lượng</div>
-        <div class="footer-online">
-            <span>⏰ Hoạt động: 7h - 24h</span>
-            <span class="dot-online"></span>
-            <span>Online 24/7</span>
-        </div>
+        <div class="footer-online"><span>⏰ Hoạt động: 7h - 24h</span><span class="dot-online"></span><span>Online 24/7</span></div>
         <div class="footer-cols">
             <div class="footer-col">
                 <h4>LIÊN HỆ</h4>
                 <a href="#"><i class="fab fa-facebook"></i> TN Quang</a>
-                <a href="#"><i class="fab fa-youtube"></i> Kênh YouTube</a>
+                <a href="#"><i class="fab fa-youtube"></i> Nhóm Zalo</a>
             </div>
             <div class="footer-col">
                 <h4>LIÊN KẾT</h4>
-                <a href="#"><i class="fas fa-home"></i> Trang chủ</a>
-                <a href="#"><i class="fas fa-user"></i> Tài khoản</a>
-                <a href="#"><i class="fas fa-history"></i> Lịch sử mua hàng</a>
-                <a href="#"><i class="fas fa-gamepad"></i> Lịch sử nạp game</a>
+                <a onclick="showPage('home')"><i class="fas fa-home"></i> Trang chủ</a>
+                <a onclick="showPage('account')"><i class="fas fa-user"></i> Tài khoản</a>
+                <a onclick="showSubPageAndNav('lichsu-muahang')"><i class="fas fa-history"></i> Lịch sử mua hàng</a>
+                <a onclick="showSubPageAndNav('lichsu-napgame')"><i class="fas fa-gamepad"></i> Lịch sử nạp game</a>
             </div>
         </div>
         <div class="footer-bottom">© 2026 TN QUANG STORE. All rights reserved.</div>
@@ -309,6 +670,7 @@
 </footer>
 
 <script>
+// ===== FIREBASE =====
 const firebaseConfig = {
     apiKey: "AIzaSyBfFejnht7HCJqjw95JFCpOMPR1HB3GSGU",
     authDomain: "tnquangstore.firebaseapp.com",
@@ -322,48 +684,66 @@ const auth = firebase.auth();
 const db = firebase.firestore();
 const ADMIN_EMAIL = "tnquang477@gmail.com";
 let isAdmin = false;
+let currentUser = null;
+let selectedCarrier = 'Garena';
+let selectedDenom = 0;
 
-function toggleModal(id, show) {
-    document.getElementById(id).style.display = show ? 'flex' : 'none';
+// ===== MODAL =====
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+// ===== PAGES =====
+function showPage(name) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + (name === 'account' ? 'account' : 'home')).classList.add('active');
+    if(name === 'account') {
+        loadAccountData();
+    }
+    window.scrollTo(0, 0);
 }
 
-// ===== RENDER CARD POSTER =====
-function renderCard(spDoc) {
-    const sp = spDoc.data();
-    const id = spDoc.id;
-    const soLuong = sp.listAcc ? sp.listAcc.length : 0;
-    const txtStock = soLuong > 0
-        ? `<div class="poster-stock" style="color:#27ae60;">Còn: ${soLuong} acc</div>`
-        : `<div class="poster-stock" style="color:#e53e3e;">HẾT HÀNG</div>`;
-    const adminCtrl = isAdmin ? `
-        <div class="admin-controls">
-            <button class="btn-edit" onclick="moBangSua('${id}','${sp.ten.replace(/'/g,"\\'")}',${sp.gia},'${sp.anh}')">✏️</button>
-            <button class="btn-delete" onclick="xoaSanPham('${id}')">🗑️</button>
-        </div>` : '';
-    return `
-        <div class="card-poster">
-            ${adminCtrl}
-            <img class="poster-img" src="${sp.anh}" onerror="this.src='https://via.placeholder.com/140x190?text=No+Image'">
-            <div class="poster-name">${sp.ten}</div>
-            <div class="poster-price">${Number(sp.gia).toLocaleString()}đ</div>
-            ${txtStock}
-        </div>`;
+function showSubPage(name) {
+    document.querySelectorAll('.sub-page').forEach(p => p.style.display = 'none');
+    document.getElementById('sub-' + name).style.display = 'block';
+    document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+    const sl = document.getElementById('sl-' + name);
+    if(sl) sl.classList.add('active');
+
+    if(name === 'lichsu-muahang') loadLichSuMuaHang();
+    if(name === 'lichsu-napgame') loadLichSuNapGame();
+    if(name === 'bien-dong') loadBienDong();
+    if(name === 'the-cao') loadTheCaoHistory();
+    if(name === 'hoa-don') loadHoaDon();
 }
 
-// ===== ĐĂNG NHẬP STATE =====
+function showSubPageAndNav(name) {
+    if(!currentUser) { openModal('loginModal'); return; }
+    showPage('account');
+    setTimeout(() => showSubPage(name), 100);
+}
+
+// ===== AUTH =====
 auth.onAuthStateChanged(user => {
     const area = document.getElementById('auth-area');
     const adminPanel = document.getElementById('admin-panel');
     const btnFlash = document.getElementById('btn-flash-post');
+    currentUser = user;
 
     if(user) {
         isAdmin = user.email === ADMIN_EMAIL;
-        if(isAdmin) { adminPanel.style.display = 'block'; btnFlash.style.display = 'inline-block'; }
+        if(isAdmin) { adminPanel.style.display='block'; btnFlash.style.display='inline-block'; }
 
         db.collection("users").doc(user.email).onSnapshot(doc => {
-            const data = doc.data() || {vnd: 0};
+            const data = doc.data() || {vnd:0};
             const ten = user.email.split('@')[0];
             const bal = data.vnd.toLocaleString();
+
+            // Update sidebar
+            const sbBal = document.getElementById('sb-balance');
+            const sbName = document.getElementById('sb-name');
+            if(sbBal) sbBal.innerText = bal + 'đ';
+            if(sbName) sbName.innerText = ten;
+
             area.innerHTML = `
                 <div class="user-right">
                     <div class="balance-trigger" id="balTrigger">
@@ -377,26 +757,35 @@ auth.onAuthStateChanged(user => {
                             <div class="d-bal">${bal} VNĐ</div>
                         </div>
                         <div class="drop-links">
-                            <a href="#"><i class="fas fa-user-circle"></i> Trang cá nhân</a>
-                            <a href="#" onclick="toggleModal('topupModal',true)"><i class="fas fa-money-bill-wave"></i> Nạp Tiền</a>
-                            <a href="#"><i class="fas fa-gamepad"></i> Lịch sử nạp game</a>
-                            <a href="#"><i class="fas fa-history"></i> Lịch Sử Mua Hàng</a>
-                            <a href="#" class="logout" onclick="auth.signOut()"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+                            <a onclick="showSubPageAndNav('profile')"><i class="fas fa-user-circle"></i> Trang cá nhân</a>
+                            <a onclick="showSubPageAndNav('nap-the-btn')"><i class="fas fa-money-bill-wave"></i> Nạp Tiền</a>
+                            <a onclick="showSubPageAndNav('lichsu-napgame')"><i class="fas fa-gamepad"></i> Lịch sử nạp game</a>
+                            <a onclick="showSubPageAndNav('lichsu-muahang')"><i class="fas fa-history"></i> Lịch Sử Mua Hàng</a>
+                            <a class="logout" onclick="auth.signOut()"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
                         </div>
                     </div>
                 </div>`;
 
-            // Dropdown toggle - gắn 1 lần sau render
             const trigger = document.getElementById('balTrigger');
             const drop = document.getElementById('userDrop');
             trigger.addEventListener('click', e => { e.stopPropagation(); drop.classList.toggle('show'); });
             window.addEventListener('click', () => drop.classList.remove('show'));
+
+            // Profile info
+            document.getElementById('profile-username').innerText = ten;
+            document.getElementById('profile-email').innerText = user.email;
+            const created = user.metadata.creationTime ? new Date(user.metadata.creationTime).toLocaleString('vi-VN') : '-';
+            document.getElementById('profile-created').innerText = created;
+
+            // Nội dung chuyển khoản
+            const ckCode = document.getElementById('ck-code');
+            if(ckCode) ckCode.innerText = ten.toUpperCase().replace(/\s/g,'').substring(0,6);
         });
     } else {
         isAdmin = false;
         adminPanel.style.display = 'none';
         btnFlash.style.display = 'none';
-        area.innerHTML = `<button class="btn-login" onclick="toggleModal('loginModal',true)">Đăng nhập</button>`;
+        area.innerHTML = `<button class="btn-login" onclick="openModal('loginModal')">Đăng nhập</button>`;
     }
     hienThiFlashSale();
     hienThiTrangChu();
@@ -405,33 +794,273 @@ auth.onAuthStateChanged(user => {
 async function authAction() {
     const e = document.getElementById('email').value;
     const p = document.getElementById('pass').value;
-    if(!e || !p) return alert("Điền đủ thông tin!");
-    try { await auth.signInWithEmailAndPassword(e, p); }
-    catch { await auth.createUserWithEmailAndPassword(e, p); await db.collection("users").doc(e).set({vnd:0,robux:0}); }
-    toggleModal('loginModal', false);
+    if(!e||!p) return alert("Điền đủ thông tin!");
+    try { await auth.signInWithEmailAndPassword(e,p); }
+    catch { await auth.createUserWithEmailAndPassword(e,p); await db.collection("users").doc(e).set({vnd:0,robux:0}); }
+    closeModal('loginModal');
 }
 
-async function submitCard() {
-    const pin = document.getElementById('pin').value;
-    const seri = document.getElementById('seri').value;
-    if(!pin || !seri) return alert("Nhập PIN và Seri!");
-    await db.collection("napthe").add({
-        email: auth.currentUser.email,
-        type: document.getElementById('cardType').value,
-        value: parseInt(document.getElementById('cardValue').value),
-        pin, seri, status: "Chờ duyệt",
-        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+function loadAccountData() {
+    if(!currentUser) { openModal('loginModal'); showPage('home'); return; }
+    const sbBal = document.getElementById('sb-balance');
+    const sbName = document.getElementById('sb-name');
+    db.collection("users").doc(currentUser.email).get().then(doc => {
+        const data = doc.data() || {vnd:0};
+        if(sbBal) sbBal.innerText = data.vnd.toLocaleString() + 'đ';
+        if(sbName) sbName.innerText = currentUser.email.split('@')[0];
     });
-    alert("✅ Thẻ đã gửi! Chờ Admin duyệt.");
-    toggleModal('topupModal', false);
+}
+
+// ===== ĐỔI MẬT KHẨU =====
+function togglePwd(id, icon) {
+    const input = document.getElementById(id);
+    if(input.type==='password') { input.type='text'; icon.classList.replace('fa-eye','fa-eye-slash'); }
+    else { input.type='password'; icon.classList.replace('fa-eye-slash','fa-eye'); }
+}
+
+async function doiMatKhau() {
+    const cur = document.getElementById('pwd-current').value;
+    const nw = document.getElementById('pwd-new').value;
+    const cf = document.getElementById('pwd-confirm').value;
+    if(!cur||!nw||!cf) return alert("Vui lòng điền đủ thông tin!");
+    if(nw !== cf) return alert("Mật khẩu mới không khớp!");
+    if(nw.length < 6) return alert("Mật khẩu phải có ít nhất 6 ký tự!");
+    try {
+        const cred = firebase.auth.EmailAuthProvider.credential(currentUser.email, cur);
+        await currentUser.reauthenticateWithCredential(cred);
+        await currentUser.updatePassword(nw);
+        alert("✅ Đổi mật khẩu thành công!");
+        ['pwd-current','pwd-new','pwd-confirm'].forEach(id => document.getElementById(id).value='');
+    } catch(e) {
+        alert("❌ Lỗi: " + (e.code==='auth/wrong-password' ? 'Mật khẩu hiện tại không đúng!' : e.message));
+    }
+}
+
+// ===== LOAD LỊCH SỬ MUA HÀNG =====
+function loadLichSuMuaHang() {
+    if(!currentUser) return;
+    const container = document.getElementById('list-muahang');
+    container.innerHTML = '<div style="text-align:center;padding:20px;color:#a0aec0;">Đang tải...</div>';
+    db.collection("DonHang").where("email","==",currentUser.email).orderBy("ngayMua","desc").get().then(snap => {
+        if(snap.empty) {
+            container.innerHTML = '<div class="empty-state"><i class="fas fa-shopping-bag"></i><p>Chưa có lịch sử mua hàng</p><button class="btn-buy-now" onclick="showPage(\'home\')">Mua hàng ngay</button></div>';
+            return;
+        }
+        container.innerHTML = '';
+        snap.forEach(doc => {
+            const d = doc.data();
+            const ngay = d.ngayMua ? new Date(d.ngayMua.toDate()).toLocaleString('vi-VN') : '-';
+            container.innerHTML += `
+                <div class="order-item">
+                    <img class="order-img" src="${d.anh||'https://via.placeholder.com/48'}" onerror="this.src='https://via.placeholder.com/48'">
+                    <div class="order-info">
+                        <div class="order-name">${d.tenSanPham||'-'} <span class="qty-badge">x1</span></div>
+                        <div class="order-code">Mã đơn: ${doc.id.substring(0,14).toUpperCase()}</div>
+                        <div class="order-date">${ngay}</div>
+                    </div>
+                    <div class="order-right">
+                        <div class="order-price">${Number(d.gia||0).toLocaleString()}đ</div>
+                        <span class="badge badge-success">HOÀN THÀNH</span>
+                    </div>
+                </div>`;
+        });
+    }).catch(() => { container.innerHTML = '<div class="empty-state"><p>Chưa có lịch sử mua hàng</p></div>'; });
+}
+
+// ===== LOAD LỊCH SỬ NẠP GAME =====
+function loadLichSuNapGame() {
+    if(!currentUser) return;
+    const container = document.getElementById('list-napgame');
+    container.innerHTML = '<div style="text-align:center;padding:20px;color:#a0aec0;">Đang tải...</div>';
+    db.collection("NapGame").where("email","==",currentUser.email).orderBy("ngayNap","desc").get().then(snap => {
+        if(snap.empty) {
+            container.innerHTML = '<div class="empty-state"><i class="fas fa-gamepad"></i><p>Chưa có lịch sử nạp game</p></div>';
+            return;
+        }
+        container.innerHTML = '';
+        snap.forEach(doc => {
+            const d = doc.data();
+            const ngay = d.ngayNap ? new Date(d.ngayNap.toDate()).toLocaleString('vi-VN') : '-';
+            container.innerHTML += `
+                <div class="order-item">
+                    <div class="order-info">
+                        <div class="order-name">${d.tenGoi||'-'}</div>
+                        <div class="order-code">${d.game||'-'}</div>
+                        <div class="order-code">${d.maGD||doc.id.substring(0,10).toUpperCase()}</div>
+                        <div class="order-date">${ngay}</div>
+                    </div>
+                    <div class="order-right">
+                        <div class="order-price">${Number(d.gia||0).toLocaleString()}đ</div>
+                        <span class="badge badge-success">HOÀN THÀNH</span>
+                    </div>
+                </div>`;
+        });
+    }).catch(() => { container.innerHTML = '<div class="empty-state"><p>Chưa có lịch sử nạp game</p></div>'; });
+}
+
+// ===== BIẾN ĐỘNG SỐ DƯ =====
+function loadBienDong() {
+    if(!currentUser) return;
+    const container = document.getElementById('list-bien-dong');
+    container.innerHTML = '<div style="text-align:center;padding:20px;color:#a0aec0;">Đang tải...</div>';
+    db.collection("GiaoDich").where("email","==",currentUser.email).orderBy("thoiGian","desc").get().then(snap => {
+        if(snap.empty) {
+            container.innerHTML = '<div class="empty-state"><i class="fas fa-chart-line"></i><p>Chưa có giao dịch nào</p></div>';
+            return;
+        }
+        container.innerHTML = '';
+        snap.forEach(doc => {
+            const d = doc.data();
+            const ngay = d.thoiGian ? new Date(d.thoiGian.toDate()).toLocaleString('vi-VN') : '-';
+            const isPlus = d.loai === 'cong';
+            container.innerHTML += `
+                <div class="transaction-item">
+                    <div class="trans-header">
+                        <div class="trans-desc">${d.moTa||'-'}</div>
+                        <div>
+                            <div class="trans-amount ${isPlus?'plus':'minus'}">${isPlus?'+':'-'}${Number(d.soTien||0).toLocaleString()}đ</div>
+                            <span class="trans-badge ${isPlus?'cong':'tru'}">${isPlus?'CỘNG TIỀN':'TRỪ TIỀN'}</span>
+                        </div>
+                    </div>
+                    <div class="trans-date">⏰ ${ngay}</div>
+                    <div class="trans-balance">
+                        <div class="trans-bal-item">
+                            <div class="trans-bal-label">SỐ DƯ TRƯỚC</div>
+                            <div class="trans-bal-value">${Number(d.truoc||0).toLocaleString()}đ</div>
+                        </div>
+                        <div class="trans-arrow"><i class="fas fa-arrow-right"></i></div>
+                        <div class="trans-bal-item">
+                            <div class="trans-bal-label">SỐ DƯ SAU</div>
+                            <div class="trans-bal-value">${Number(d.sau||0).toLocaleString()}đ</div>
+                        </div>
+                    </div>
+                </div>`;
+        });
+    }).catch(() => { container.innerHTML = '<div class="empty-state"><p>Chưa có giao dịch nào</p></div>'; });
+}
+
+// ===== THẺ CÀO =====
+function selectCarrier(el, name) {
+    document.querySelectorAll('.carrier-btn').forEach(b => b.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedCarrier = name;
+}
+
+function selectDenom(el, amount) {
+    document.querySelectorAll('.denom-btn').forEach(b => b.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedDenom = amount;
+    const actual = Math.round(amount * 0.8);
+    document.getElementById('amount-display').innerText = actual.toLocaleString() + 'đ';
+}
+
+async function submitTheCao() {
+    if(!currentUser) return openModal('loginModal');
+    const seri = document.getElementById('card-seri').value.trim();
+    const pin = document.getElementById('card-pin').value.trim();
+    if(!selectedCarrier) return alert("Chọn nhà mạng!");
+    if(!selectedDenom) return alert("Chọn mệnh giá!");
+    if(!seri||!pin) return alert("Nhập Seri và Mã thẻ!");
+    await db.collection("napthe").add({
+        email: currentUser.email,
+        nhamang: selectedCarrier,
+        menhgia: selectedDenom,
+        seri, pin,
+        status: "Chờ duyệt",
+        thoiGian: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    alert("✅ Thẻ đã gửi! Chờ hệ thống duyệt.");
+    document.getElementById('card-seri').value='';
+    document.getElementById('card-pin').value='';
+    selectedDenom=0;
+    document.querySelectorAll('.denom-btn').forEach(b=>b.classList.remove('selected'));
+    document.getElementById('amount-display').innerText='0đ';
+    loadTheCaoHistory();
+}
+
+function loadTheCaoHistory() {
+    if(!currentUser) return;
+    const container = document.getElementById('the-cao-history');
+    db.collection("napthe").where("email","==",currentUser.email).orderBy("thoiGian","desc").limit(10).get().then(snap => {
+        if(snap.empty) { container.innerHTML='<div style="text-align:center;padding:20px;color:#a0aec0;font-size:13px;">Chưa có lịch sử</div>'; return; }
+        container.innerHTML = '';
+        snap.forEach(doc => {
+            const d = doc.data();
+            const ngay = d.thoiGian ? new Date(d.thoiGian.toDate()).toLocaleString('vi-VN') : '-';
+            const isOk = d.status === 'Thành công';
+            container.innerHTML += `
+                <div class="card-history-item">
+                    <div class="ch-header">
+                        <div class="ch-carrier">${d.nhamang||d.type||'-'}</div>
+                        <span class="badge ${isOk?'badge-success':'badge-pending'}">${d.status||'Chờ duyệt'}</span>
+                    </div>
+                    <div style="font-size:12px;color:#a0aec0;margin-bottom:8px;">${ngay}</div>
+                    <div class="ch-grid">
+                        <div>
+                            <div class="ch-field-label">SERIAL</div>
+                            <div class="ch-field-value">${d.seri||'-'}</div>
+                        </div>
+                        <div>
+                            <div class="ch-field-label">MÃ THẺ</div>
+                            <div class="ch-field-value">${d.pin||'-'}</div>
+                        </div>
+                        <div>
+                            <div class="ch-field-label">MỆNH GIÁ</div>
+                            <div class="ch-field-value red">${Number(d.menhgia||d.value||0).toLocaleString()}đ</div>
+                        </div>
+                        <div>
+                            <div class="ch-field-label">THỰC NHẬN</div>
+                            <div class="ch-field-value green">${Number(Math.round((d.menhgia||d.value||0)*0.8)).toLocaleString()}đ</div>
+                        </div>
+                    </div>
+                </div>`;
+        });
+    }).catch(()=>{});
+}
+
+function loadHoaDon() {
+    if(!currentUser) return;
+    const container = document.getElementById('list-hoa-don');
+    db.collection("HoaDon").where("email","==",currentUser.email).orderBy("thoiGian","desc").get().then(snap => {
+        if(snap.empty) {
+            container.innerHTML='<div class="empty-state"><i class="fas fa-file-invoice" style="font-size:48px;color:#e2e8f0;display:block;margin-bottom:12px;"></i><p>Chưa có hoá đơn nào</p><button class="btn-buy-now" onclick="showSubPage(\'ngan-hang\')">Mua hàng ngay</button></div>';
+            return;
+        }
+        container.innerHTML = '';
+        snap.forEach(doc => {
+            const d = doc.data();
+            const ngay = d.thoiGian ? new Date(d.thoiGian.toDate()).toLocaleString('vi-VN') : '-';
+            container.innerHTML += `<div class="order-item"><div class="order-info"><div class="order-name">Hoá đơn #${doc.id.substring(0,8).toUpperCase()}</div><div class="order-date">${ngay}</div></div><div class="order-right"><div class="order-price">${Number(d.soTien||0).toLocaleString()}đ</div><span class="badge badge-pending">CHỜ THANH TOÁN</span></div></div>`;
+        });
+    }).catch(()=>{});
+}
+
+// ===== NẠP TIỀN BUTTON =====
+document.querySelector('.btn-naptien-header').addEventListener('click', () => {
+    if(!currentUser) { openModal('loginModal'); return; }
+    showPage('account');
+    setTimeout(() => showSubPage('the-cao'), 100);
+});
+
+// ===== COPY =====
+function copyText(text) {
+    navigator.clipboard.writeText(text).then(() => alert("✅ Đã copy: " + text));
+}
+
+// ===== RENDER CARD =====
+function renderCard(spDoc) {
+    const sp = spDoc.data(); const id = spDoc.id;
+    const soLuong = sp.listAcc ? sp.listAcc.length : 0;
+    const txtStock = soLuong > 0 ? `<div class="poster-stock" style="color:#27ae60;">Còn: ${soLuong} acc</div>` : `<div class="poster-stock" style="color:#e53e3e;">HẾT HÀNG</div>`;
+    const adminCtrl = isAdmin ? `<div class="admin-controls"><button class="btn-edit" onclick="moBangSua('${id}','${sp.ten.replace(/'/g,"\\'")}',${sp.gia},'${sp.anh}')">✏️</button><button class="btn-delete" onclick="xoaSanPham('${id}')">🗑️</button></div>` : '';
+    return `<div class="card-poster">${adminCtrl}<img class="poster-img" src="${sp.anh}" onerror="this.src='https://via.placeholder.com/130x175?text=No+Img'"><div class="poster-name">${sp.ten}</div><div class="poster-price">${Number(sp.gia).toLocaleString()}đ</div>${txtStock}</div>`;
 }
 
 function hienThiFlashSale() {
     db.collection("SanPham").where("khuVuc","==","FLASH SALE").onSnapshot(snap => {
         const g = document.getElementById('grid-flash-sale');
-        if(snap.empty) { g.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:20px;color:#aaa;font-size:13px;">Chưa có sản phẩm flash sale</div>`; return; }
-        g.innerHTML = "";
-        snap.forEach(d => { g.innerHTML += renderCard(d); });
+        if(snap.empty) { g.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:20px;color:#aaa;font-size:13px;">Chưa có sản phẩm</div>`; return; }
+        g.innerHTML=""; snap.forEach(d=>{ g.innerHTML+=renderCard(d); });
     });
 }
 
@@ -439,113 +1068,81 @@ function taoTieuDeMoi() {
     const ten = document.getElementById('new-category-name').value.trim();
     if(!ten) return alert("Nhập tên danh mục!");
     db.collection("DanhMuc").add({ten, ngayTao: firebase.firestore.FieldValue.serverTimestamp()})
-    .then(() => { document.getElementById('new-category-name').value=""; alert("✅ Đã tạo: "+ten); });
+    .then(()=>{ document.getElementById('new-category-name').value=""; alert("✅ Đã tạo: "+ten); });
 }
 
 function hienThiTrangChu() {
     db.collection("DanhMuc").orderBy("ngayTao","asc").onSnapshot(snap => {
-        const main = document.getElementById('main-shop-display');
-        main.innerHTML = "";
+        const main = document.getElementById('main-shop-display'); main.innerHTML="";
         snap.forEach(doc => {
             const ten = doc.data().ten;
-            const adminBtns = isAdmin ? `
-                <div class="admin-cat-btns">
-                    <button class="btn-dangbai" onclick="moFormDangBai('${ten}')">➕ Đăng</button>
-                    <button class="btn-sua-dm" onclick="suaTieuDe('${doc.id}','${ten}')">✏️</button>
-                    <button class="btn-xoa-dm" onclick="xoaTieuDe('${doc.id}')">🗑️</button>
-                </div>` : '';
-            main.innerHTML += `
-                <div class="section">
-                    <div class="section-head">
-                        <div>
-                            <div class="section-title">${ten.toUpperCase()}</div>
-                            <div class="section-desc">Nhấn vào sản phẩm để xem chi tiết</div>
-                        </div>
-                        ${adminBtns}
-                    </div>
-                    <div class="grid-poster" id="grid-${doc.id}"></div>
-                </div>`;
+            const adminBtns = isAdmin ? `<div class="admin-cat-btns"><button class="btn-dangbai" onclick="moFormDangBai('${ten}')">➕ Đăng</button><button class="btn-sua-dm" onclick="suaTieuDe('${doc.id}','${ten}')">✏️</button><button class="btn-xoa-dm" onclick="xoaTieuDe('${doc.id}')">🗑️</button></div>` : '';
+            main.innerHTML += `<div class="section"><div class="section-head"><div><div class="section-title">${ten.toUpperCase()}</div><div class="section-desc">Nhấn vào sản phẩm để xem chi tiết</div></div>${adminBtns}</div><div class="grid-poster" id="grid-${doc.id}"></div></div>`;
             db.collection("SanPham").where("khuVuc","==",ten).onSnapshot(spSnap => {
-                const g = document.getElementById(`grid-${doc.id}`);
-                if(!g) return;
-                if(spSnap.empty) { g.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:15px;color:#aaa;font-size:13px;">Chưa có sản phẩm</div>`; return; }
-                g.innerHTML = "";
-                spSnap.forEach(d => { g.innerHTML += renderCard(d); });
+                const g = document.getElementById(`grid-${doc.id}`); if(!g) return;
+                if(spSnap.empty){g.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:15px;color:#aaa;font-size:13px;">Chưa có sản phẩm</div>`;return;}
+                g.innerHTML=""; spSnap.forEach(d=>{ g.innerHTML+=renderCard(d); });
             });
         });
     });
 }
 
 function moFormDangBai(tenDM) {
-    document.getElementById('post-form-area').style.display = 'block';
-    document.getElementById('post-category').value = tenDM;
-    document.getElementById('display-category-name').innerText = tenDM.toUpperCase();
-    document.getElementById('edit-product-id').value = "";
-    document.getElementById('form-title').innerText = "Thêm Sản Phẩm";
-    document.getElementById('btn-submit-post').innerText = "ĐĂNG LÊN SHOP";
-    document.getElementById('btn-submit-post').style.background = "#2ecc71";
-    ['post-title','post-price','post-img','post-list-acc'].forEach(id => document.getElementById(id).value = "");
-    window.scrollTo({top:0, behavior:'smooth'});
+    document.getElementById('post-form-area').style.display='block';
+    document.getElementById('post-category').value=tenDM;
+    document.getElementById('display-category-name').innerText=tenDM.toUpperCase();
+    document.getElementById('edit-product-id').value="";
+    document.getElementById('form-title').innerText="Thêm Sản Phẩm";
+    document.getElementById('btn-submit-post').innerText="ĐĂNG LÊN SHOP";
+    document.getElementById('btn-submit-post').style.background="#2ecc71";
+    ['post-title','post-price','post-img','post-list-acc'].forEach(id=>document.getElementById(id).value="");
+    window.scrollTo({top:0,behavior:'smooth'});
 }
-function dongForm() { document.getElementById('post-form-area').style.display = 'none'; }
+function dongForm(){document.getElementById('post-form-area').style.display='none';}
 
-function luuBaiViet() {
-    const idSua = document.getElementById('edit-product-id').value;
-    const ten = document.getElementById('post-title').value.trim();
-    const gia = document.getElementById('post-price').value;
-    const anh = document.getElementById('post-img').value.trim();
-    const khuVuc = document.getElementById('post-category').value;
-    const listAcc = document.getElementById('post-list-acc').value.trim().split('\n').filter(a=>a.trim()!="");
+function luuBaiViet(){
+    const idSua=document.getElementById('edit-product-id').value;
+    const ten=document.getElementById('post-title').value.trim();
+    const gia=document.getElementById('post-price').value;
+    const anh=document.getElementById('post-img').value.trim();
+    const khuVuc=document.getElementById('post-category').value;
+    const listAcc=document.getElementById('post-list-acc').value.trim().split('\n').filter(a=>a.trim()!="");
     if(!ten||!gia||!anh) return alert("Nhập đủ Tên, Giá, Ảnh!");
-    if(idSua) {
+    if(idSua){
         db.collection("SanPham").doc(idSua).update({ten,gia:Number(gia),anh,listAcc}).then(()=>{alert("✅ Đã cập nhật!");dongForm();});
-    } else {
+    }else{
         db.collection("SanPham").add({ten,gia:Number(gia),anh,khuVuc,listAcc,ngayDang:firebase.firestore.FieldValue.serverTimestamp()}).then(()=>{alert("✅ Đăng thành công!");dongForm();});
     }
 }
 
-function xoaSanPham(id) {
-    if(confirm("Xác nhận xóa?")) db.collection("SanPham").doc(id).delete().then(()=>alert("✅ Đã xóa!"));
+function xoaSanPham(id){if(confirm("Xác nhận xóa?"))db.collection("SanPham").doc(id).delete().then(()=>alert("✅ Đã xóa!"));}
+
+function moBangSua(id,ten,gia,anh){
+    document.getElementById('quick-edit-modal').style.display='block';
+    document.getElementById('edit-id').value=id;
+    document.getElementById('edit-ten').value=ten;
+    document.getElementById('edit-gia').value=gia;
+    document.getElementById('edit-anh').value=anh;
+    document.getElementById('edit-list-acc').value="Đang tải...";
+    db.collection("SanPham").doc(id).get().then(d=>{ document.getElementById('edit-list-acc').value=d.data().listAcc?d.data().listAcc.join('\n'):''; });
 }
 
-function moBangSua(id, ten, gia, anh) {
-    document.getElementById('quick-edit-modal').style.display = 'block';
-    document.getElementById('edit-id').value = id;
-    document.getElementById('edit-ten').value = ten;
-    document.getElementById('edit-gia').value = gia;
-    document.getElementById('edit-anh').value = anh;
-    document.getElementById('edit-list-acc').value = "Đang tải...";
-    db.collection("SanPham").doc(id).get().then(d=>{
-        document.getElementById('edit-list-acc').value = d.data().listAcc ? d.data().listAcc.join('\n') : '';
-    });
+function luuCapNhat(){
+    const id=document.getElementById('edit-id').value;
+    const listAcc=document.getElementById('edit-list-acc').value.trim().split('\n').filter(a=>a.trim()!="");
+    db.collection("SanPham").doc(id).update({ten:document.getElementById('edit-ten').value,gia:Number(document.getElementById('edit-gia').value),anh:document.getElementById('edit-anh').value,listAcc}).then(()=>{alert("✅ Cập nhật xong!");document.getElementById('quick-edit-modal').style.display='none';});
 }
 
-function luuCapNhat() {
-    const id = document.getElementById('edit-id').value;
-    const listAcc = document.getElementById('edit-list-acc').value.trim().split('\n').filter(a=>a.trim()!="");
-    db.collection("SanPham").doc(id).update({
-        ten: document.getElementById('edit-ten').value,
-        gia: Number(document.getElementById('edit-gia').value),
-        anh: document.getElementById('edit-anh').value,
-        listAcc
-    }).then(()=>{alert("✅ Cập nhật xong!");document.getElementById('quick-edit-modal').style.display='none';});
-}
+function suaTieuDe(id,cu){const moi=prompt("Tên mới:",cu);if(moi&&moi.trim())db.collection("DanhMuc").doc(id).update({ten:moi.trim()}).then(()=>alert("✅ Đã đổi tên!"));}
+function xoaTieuDe(id){if(confirm("⚠️ Xóa danh mục này?"))db.collection("DanhMuc").doc(id).delete().then(()=>alert("✅ Đã xóa!"));}
 
-function suaTieuDe(id, cu) {
-    const moi = prompt("Tên mới:", cu);
-    if(moi && moi.trim()) db.collection("DanhMuc").doc(id).update({ten:moi.trim()}).then(()=>alert("✅ Đã đổi tên!"));
-}
-function xoaTieuDe(id) {
-    if(confirm("⚠️ Xóa danh mục này?")) db.collection("DanhMuc").doc(id).delete().then(()=>alert("✅ Đã xóa!"));
-}
-
-// ===== FLASH SALE TIMER =====
-let time = 3600 * 8 + 60 + 55; // 08:01:55
+// ===== TIMER =====
+let time = 8*3600+1*60+55;
 setInterval(()=>{
-    let h=Math.floor(time/3600), m=Math.floor((time%3600)/60), s=time%60;
-    document.getElementById('t-h').innerText = h<10?'0'+h:h;
-    document.getElementById('t-m').innerText = m<10?'0'+m:m;
-    document.getElementById('t-s').innerText = s<10?'0'+s:s;
+    let h=Math.floor(time/3600),m=Math.floor((time%3600)/60),s=time%60;
+    document.getElementById('t-h').innerText=h<10?'0'+h:h;
+    document.getElementById('t-m').innerText=m<10?'0'+m:m;
+    document.getElementById('t-s').innerText=s<10?'0'+s:s;
     if(time>0) time--;
 },1000);
 </script>
