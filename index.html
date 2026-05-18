@@ -14,14 +14,11 @@
         .tab-content.active { display: block; }
         .sub-page { display: none; }
         .sub-page.active { display: block; }
-        .nav-btn.active { background: rgba(255,255,255,0.2); }
         .sidebar-link.active { background: #ebf4ff; color: #1a56db; border-left: 3px solid #1a56db; font-weight: 700; }
-        .carrier-btn.selected { border-color: #1a56db; background: #ebf4ff; color: #1a56db; }
-        .denom-btn.selected { border-color: #1a56db; background: #ebf4ff; color: #1a56db; }
-        .platform-btn.active { background: #1a56db; color: white; }
-        .admin-tab.active { color: #1a56db; border-bottom: 2px solid #1a56db; }
         .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center; }
         .modal-overlay.open { display: flex; }
+        .sticky-sidebar { position: sticky; top: 1rem; max-height: calc(100vh - 2rem); overflow-y: auto; }
+        .pkg-card.active-pkg { border-color: #10b981 !important; background: rgba(16,185,129,0.08); }
         @media(max-width:768px){ .search-hide{display:none;} }
     </style>
 </head>
@@ -49,7 +46,7 @@
         </nav>
     </div>
     <div class="bg-white border-t border-gray-100 py-1.5 overflow-hidden text-sm text-gray-500">
-        <marquee>🔥 Chào mừng đến với TN QUANG STORE - Hệ thống bán Acc Blox Fruit, Buff MXH, Nạp Game uy tín hàng đầu Việt Nam! 🚀</marquee>
+        <marquee>🔥 Chào mừng đến với TN QUANG STORE - Hệ thống bán Acc, Buff MXH, Nạp Game uy tín hàng đầu Việt Nam! 🚀</marquee>
     </div>
 </header>
 
@@ -57,60 +54,41 @@
 
 <!-- ==================== TAB: TÀI KHOẢN ==================== -->
 <div id="tab-tai-khoan" class="tab-content">
-    <!-- ADMIN: Form đăng bài -->
-    <div id="admin-post-form" class="hidden mb-6 bg-white rounded-xl p-5 border-2 border-blue-300">
+    <div id="admin-post-form-tk" class="hidden mb-6 bg-white rounded-xl p-5 border-2 border-blue-300">
         <h3 class="font-black text-blue-700 text-lg mb-4">🛠️ Đăng Sản Phẩm Mới</h3>
         <div class="grid grid-cols-2 gap-4 mb-4">
             <div>
-                <label class="text-sm font-semibold text-gray-600 mb-1 block">Loại sản phẩm</label>
-                <select id="post-type" onchange="updatePostType()" class="w-full border border-gray-200 rounded-lg p-2.5 text-sm focus:border-blue-400 outline-none">
+                <label class="text-sm font-semibold text-gray-600 mb-1 block">Loại</label>
+                <select id="post-type" class="w-full border border-gray-200 rounded-lg p-2.5 text-sm outline-none">
                     <option value="tai-khoan">Tài Khoản</option>
                     <option value="dich-vu">Dịch Vụ</option>
                 </select>
             </div>
             <div>
-                <label class="text-sm font-semibold text-gray-600 mb-1 block">Chế độ xử lý</label>
-                <select id="post-mode" onchange="togglePostMode()" class="w-full border border-gray-200 rounded-lg p-2.5 text-sm focus:border-blue-400 outline-none">
-                    <option value="auto">✅ Xử lý tự động (nhả acc ngay)</option>
-                    <option value="manual">✋ Xử lý thủ công (duyệt tay)</option>
+                <label class="text-sm font-semibold text-gray-600 mb-1 block">Chế độ</label>
+                <select id="post-mode" onchange="togglePostMode()" class="w-full border border-gray-200 rounded-lg p-2.5 text-sm outline-none">
+                    <option value="auto">✅ Tự động</option>
+                    <option value="manual">✋ Thủ công</option>
                 </select>
             </div>
         </div>
         <div class="grid grid-cols-2 gap-4 mb-4">
-            <div>
-                <label class="text-sm font-semibold text-gray-600 mb-1 block">Tên sản phẩm</label>
-                <input type="text" id="post-name" placeholder="Acc Blox Fruit Max..." class="w-full border border-gray-200 rounded-lg p-2.5 text-sm focus:border-blue-400 outline-none">
-            </div>
-            <div>
-                <label class="text-sm font-semibold text-gray-600 mb-1 block">Giá (VNĐ)</label>
-                <input type="number" id="post-price" placeholder="100000" class="w-full border border-gray-200 rounded-lg p-2.5 text-sm focus:border-blue-400 outline-none">
-            </div>
+            <input type="text" id="post-name" placeholder="Tên sản phẩm..." class="border border-gray-200 rounded-lg p-2.5 text-sm outline-none focus:border-blue-400">
+            <input type="number" id="post-price" placeholder="Giá (VNĐ)" class="border border-gray-200 rounded-lg p-2.5 text-sm outline-none focus:border-blue-400">
         </div>
-        <div>
-            <label class="text-sm font-semibold text-gray-600 mb-1 block">Link ảnh sản phẩm</label>
-            <input type="text" id="post-img" placeholder="https://..." class="w-full border border-gray-200 rounded-lg p-2.5 text-sm focus:border-blue-400 outline-none mb-3">
-        </div>
-        <!-- Chế độ tự động -->
+        <input type="text" id="post-img" placeholder="Link ảnh..." class="w-full border border-gray-200 rounded-lg p-2.5 text-sm outline-none focus:border-blue-400 mb-3">
         <div id="auto-section">
-            <label class="text-sm font-semibold text-gray-600 mb-1 block">Danh sách tài khoản (User|Pass - mỗi dòng 1 acc)</label>
-            <textarea id="post-acc-list" placeholder="user1|pass1&#10;user2|pass2&#10;user3|pass3" rows="4" class="w-full border border-gray-200 rounded-lg p-2.5 text-sm focus:border-blue-400 outline-none resize-none"></textarea>
+            <textarea id="post-acc-list" placeholder="User|Pass (mỗi dòng 1 acc)" rows="3" class="w-full border border-gray-200 rounded-lg p-2.5 text-sm outline-none resize-none"></textarea>
         </div>
-        <!-- Chế độ thủ công -->
         <div id="manual-section" class="hidden">
-            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3 text-sm text-yellow-800">
-                <i class="fas fa-info-circle mr-1"></i> Chế độ thủ công: Khi khách mua, đơn hàng sẽ được gửi vào Hộp Thư Admin để bạn duyệt và xử lý thủ công.
-            </div>
+            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3 text-sm text-yellow-700">Chế độ thủ công: đơn hàng vào Hộp Thư Admin.</div>
         </div>
-        <button onclick="adminPostProduct()" class="mt-4 w-full bg-blue-700 text-white py-2.5 rounded-lg font-bold hover:bg-blue-800 transition">ĐĂNG LÊN SHOP</button>
+        <button onclick="adminPostProduct()" class="mt-3 w-full bg-blue-700 text-white py-2.5 rounded-lg font-bold hover:bg-blue-800 transition">ĐĂNG LÊN SHOP</button>
     </div>
 
-    <!-- Grid sản phẩm Tài Khoản -->
     <div class="flex items-center justify-between mb-4">
-        <div>
-            <h2 class="text-xl font-black text-gray-800">Mua Tài Khoản</h2>
-            <p class="text-sm text-gray-500">Acc game chất lượng cao, giao tự động</p>
-        </div>
-        <button id="btn-open-post-form" onclick="togglePostForm()" class="hidden bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-green-700 transition">➕ Đăng Sản Phẩm</button>
+        <div><h2 class="text-xl font-black text-gray-800">Mua Tài Khoản</h2><p class="text-sm text-gray-500">Acc game chất lượng cao</p></div>
+        <button id="btn-open-post-tk" onclick="document.getElementById('admin-post-form-tk').classList.toggle('hidden')" class="hidden bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-green-700">➕ Đăng SP</button>
     </div>
     <div id="grid-tai-khoan" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
 </div>
@@ -118,75 +96,154 @@
 <!-- ==================== TAB: DỊCH VỤ ==================== -->
 <div id="tab-dich-vu" class="tab-content">
     <div class="flex items-center justify-between mb-4">
-        <div>
-            <h2 class="text-xl font-black text-gray-800">Dịch Vụ</h2>
-            <p class="text-sm text-gray-500">YouTube, Netflix, Cloud Gaming và hơn thế nữa</p>
-        </div>
+        <div><h2 class="text-xl font-black text-gray-800">Dịch Vụ</h2><p class="text-sm text-gray-500">YouTube, Netflix, Cloud Gaming...</p></div>
     </div>
     <div id="grid-dich-vu" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
 </div>
 
-<!-- ==================== TAB: NẠP GAME ==================== -->
+<!-- ==================== TAB: NẠP GAME (HỆ THỐNG 3 CẤP) ==================== -->
 <div id="tab-nap-game" class="tab-content">
-    <h2 class="text-xl font-black text-gray-800 mb-1">Nạp Game</h2>
-    <p class="text-sm text-gray-500 mb-5">Nạp game Hoyoverse và các tựa game khác</p>
 
-    <!-- ADMIN: Thêm game mới -->
-    <div id="admin-nap-game-form" class="hidden mb-6 bg-white rounded-xl p-5 border-2 border-blue-300">
-        <h3 class="font-black text-blue-700 mb-4">🛠️ Thêm Gói Nạp Game</h3>
+    <!-- ADMIN: Tạo Game mới -->
+    <div id="admin-nap-game-panel" class="hidden mb-6 bg-white rounded-xl p-5 border-2 border-amber-300">
+        <h3 class="font-black text-amber-600 text-base mb-4"><i class="fas fa-user-gear mr-2"></i>Quản Lý Game (Admin)</h3>
         <div class="grid grid-cols-3 gap-3 mb-3">
-            <input type="text" id="ng-game" placeholder="Tên game (Genshin Impact...)" class="border border-gray-200 rounded-lg p-2.5 text-sm outline-none focus:border-blue-400">
-            <input type="text" id="ng-pack" placeholder="Tên gói (Không Nguyệt Chúc Phúc...)" class="border border-gray-200 rounded-lg p-2.5 text-sm outline-none focus:border-blue-400">
-            <input type="number" id="ng-price" placeholder="Giá (VNĐ)" class="border border-gray-200 rounded-lg p-2.5 text-sm outline-none focus:border-blue-400">
+            <div>
+                <label class="text-xs font-semibold text-gray-500 mb-1 block">Tên Game</label>
+                <input type="text" id="admin-game-name" placeholder="VD: Genshin Impact" class="w-full border border-gray-200 rounded-lg p-2.5 text-sm outline-none focus:border-amber-400">
+            </div>
+            <div>
+                <label class="text-xs font-semibold text-gray-500 mb-1 block">Ảnh Bìa (URL)</label>
+                <input type="text" id="admin-game-thumb" placeholder="https://..." class="w-full border border-gray-200 rounded-lg p-2.5 text-sm outline-none focus:border-amber-400">
+            </div>
+            <div class="flex items-end">
+                <button onclick="adminAddGame()" class="w-full bg-amber-500 hover:bg-amber-400 text-white font-bold text-sm py-2.5 rounded-lg transition">
+                    <i class="fas fa-plus mr-1"></i>Thêm Game
+                </button>
+            </div>
         </div>
-        <button onclick="adminAddGamePack()" class="bg-blue-700 text-white px-6 py-2 rounded-lg font-bold hover:bg-blue-800 transition text-sm">THÊM GÓI</button>
+        <div id="admin-game-list" class="space-y-3 mt-4"></div>
     </div>
 
-    <div class="bg-white rounded-xl p-6 shadow-sm max-w-2xl mx-auto">
-        <div class="grid grid-cols-2 gap-4 mb-4">
-            <div>
-                <label class="text-sm font-semibold text-gray-600 mb-1 block">Game <span class="text-red-500">*</span></label>
-                <select id="game-select" class="w-full border border-gray-200 rounded-lg p-2.5 text-sm outline-none focus:border-blue-400">
-                    <option value="">-- Chọn game --</option>
-                    <option>Genshin Impact</option>
-                    <option>Honkai: Star Rail</option>
-                    <option>Zenless Zone Zero</option>
-                    <option>Wuthering Waves</option>
-                </select>
-            </div>
-            <div>
-                <label class="text-sm font-semibold text-gray-600 mb-1 block">Máy chủ <span class="text-red-500">*</span></label>
-                <select id="game-server" class="w-full border border-gray-200 rounded-lg p-2.5 text-sm outline-none focus:border-blue-400">
-                    <option>Asia</option>
-                    <option>America</option>
-                    <option>Europe</option>
-                    <option>TW/HK/MO</option>
-                </select>
-            </div>
+    <!-- STAGE 1: Danh sách game -->
+    <div id="ng-stage-1">
+        <div class="flex items-center justify-between mb-4">
+            <div><h2 class="text-xl font-black text-gray-800">Nạp Game</h2><p class="text-sm text-gray-500">Chọn game để xem các gói nạp</p></div>
+            <button id="btn-admin-nap-game" onclick="document.getElementById('admin-nap-game-panel').classList.toggle('hidden'); renderAdminGameList();" class="hidden bg-amber-500 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-amber-400">🛠️ Quản lý</button>
         </div>
-        <div class="mb-4">
-            <label class="text-sm font-semibold text-gray-600 mb-1 block">UID <span class="text-red-500">*</span></label>
-            <input type="text" id="game-uid" placeholder="Nhập UID của bạn" class="w-full border border-gray-200 rounded-lg p-2.5 text-sm outline-none focus:border-blue-400">
+        <div id="user-game-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+            <div class="col-span-4 text-center text-gray-400 py-10 text-sm">Đang tải...</div>
         </div>
-        <div class="mb-5">
-            <label class="text-sm font-semibold text-gray-600 mb-1 block">Chọn gói nạp</label>
-            <select id="game-pack" class="w-full border border-gray-200 rounded-lg p-2.5 text-sm outline-none focus:border-blue-400">
-                <option value="Không Nguyệt Chúc Phúc|85000">Không Nguyệt Chúc Phúc - 85.000đ</option>
-                <option value="60 Đá Sáng Thế|20000">60 Đá Sáng Thế - 20.000đ</option>
-                <option value="300 Đá Sáng Thế|90000">300 Đá Sáng Thế - 90.000đ</option>
-                <option value="980 Đá Sáng Thế|270000">980 Đá Sáng Thế - 270.000đ</option>
-                <option value="6480 Đá Sáng Thế|1700000">6480 Đá Sáng Thế - 1.700.000đ</option>
-            </select>
-        </div>
-        <button onclick="submitGameTopup()" class="w-full bg-blue-700 text-white py-3 rounded-xl font-black text-base hover:bg-blue-800 transition">
-            <i class="fas fa-gamepad mr-2"></i>Thanh Toán & Gửi Đơn
+    </div>
+
+    <!-- STAGE 2: Chi tiết game -->
+    <div id="ng-stage-2" class="hidden">
+        <button onclick="backToStage1()" class="mb-4 flex items-center gap-2 text-sm text-gray-500 hover:text-gray-700 transition">
+            <i class="fas fa-chevron-left"></i> Quay lại danh sách game
         </button>
-    </div>
 
-    <div class="mt-6 max-w-2xl mx-auto">
-        <h3 class="font-black text-gray-700 mb-3 flex items-center gap-2"><i class="fas fa-history text-blue-600"></i> Lịch Sử Nạp Game</h3>
-        <div id="user-napgame-orders" class="space-y-3">
-            <div class="text-center text-gray-400 text-sm py-6">Chưa có đơn nạp game nào</div>
+        <div class="grid grid-cols-1 lg:grid-cols-10 gap-6 items-start">
+            <!-- CỘT TRÁI 70% -->
+            <div class="lg:col-span-7 space-y-5">
+
+                <!-- Game header -->
+                <div id="ng-game-header" class="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100"></div>
+
+                <!-- Tab chuyển đổi UID / LOGIN -->
+                <div class="bg-white rounded-xl p-1.5 flex gap-2 border border-gray-100 shadow-sm">
+                    <button id="ng-tab-auto" onclick="ngSwitchTab('auto')" class="flex-1 py-2.5 text-center text-sm font-bold rounded-lg bg-blue-700 text-white transition">
+                        <i class="fas fa-bolt mr-1"></i>Nạp Tự Động <span class="text-xs opacity-75">(Nạp UID)</span>
+                    </button>
+                    <button id="ng-tab-log" onclick="ngSwitchTab('log')" class="flex-1 py-2.5 text-center text-sm font-semibold rounded-lg text-gray-500 hover:bg-gray-50 transition">
+                        <i class="fas fa-user-lock mr-1"></i>Nạp Qua Tài Khoản <span class="text-xs opacity-75">(LOGIN)</span>
+                    </button>
+                </div>
+
+                <!-- Form điền thông tin -->
+                <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+                    <h3 class="text-sm font-bold text-gray-700 mb-4 flex items-center gap-2">
+                        <i class="fas fa-pen-to-square text-blue-500"></i> Thông tin tài khoản nhận
+                    </h3>
+                    <!-- Form UID -->
+                    <div id="ng-form-uid" class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-xs font-semibold text-gray-500 mb-1.5 block">Nhập UID nhân vật <span class="text-red-500">*</span></label>
+                            <input type="text" id="ng-input-uid" placeholder="Nhập UID game..." class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm outline-none focus:border-blue-400">
+                        </div>
+                        <div>
+                            <label class="text-xs font-semibold text-gray-500 mb-1.5 block">Chọn Máy Chủ <span class="text-red-500">*</span></label>
+                            <select id="ng-input-server-uid" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm outline-none focus:border-blue-400">
+                                <option>Asia</option>
+                                <option>America</option>
+                                <option>Europe</option>
+                                <option>TW/HK/MO</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!-- Form LOGIN -->
+                    <div id="ng-form-log" class="hidden grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div>
+                            <label class="text-xs font-semibold text-gray-500 mb-1.5 block">Tài khoản <span class="text-red-500">*</span></label>
+                            <input type="text" id="ng-input-username" placeholder="Email / Tên đăng nhập..." class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm outline-none focus:border-blue-400">
+                        </div>
+                        <div>
+                            <label class="text-xs font-semibold text-gray-500 mb-1.5 block">Mật khẩu <span class="text-red-500">*</span></label>
+                            <input type="password" id="ng-input-password" placeholder="Nhập mật khẩu..." class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm outline-none focus:border-blue-400">
+                        </div>
+                        <div>
+                            <label class="text-xs font-semibold text-gray-500 mb-1.5 block">Máy chủ / Đăng nhập qua <span class="text-red-500">*</span></label>
+                            <input type="text" id="ng-input-server-log" placeholder="VD: Khuyên Nguyệt - Asia" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm outline-none focus:border-blue-400">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Danh sách gói nạp -->
+                <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+                    <h3 class="text-sm font-bold text-gray-700 mb-4 flex items-center gap-2">
+                        <i class="fas fa-gem text-cyan-500"></i> Chọn gói vật phẩm muốn nạp:
+                    </h3>
+                    <div id="ng-package-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-3"></div>
+                </div>
+            </div>
+
+            <!-- CỘT PHẢI 30% - Sticky Sidebar -->
+            <div class="lg:col-span-3 sticky-sidebar">
+                <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 space-y-4">
+                    <h3 class="text-sm font-black text-gray-700 text-center border-b border-gray-100 pb-3 uppercase tracking-wide">Thanh toán</h3>
+
+                    <!-- Chi tiết gói đã chọn -->
+                    <div id="ng-checkout-detail" class="bg-gray-50 rounded-xl p-4 text-center border border-gray-100">
+                        <p class="text-xs text-gray-400 py-2">Chưa chọn gói nạp nào</p>
+                    </div>
+
+                    <!-- Số lượng -->
+                    <div class="flex items-center justify-between bg-gray-50 p-3 rounded-xl border border-gray-100">
+                        <span class="text-xs font-semibold text-gray-500">Số lượng mua:</span>
+                        <div class="flex items-center gap-2">
+                            <button onclick="ngUpdateQty(-1)" class="w-8 h-8 bg-white border border-gray-200 rounded-lg text-sm font-bold text-gray-600 hover:bg-gray-100 transition flex items-center justify-center">−</button>
+                            <input type="number" id="ng-checkout-qty" value="1" min="1" readonly class="w-10 text-center bg-transparent text-sm font-black text-gray-800 outline-none">
+                            <button onclick="ngUpdateQty(1)" class="w-8 h-8 bg-white border border-gray-200 rounded-lg text-sm font-bold text-gray-600 hover:bg-gray-100 transition flex items-center justify-center">+</button>
+                        </div>
+                    </div>
+
+                    <!-- Tổng tiền -->
+                    <div class="flex items-center justify-between pt-2 border-t border-gray-100">
+                        <span class="text-xs font-semibold text-gray-500">Tổng tiền:</span>
+                        <span id="ng-total-price" class="text-xl font-black text-blue-700">0đ</span>
+                    </div>
+
+                    <!-- Nút đặt hàng -->
+                    <button onclick="ngProcessCheckout()" class="w-full bg-blue-700 hover:bg-blue-800 text-white py-3.5 rounded-xl font-black text-base transition shadow-lg flex items-center justify-center gap-2">
+                        <i class="fas fa-cart-shopping"></i> Đặt Hàng Ngay
+                    </button>
+
+                    <!-- Lưu ý -->
+                    <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs text-amber-700 space-y-1">
+                        <p class="font-bold"><i class="fas fa-circle-info mr-1"></i>Lưu ý mua hàng:</p>
+                        <p>Đơn hàng được chuyển trực tiếp về hộp thư Admin. Vui lòng điền đúng thông tin tránh lỗi đơn.</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -195,117 +252,33 @@
 <div id="tab-buff-mxh" class="tab-content">
     <h2 class="text-xl font-black text-gray-800 mb-1">Buff Mạng Xã Hội</h2>
     <p class="text-sm text-gray-500 mb-4">Tăng tương tác Facebook, TikTok, YouTube chất lượng cao</p>
-
-    <!-- Platform selector -->
     <div class="flex gap-2 mb-5">
-        <button onclick="selectPlatform('facebook', this)" class="platform-btn active px-5 py-2.5 rounded-xl text-sm font-bold border-2 border-blue-700 transition">
-            <i class="fab fa-facebook mr-1"></i>Facebook
-        </button>
-        <button onclick="selectPlatform('tiktok', this)" class="platform-btn px-5 py-2.5 rounded-xl text-sm font-bold bg-white border-2 border-gray-200 text-gray-600 hover:border-gray-400 transition">
-            <i class="fab fa-tiktok mr-1"></i>TikTok
-        </button>
-        <button onclick="selectPlatform('youtube', this)" class="platform-btn px-5 py-2.5 rounded-xl text-sm font-bold bg-white border-2 border-gray-200 text-gray-600 hover:border-gray-400 transition">
-            <i class="fab fa-youtube mr-1"></i>YouTube
-        </button>
+        <button onclick="selectPlatform('facebook', this)" class="platform-btn px-5 py-2.5 rounded-xl text-sm font-bold bg-blue-700 text-white border-2 border-blue-700 transition"><i class="fab fa-facebook mr-1"></i>Facebook</button>
+        <button onclick="selectPlatform('tiktok', this)" class="platform-btn px-5 py-2.5 rounded-xl text-sm font-bold bg-white border-2 border-gray-200 text-gray-600 hover:border-gray-400 transition"><i class="fab fa-tiktok mr-1"></i>TikTok</button>
+        <button onclick="selectPlatform('youtube', this)" class="platform-btn px-5 py-2.5 rounded-xl text-sm font-bold bg-white border-2 border-gray-200 text-gray-600 hover:border-gray-400 transition"><i class="fab fa-youtube mr-1"></i>YouTube</button>
     </div>
-
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <!-- Form tạo đơn -->
-        <div class="bg-white rounded-xl p-5 shadow-sm">
+        <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
             <h3 class="font-black text-gray-700 mb-4">Tạo Đơn Buff</h3>
             <div class="mb-3">
                 <label class="text-sm font-semibold text-gray-600 mb-1 block">Loại tương tác <span class="text-red-500">*</span></label>
                 <select id="buff-type" class="w-full border border-gray-200 rounded-lg p-2.5 text-sm outline-none focus:border-blue-400">
-                    <option value="Tăng View">👁️ Tăng View</option>
-                    <option value="Tăng Follow/Sub">➕ Tăng Follow/Sub</option>
-                    <option value="Tăng Like/Tim">❤️ Tăng Like/Tim</option>
-                    <option value="Tăng Bình Luận">💬 Tăng Bình Luận</option>
-                    <option value="Tăng Chia Sẻ">↗️ Tăng Chia Sẻ</option>
+                    <option>Tăng View</option><option>Tăng Follow/Sub</option><option>Tăng Like/Tim</option><option>Tăng Bình Luận</option><option>Tăng Chia Sẻ</option>
                 </select>
             </div>
-            <div class="mb-3">
-                <label class="text-sm font-semibold text-gray-600 mb-1 block">Chất lượng Server <span class="text-red-500">*</span></label>
-                <div class="space-y-2">
-                    <label class="flex items-center gap-2 p-3 border border-gray-200 rounded-lg cursor-pointer hover:border-blue-400 transition">
-                        <input type="radio" name="buff-quality" value="Buff dễ mất" checked class="accent-blue-600">
-                        <div>
-                            <div class="text-sm font-semibold">🟢 Buff dễ mất</div>
-                            <div class="text-xs text-gray-500">Giá rẻ, tốc độ nhanh, có thể bị mất</div>
-                        </div>
-                    </label>
-                    <label class="flex items-center gap-2 p-3 border border-gray-200 rounded-lg cursor-pointer hover:border-blue-400 transition">
-                        <input type="radio" name="buff-quality" value="Buff khó rớt" class="accent-blue-600">
-                        <div>
-                            <div class="text-sm font-semibold">🔵 Buff khó rớt</div>
-                            <div class="text-xs text-gray-500">Chất lượng cao, ít mất hơn</div>
-                        </div>
-                    </label>
-                    <label class="flex items-center gap-2 p-3 border border-gray-200 rounded-lg cursor-pointer hover:border-blue-400 transition">
-                        <input type="radio" name="buff-quality" value="Buff hạn chế rớt hết mức có thể" class="accent-blue-600">
-                        <div>
-                            <div class="text-sm font-semibold">🟣 Buff hạn chế rớt hết mức có thể</div>
-                            <div class="text-xs text-gray-500">Cao cấp nhất, bền vững tối đa</div>
-                        </div>
-                    </label>
-                </div>
+            <div class="mb-3 space-y-2">
+                <label class="text-sm font-semibold text-gray-600 block">Chất lượng <span class="text-red-500">*</span></label>
+                <label class="flex items-center gap-2 p-3 border border-gray-200 rounded-lg cursor-pointer hover:border-blue-400"><input type="radio" name="buff-quality" value="Buff dễ mất" checked class="accent-blue-600"><div><div class="text-sm font-semibold">🟢 Buff dễ mất</div><div class="text-xs text-gray-400">Giá rẻ, tốc độ nhanh</div></div></label>
+                <label class="flex items-center gap-2 p-3 border border-gray-200 rounded-lg cursor-pointer hover:border-blue-400"><input type="radio" name="buff-quality" value="Buff khó rớt" class="accent-blue-600"><div><div class="text-sm font-semibold">🔵 Buff khó rớt</div><div class="text-xs text-gray-400">Chất lượng cao</div></div></label>
+                <label class="flex items-center gap-2 p-3 border border-gray-200 rounded-lg cursor-pointer hover:border-blue-400"><input type="radio" name="buff-quality" value="Buff hạn chế rớt hết mức có thể" class="accent-blue-600"><div><div class="text-sm font-semibold">🟣 Buff hạn chế rớt hết mức có thể</div><div class="text-xs text-gray-400">Cao cấp nhất</div></div></label>
             </div>
-            <div class="mb-3">
-                <label class="text-sm font-semibold text-gray-600 mb-1 block">Link bài viết/trang <span class="text-red-500">*</span></label>
-                <input type="text" id="buff-link" placeholder="https://..." class="w-full border border-gray-200 rounded-lg p-2.5 text-sm outline-none focus:border-blue-400">
-            </div>
-            <div class="mb-4">
-                <label class="text-sm font-semibold text-gray-600 mb-1 block">Số lượng <span class="text-red-500">*</span></label>
-                <input type="number" id="buff-amount" placeholder="1000" class="w-full border border-gray-200 rounded-lg p-2.5 text-sm outline-none focus:border-blue-400">
-            </div>
-            <button onclick="submitBuff()" class="w-full bg-blue-700 text-white py-3 rounded-xl font-black hover:bg-blue-800 transition">
-                <i class="fas fa-bolt mr-2"></i>Tạo Đơn Hàng
-            </button>
+            <div class="mb-3"><label class="text-sm font-semibold text-gray-600 mb-1 block">Link <span class="text-red-500">*</span></label><input type="text" id="buff-link" placeholder="https://..." class="w-full border border-gray-200 rounded-lg p-2.5 text-sm outline-none focus:border-blue-400"></div>
+            <div class="mb-4"><label class="text-sm font-semibold text-gray-600 mb-1 block">Số lượng <span class="text-red-500">*</span></label><input type="number" id="buff-amount" placeholder="1000" class="w-full border border-gray-200 rounded-lg p-2.5 text-sm outline-none focus:border-blue-400"></div>
+            <button onclick="submitBuff()" class="w-full bg-blue-700 text-white py-3 rounded-xl font-black hover:bg-blue-800 transition"><i class="fas fa-bolt mr-2"></i>Tạo Đơn</button>
         </div>
-
-        <!-- Đơn hàng của user -->
-        <div class="bg-white rounded-xl p-5 shadow-sm">
-            <h3 class="font-black text-gray-700 mb-4 flex items-center gap-2">
-                <i class="fas fa-list-alt text-blue-600"></i> Đơn Hàng Của Bạn
-            </h3>
-            <div id="user-buff-orders" class="space-y-3 max-h-96 overflow-y-auto">
-                <div class="text-center text-gray-400 text-sm py-8">Chưa có đơn hàng nào</div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- ==================== TAB: ADMIN PANEL ==================== -->
-<div id="tab-admin-panel" class="tab-content">
-    <div class="bg-white rounded-xl shadow-sm overflow-hidden border-2 border-red-200">
-        <div class="bg-red-600 text-white px-6 py-4 flex items-center gap-3">
-            <i class="fas fa-shield-alt text-xl"></i>
-            <div>
-                <h2 class="text-lg font-black">Hộp Thư Admin</h2>
-                <p class="text-red-200 text-sm">Quản lý tất cả đơn hàng từ khách</p>
-            </div>
-        </div>
-
-        <!-- Admin tabs -->
-        <div class="flex border-b border-gray-200 bg-gray-50">
-            <button onclick="switchAdminTab('buff-mxh')" class="admin-tab active px-5 py-3 text-sm font-semibold text-gray-600 transition">
-                <i class="fas fa-chart-line mr-1"></i>Buff MXH
-            </button>
-            <button onclick="switchAdminTab('nap-game')" class="admin-tab px-5 py-3 text-sm font-semibold text-gray-600 transition">
-                <i class="fas fa-gamepad mr-1"></i>Nạp Game
-            </button>
-            <button onclick="switchAdminTab('tai-khoan')" class="admin-tab px-5 py-3 text-sm font-semibold text-gray-600 transition">
-                <i class="fas fa-user mr-1"></i>Tài Khoản
-            </button>
-            <button onclick="switchAdminTab('dich-vu')" class="admin-tab px-5 py-3 text-sm font-semibold text-gray-600 transition">
-                <i class="fas fa-cogs mr-1"></i>Dịch Vụ
-            </button>
-        </div>
-
-        <div class="p-5">
-            <div id="admin-inbox-buff-mxh" class="admin-inbox-content space-y-4"></div>
-            <div id="admin-inbox-nap-game" class="admin-inbox-content space-y-4 hidden"></div>
-            <div id="admin-inbox-tai-khoan" class="admin-inbox-content space-y-4 hidden"></div>
-            <div id="admin-inbox-dich-vu" class="admin-inbox-content space-y-4 hidden"></div>
+        <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+            <h3 class="font-black text-gray-700 mb-4"><i class="fas fa-list-alt text-blue-600 mr-1"></i>Đơn Hàng Của Bạn</h3>
+            <div id="user-buff-orders" class="space-y-3 max-h-96 overflow-y-auto"><div class="text-center text-gray-400 text-sm py-8">Chưa có đơn hàng</div></div>
         </div>
     </div>
 </div>
@@ -313,89 +286,51 @@
 <!-- ==================== ACCOUNT PAGE ==================== -->
 <div id="tab-account" class="tab-content">
     <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
-        <!-- Sidebar -->
         <div class="bg-white rounded-xl shadow-sm overflow-hidden h-fit">
             <div class="p-4 border-b border-gray-100">
-                <div class="flex items-center gap-2 text-blue-700 font-bold mb-1">
-                    <i class="fas fa-wallet"></i>
-                    <span id="sb-balance" class="text-base">0đ</span>
-                </div>
-                <div class="flex items-center gap-2 text-gray-500 text-sm">
-                    <i class="fas fa-user"></i>
-                    <span id="sb-name">User</span>
-                </div>
+                <div class="flex items-center gap-2 text-blue-700 font-bold mb-1"><i class="fas fa-wallet"></i><span id="sb-balance" class="text-base">0đ</span></div>
+                <div class="flex items-center gap-2 text-gray-500 text-sm"><i class="fas fa-user"></i><span id="sb-name">User</span></div>
             </div>
-            <div class="text-xs text-gray-400 font-bold px-4 pt-3 pb-1 uppercase tracking-wide">Người dùng</div>
-            <div class="sidebar-link active px-4 py-2.5 text-sm cursor-pointer flex items-center gap-2" onclick="showSubPage('profile')">
-                <i class="fas fa-user-circle w-4 text-center"></i> Thông tin cá nhân
-            </div>
-            <div class="sidebar-link px-4 py-2.5 text-sm cursor-pointer flex items-center gap-2 text-gray-600" onclick="showSubPage('lich-su-mua')">
-                <i class="fas fa-history w-4 text-center"></i> Lịch sử mua hàng
-            </div>
-            <div class="sidebar-link px-4 py-2.5 text-sm cursor-pointer flex items-center gap-2 text-gray-600" onclick="showSubPage('bien-dong')">
-                <i class="fas fa-chart-line w-4 text-center"></i> Biến động số dư
-            </div>
-            <div class="text-xs text-gray-400 font-bold px-4 pt-3 pb-1 uppercase tracking-wide">Nạp tiền</div>
-            <div class="sidebar-link px-4 py-2.5 text-sm cursor-pointer flex items-center gap-2 text-gray-600" onclick="showSubPage('nap-the')">
-                <i class="fas fa-credit-card w-4 text-center"></i> Thẻ cào
-            </div>
-            <div class="sidebar-link px-4 py-2.5 text-sm cursor-pointer flex items-center gap-2 text-gray-600 mb-2" onclick="showSubPage('ngan-hang')">
-                <i class="fas fa-university w-4 text-center"></i> Ngân hàng
-            </div>
+            <div class="text-xs text-gray-400 font-bold px-4 pt-3 pb-1 uppercase">Người dùng</div>
+            <div class="sidebar-link active px-4 py-2.5 text-sm cursor-pointer flex items-center gap-2" onclick="showSubPage('profile')"><i class="fas fa-user-circle w-4 text-center"></i> Thông tin cá nhân</div>
+            <div class="sidebar-link px-4 py-2.5 text-sm cursor-pointer flex items-center gap-2 text-gray-600" onclick="showSubPage('lich-su-mua')"><i class="fas fa-history w-4 text-center"></i> Lịch sử mua hàng</div>
+            <div class="sidebar-link px-4 py-2.5 text-sm cursor-pointer flex items-center gap-2 text-gray-600" onclick="showSubPage('bien-dong')"><i class="fas fa-chart-line w-4 text-center"></i> Biến động số dư</div>
+            <div class="text-xs text-gray-400 font-bold px-4 pt-3 pb-1 uppercase">Nạp tiền</div>
+            <div class="sidebar-link px-4 py-2.5 text-sm cursor-pointer flex items-center gap-2 text-gray-600" onclick="showSubPage('nap-the')"><i class="fas fa-credit-card w-4 text-center"></i> Thẻ cào</div>
+            <div class="sidebar-link px-4 py-2.5 text-sm cursor-pointer flex items-center gap-2 text-gray-600 mb-2" onclick="showSubPage('ngan-hang')"><i class="fas fa-university w-4 text-center"></i> Ngân hàng</div>
         </div>
-
-        <!-- Content -->
         <div class="md:col-span-3 bg-white rounded-xl shadow-sm p-6">
-            <!-- Thông tin cá nhân -->
             <div id="sub-profile" class="sub-page active">
                 <h3 class="text-xl font-black text-gray-800 mb-1">Thông Tin Cá Nhân</h3>
                 <div class="w-10 h-1 bg-blue-700 rounded mb-5"></div>
                 <div class="border border-gray-100 rounded-xl p-4 mb-4">
-                    <div class="flex items-center gap-2 font-bold text-gray-700 mb-3"><i class="fas fa-user-circle text-blue-600 text-lg"></i> Thông tin tài khoản</div>
-                    <div class="flex items-center gap-3 p-3 border border-gray-100 rounded-lg mb-2">
-                        <i class="fas fa-at text-gray-400 w-5 text-center"></i>
-                        <div><div class="text-xs text-gray-400 uppercase font-semibold">Tên đăng nhập</div><div class="font-semibold text-gray-700" id="profile-username">-</div></div>
-                    </div>
-                    <div class="flex items-center gap-3 p-3 border border-gray-100 rounded-lg mb-2">
-                        <i class="fas fa-envelope text-gray-400 w-5 text-center"></i>
-                        <div><div class="text-xs text-gray-400 uppercase font-semibold">Email</div><div class="font-semibold text-gray-700" id="profile-email">-</div></div>
-                    </div>
+                    <div class="font-bold text-gray-700 mb-3 flex items-center gap-2"><i class="fas fa-user-circle text-blue-600"></i> Thông tin tài khoản</div>
+                    <div class="flex items-center gap-3 p-3 border border-gray-100 rounded-lg mb-2"><i class="fas fa-at text-gray-400 w-5 text-center"></i><div><div class="text-xs text-gray-400 uppercase font-semibold">Tên đăng nhập</div><div class="font-semibold text-gray-700" id="profile-username">-</div></div></div>
+                    <div class="flex items-center gap-3 p-3 border border-gray-100 rounded-lg"><i class="fas fa-envelope text-gray-400 w-5 text-center"></i><div><div class="text-xs text-gray-400 uppercase font-semibold">Email</div><div class="font-semibold text-gray-700" id="profile-email">-</div></div></div>
                 </div>
                 <div class="border border-gray-100 rounded-xl p-4">
-                    <div class="flex items-center gap-2 font-bold text-gray-700 mb-3"><i class="fas fa-shield-alt text-blue-600 text-lg"></i> Đổi mật khẩu</div>
+                    <div class="font-bold text-gray-700 mb-3 flex items-center gap-2"><i class="fas fa-shield-alt text-blue-600"></i> Đổi mật khẩu</div>
                     <input type="password" id="pwd-current" placeholder="Mật khẩu hiện tại" class="w-full border border-gray-200 rounded-lg p-2.5 text-sm mb-3 outline-none focus:border-blue-400">
                     <input type="password" id="pwd-new" placeholder="Mật khẩu mới (tối thiểu 6 ký tự)" class="w-full border border-gray-200 rounded-lg p-2.5 text-sm mb-3 outline-none focus:border-blue-400">
                     <input type="password" id="pwd-confirm" placeholder="Xác nhận mật khẩu mới" class="w-full border border-gray-200 rounded-lg p-2.5 text-sm mb-3 outline-none focus:border-blue-400">
-                    <button onclick="doiMatKhau()" class="w-full bg-blue-700 text-white py-2.5 rounded-lg font-bold hover:bg-blue-800 transition">
-                        <i class="fas fa-lock mr-2"></i>Cập nhật mật khẩu
-                    </button>
+                    <button onclick="doiMatKhau()" class="w-full bg-blue-700 text-white py-2.5 rounded-lg font-bold hover:bg-blue-800 transition"><i class="fas fa-lock mr-2"></i>Cập nhật mật khẩu</button>
                 </div>
             </div>
-
-            <!-- Lịch sử mua hàng -->
             <div id="sub-lich-su-mua" class="sub-page">
                 <h3 class="text-xl font-black text-gray-800 mb-1">Lịch Sử Mua Hàng</h3>
                 <div class="w-10 h-1 bg-blue-700 rounded mb-5"></div>
-                <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4 text-sm text-blue-700">
-                    <i class="fas fa-info-circle mr-1"></i> Hãy sao lưu tài khoản đã mua nhé, tránh trường hợp mất dữ liệu.
-                </div>
-                <div id="list-lich-su-mua"><div class="text-center text-gray-400 py-10">Chưa có lịch sử mua hàng</div></div>
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4 text-sm text-blue-700"><i class="fas fa-info-circle mr-1"></i> Hãy sao lưu tài khoản đã mua nhé.</div>
+                <div id="list-lich-su-mua"><div class="text-center text-gray-400 py-10 text-sm">Chưa có lịch sử mua hàng</div></div>
             </div>
-
-            <!-- Biến động số dư -->
             <div id="sub-bien-dong" class="sub-page">
                 <h3 class="text-xl font-black text-gray-800 mb-1">Biến Động Số Dư</h3>
                 <div class="w-10 h-1 bg-blue-700 rounded mb-5"></div>
-                <div id="list-bien-dong"><div class="text-center text-gray-400 py-10">Chưa có giao dịch nào</div></div>
+                <div id="list-bien-dong"><div class="text-center text-gray-400 py-10 text-sm">Chưa có giao dịch</div></div>
             </div>
-
-            <!-- Nạp thẻ -->
             <div id="sub-nap-the" class="sub-page">
                 <h3 class="text-xl font-black text-gray-800 mb-1">Nạp Thẻ Cào</h3>
                 <div class="w-10 h-1 bg-blue-700 rounded mb-5"></div>
-                <div class="bg-orange-50 border border-orange-200 rounded-lg p-3 mb-4 text-sm text-orange-700">
-                    <i class="fas fa-exclamation-triangle mr-1"></i> Chiết khấu 20%. Ví dụ: 100k thẻ cào = 80k tiền shop.
-                </div>
+                <div class="bg-orange-50 border border-orange-200 rounded-lg p-3 mb-4 text-sm text-orange-700"><i class="fas fa-exclamation-triangle mr-1"></i> Chiết khấu 20%. 100k thẻ = 80k tiền shop.</div>
                 <div class="grid grid-cols-3 gap-2 mb-4" id="carrier-grid-acc">
                     <div class="carrier-btn selected border-2 border-blue-700 bg-blue-50 text-blue-700 rounded-lg p-2.5 text-center text-sm font-bold cursor-pointer" onclick="selectCarrierAcc(this,'Garena')">GARENA</div>
                     <div class="carrier-btn border-2 border-gray-200 rounded-lg p-2.5 text-center text-sm font-bold cursor-pointer text-gray-600" onclick="selectCarrierAcc(this,'Viettel')">VIETTEL</div>
@@ -414,48 +349,18 @@
                 </div>
                 <input type="text" id="acc-seri" placeholder="Số Seri thẻ" class="w-full border border-gray-200 rounded-lg p-2.5 text-sm mb-3 outline-none focus:border-blue-400">
                 <input type="text" id="acc-pin" placeholder="Mã PIN thẻ" class="w-full border border-gray-200 rounded-lg p-2.5 text-sm mb-3 outline-none focus:border-blue-400">
-                <div class="bg-gray-50 rounded-lg p-4 text-center mb-3">
-                    <div class="text-xs text-gray-400 mb-1">Số tiền thực nhận</div>
-                    <div class="text-2xl font-black text-green-600" id="acc-amount-display">0đ</div>
-                    <div class="text-xs text-gray-400">Chiết khấu 20%</div>
-                </div>
-                <button onclick="submitTheCao()" class="w-full bg-blue-700 text-white py-3 rounded-xl font-black hover:bg-blue-800 transition">
-                    <i class="fas fa-paper-plane mr-2"></i>Nạp Thẻ Ngay
-                </button>
+                <div class="bg-gray-50 rounded-lg p-4 text-center mb-3"><div class="text-xs text-gray-400 mb-1">Số tiền thực nhận</div><div class="text-2xl font-black text-green-600" id="acc-amount-display">0đ</div><div class="text-xs text-gray-400">Chiết khấu 20%</div></div>
+                <button onclick="submitTheCao()" class="w-full bg-blue-700 text-white py-3 rounded-xl font-black hover:bg-blue-800 transition"><i class="fas fa-paper-plane mr-2"></i>Nạp Thẻ Ngay</button>
             </div>
-
-            <!-- Ngân hàng -->
             <div id="sub-ngan-hang" class="sub-page">
                 <h3 class="text-xl font-black text-gray-800 mb-1">Nạp Tiền Ngân Hàng</h3>
                 <div class="w-10 h-1 bg-blue-700 rounded mb-5"></div>
-                <div class="bg-orange-50 border border-orange-200 rounded-xl p-4 mb-4 text-sm text-orange-800">
-                    <div class="font-bold mb-2">📋 Hướng dẫn nạp tiền</div>
-                    <ul class="list-disc pl-4 space-y-1">
-                        <li>Chuyển khoản theo đúng số tài khoản và nội dung bên dưới</li>
-                        <li>Hệ thống tự cộng tiền sau ~1 phút</li>
-                        <li>Nếu sau 10p chưa được cộng, liên hệ Admin</li>
-                    </ul>
-                </div>
+                <div class="bg-orange-50 border border-orange-200 rounded-xl p-4 mb-4 text-sm text-orange-800"><div class="font-bold mb-2">📋 Hướng dẫn nạp tiền</div><ul class="list-disc pl-4 space-y-1"><li>Chuyển khoản đúng số tài khoản và nội dung bên dưới</li><li>Hệ thống tự cộng tiền sau ~1 phút</li><li>Sau 10p chưa cộng → liên hệ Admin</li></ul></div>
                 <div class="border border-gray-200 rounded-xl p-5">
                     <div class="text-xl font-black text-blue-700 mb-3">ACB</div>
-                    <div class="flex justify-between py-3 border-b border-gray-100">
-                        <span class="text-sm text-gray-500">Số tài khoản</span>
-                        <div class="flex items-center gap-2">
-                            <span class="font-bold text-gray-800">16535551</span>
-                            <button onclick="copyText('16535551')" class="text-blue-600 text-xs"><i class="fas fa-copy"></i></button>
-                        </div>
-                    </div>
-                    <div class="flex justify-between py-3 border-b border-gray-100">
-                        <span class="text-sm text-gray-500">Chủ tài khoản</span>
-                        <span class="font-bold text-gray-800">NGUYEN TUAN ANH</span>
-                    </div>
-                    <div class="flex justify-between py-3">
-                        <span class="text-sm text-gray-500">Nội dung CK</span>
-                        <div class="flex items-center gap-2">
-                            <span class="font-bold text-red-600" id="noi-dung-ck">TNQ...</span>
-                            <button onclick="copyText(document.getElementById('noi-dung-ck').innerText)" class="text-blue-600 text-xs"><i class="fas fa-copy"></i></button>
-                        </div>
-                    </div>
+                    <div class="flex justify-between py-3 border-b border-gray-100"><span class="text-sm text-gray-500">Số tài khoản</span><div class="flex items-center gap-2"><span class="font-bold">16535551</span><button onclick="copyText('16535551')" class="text-blue-600 text-xs"><i class="fas fa-copy"></i></button></div></div>
+                    <div class="flex justify-between py-3 border-b border-gray-100"><span class="text-sm text-gray-500">Chủ tài khoản</span><span class="font-bold">NGUYEN TUAN ANH</span></div>
+                    <div class="flex justify-between py-3"><span class="text-sm text-gray-500">Nội dung CK</span><div class="flex items-center gap-2"><span class="font-bold text-red-600" id="noi-dung-ck">TNQ...</span><button onclick="copyText(document.getElementById('noi-dung-ck').innerText)" class="text-blue-600 text-xs"><i class="fas fa-copy"></i></button></div></div>
                 </div>
             </div>
         </div>
@@ -468,10 +373,7 @@
 <footer class="bg-gray-900 text-gray-400 mt-10 py-8 px-4">
     <div class="max-w-6xl mx-auto grid grid-cols-2 gap-6">
         <div>
-            <div class="flex items-center gap-2 mb-2">
-                <div class="w-8 h-8 bg-blue-700 rounded-lg flex items-center justify-center text-white font-black text-xs">TN</div>
-                <span class="text-white font-black">TN QUANG STORE</span>
-            </div>
+            <div class="flex items-center gap-2 mb-2"><div class="w-8 h-8 bg-blue-700 rounded-lg flex items-center justify-center text-white font-black text-xs">TN</div><span class="text-white font-black">TN QUANG STORE</span></div>
             <p class="text-sm">Shop bán Acc, Buff MXH, Nạp Game uy tín</p>
             <p class="text-sm mt-1">⏰ 7h - 24h &nbsp;🟢 Online 24/7</p>
         </div>
@@ -499,22 +401,25 @@
     </div>
 </div>
 
-<!-- MODAL MUA SẢN PHẨM TỰ ĐỘNG -->
+<!-- MODAL MUA TỰ ĐỘNG -->
 <div id="autoModal" class="modal-overlay">
     <div class="bg-white rounded-2xl p-7 w-full max-w-sm shadow-2xl relative">
         <button onclick="closeModal('autoModal')" class="absolute right-4 top-4 text-gray-400 text-xl">&times;</button>
-        <div class="text-center mb-4">
-            <i class="fas fa-check-circle text-green-500 text-4xl mb-2"></i>
-            <h3 class="text-lg font-black text-gray-800">Mua Thành Công!</h3>
-            <p class="text-sm text-gray-500">Thông tin tài khoản của bạn:</p>
-        </div>
-        <div class="bg-gray-50 rounded-xl p-4 text-center">
-            <div class="text-sm text-gray-500 mb-1">Tài khoản | Mật khẩu</div>
-            <div class="font-black text-blue-700 text-lg" id="auto-acc-info">-</div>
-        </div>
-        <button onclick="copyText(document.getElementById('auto-acc-info').innerText); alert('✅ Đã copy!')" class="w-full mt-4 border border-blue-600 text-blue-600 py-2 rounded-xl font-bold hover:bg-blue-50 transition">
-            <i class="fas fa-copy mr-2"></i>Copy Tài Khoản
-        </button>
+        <div class="text-center mb-4"><i class="fas fa-check-circle text-green-500 text-4xl mb-2"></i><h3 class="text-lg font-black text-gray-800">Mua Thành Công!</h3><p class="text-sm text-gray-500">Thông tin tài khoản của bạn:</p></div>
+        <div class="bg-gray-50 rounded-xl p-4 text-center"><div class="text-sm text-gray-500 mb-1">Tài khoản | Mật khẩu</div><div class="font-black text-blue-700 text-lg" id="auto-acc-info">-</div></div>
+        <button onclick="copyText(document.getElementById('auto-acc-info').innerText); alert('✅ Đã copy!')" class="w-full mt-4 border border-blue-600 text-blue-600 py-2 rounded-xl font-bold hover:bg-blue-50 transition"><i class="fas fa-copy mr-2"></i>Copy Tài Khoản</button>
+    </div>
+</div>
+
+<!-- MODAL ĐẶT HÀNG THÀNH CÔNG -->
+<div id="orderSuccessModal" class="modal-overlay">
+    <div class="bg-white rounded-2xl p-7 w-full max-w-sm shadow-2xl relative text-center">
+        <button onclick="closeModal('orderSuccessModal')" class="absolute right-4 top-4 text-gray-400 text-xl">&times;</button>
+        <i class="fas fa-check-circle text-green-500 text-5xl mb-3"></i>
+        <h3 class="text-xl font-black text-gray-800 mb-2">Đặt Hàng Thành Công!</h3>
+        <p class="text-sm text-gray-500 mb-4">Đơn hàng của bạn đã được gửi vào hàng đợi Admin. Vui lòng chờ xử lý.</p>
+        <div id="order-success-detail" class="bg-gray-50 rounded-xl p-4 text-left text-sm space-y-2 mb-4"></div>
+        <button onclick="closeModal('orderSuccessModal')" class="w-full bg-blue-700 text-white py-2.5 rounded-xl font-bold hover:bg-blue-800 transition">Đóng</button>
     </div>
 </div>
 
@@ -534,9 +439,15 @@ const db = firebase.firestore();
 const ADMIN_EMAIL = "tnquang477@gmail.com";
 let isAdmin = false;
 let currentUser = null;
-let selectedPlatform = 'facebook';
 let selectedCarrierAcc = 'Garena';
 let selectedDenomAcc = 0;
+let selectedPlatformName = 'facebook';
+
+// ===== NẠP GAME STATE =====
+let ngCurrentGameId = null;
+let ngCurrentGameData = null;
+let ngCurrentTab = 'auto';
+let ngSelectedPackage = null;
 
 // ===== MODAL =====
 function openModal(id) { document.getElementById(id).classList.add('open'); }
@@ -545,25 +456,14 @@ function closeModal(id) { document.getElementById(id).classList.remove('open'); 
 // ===== TABS =====
 function openTab(tabId) {
     document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-    document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
-    const mapping = {
-        'tai-khoan': 'tab-tai-khoan',
-        'dich-vu': 'tab-dich-vu',
-        'nap-game': 'tab-nap-game',
-        'buff-mxh': 'tab-buff-mxh',
-        'admin-panel': 'tab-admin-panel',
-        'account': 'tab-account'
-    };
-    const targetId = mapping[tabId] || ('tab-' + tabId);
-    const target = document.getElementById(targetId);
+    const map = {'tai-khoan':'tab-tai-khoan','dich-vu':'tab-dich-vu','nap-game':'tab-nap-game','buff-mxh':'tab-buff-mxh','account':'tab-account'};
+    const target = document.getElementById(map[tabId] || 'tab-tai-khoan');
     if(target) target.classList.add('active');
-
-    if(tabId === 'tai-khoan') loadProducts('tai-khoan');
-    if(tabId === 'dich-vu') loadProducts('dich-vu');
-    if(tabId === 'buff-mxh') loadUserBuffOrders();
-    if(tabId === 'admin-panel') { if(!isAdmin){ alert('Bạn không có quyền!'); openTab('tai-khoan'); return; } loadAdminInbox('buff-mxh'); }
-    if(tabId === 'nap-game') loadUserNapGameOrders();
-    window.scrollTo(0, 0);
+    if(tabId==='tai-khoan') loadProducts('tai-khoan');
+    if(tabId==='dich-vu') loadProducts('dich-vu');
+    if(tabId==='nap-game') { loadUserGameGrid(); if(isAdmin) document.getElementById('btn-admin-nap-game').classList.remove('hidden'); }
+    if(tabId==='buff-mxh') loadUserBuffOrders();
+    window.scrollTo(0,0);
 }
 openTab('tai-khoan');
 
@@ -573,15 +473,24 @@ auth.onAuthStateChanged(user => {
     const area = document.getElementById('auth-area');
     if(user) {
         isAdmin = user.email === ADMIN_EMAIL;
+        if(isAdmin) {
+            document.getElementById('btn-open-post-tk')?.classList.remove('hidden');
+            document.getElementById('admin-post-form-tk')?.classList.remove('hidden');
+        }
         db.collection("users").doc(user.email).onSnapshot(doc => {
             const data = doc.data() || {vnd:0};
             const ten = user.email.split('@')[0];
             const bal = data.vnd.toLocaleString();
-            document.getElementById('sb-balance').innerText = bal + 'đ';
-            document.getElementById('sb-name').innerText = ten;
-            document.getElementById('profile-username').innerText = ten;
-            document.getElementById('profile-email').innerText = user.email;
-            document.getElementById('noi-dung-ck').innerText = 'TNQ' + ten.toUpperCase().substring(0,6);
+            const sbBal = document.getElementById('sb-balance');
+            const sbName = document.getElementById('sb-name');
+            if(sbBal) sbBal.innerText = bal + 'đ';
+            if(sbName) sbName.innerText = ten;
+            const profileUser = document.getElementById('profile-username');
+            const profileEmail = document.getElementById('profile-email');
+            if(profileUser) profileUser.innerText = ten;
+            if(profileEmail) profileEmail.innerText = user.email;
+            const ckEl = document.getElementById('noi-dung-ck');
+            if(ckEl) ckEl.innerText = 'TNQ' + ten.toUpperCase().substring(0,6);
 
             area.innerHTML = `
                 <div class="relative" id="user-menu-wrap">
@@ -590,7 +499,7 @@ auth.onAuthStateChanged(user => {
                         <span class="text-sm font-bold text-gray-800">${bal} VNĐ</span>
                         <i class="fas fa-chevron-down text-gray-400 text-xs"></i>
                     </button>
-                    <div id="user-dropdown" class="hidden absolute right-0 top-full mt-2 bg-white rounded-xl shadow-xl border border-gray-100 w-48 z-50 overflow-hidden">
+                    <div id="user-dropdown" class="hidden absolute right-0 top-full mt-2 bg-white rounded-xl shadow-xl border border-gray-100 w-52 z-50 overflow-hidden">
                         <div class="px-4 py-3 border-b border-gray-100 bg-gray-50">
                             <div class="font-bold text-sm text-gray-800">${ten}</div>
                             <div class="text-green-600 font-bold text-sm">${bal} VNĐ</div>
@@ -598,33 +507,23 @@ auth.onAuthStateChanged(user => {
                         <a onclick="openTab('account');showSubPage('profile')" class="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-600 hover:bg-gray-50 cursor-pointer border-b border-gray-50"><i class="fas fa-user-circle w-4 text-center text-gray-400"></i> Trang cá nhân</a>
                         <a onclick="openTab('account');showSubPage('lich-su-mua')" class="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-600 hover:bg-gray-50 cursor-pointer border-b border-gray-50"><i class="fas fa-history w-4 text-center text-gray-400"></i> Lịch sử mua hàng</a>
                         <a onclick="openTab('account');showSubPage('nap-the')" class="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-600 hover:bg-gray-50 cursor-pointer border-b border-gray-50"><i class="fas fa-credit-card w-4 text-center text-red-400"></i> Nạp thẻ cào</a>
-                        ${isAdmin ? `<a onclick="openTab('admin-panel')" class="flex items-center gap-2 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 cursor-pointer border-b border-gray-50"><i class="fas fa-shield-alt w-4 text-center"></i> Hộp thư Admin</a>` : ''}
                         <a onclick="auth.signOut()" class="flex items-center gap-2 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 cursor-pointer"><i class="fas fa-sign-out-alt w-4 text-center"></i> Đăng xuất</a>
                     </div>
                 </div>`;
 
-            if(isAdmin) {
-                document.getElementById('admin-post-form').classList.remove('hidden');
-                document.getElementById('btn-open-post-form').classList.remove('hidden');
-                const adminNg = document.getElementById('admin-nap-game-form');
-                if(adminNg) adminNg.classList.remove('hidden');
-            }
+            document.getElementById('user-menu-wrap')?.addEventListener('click', e => e.stopPropagation());
         });
-        loadProducts('tai-khoan');
-        loadProducts('dich-vu');
     } else {
         isAdmin = false;
         area.innerHTML = `<button onclick="openModal('loginModal')" class="bg-blue-700 text-white px-4 py-2 rounded-xl text-sm font-bold hover:bg-blue-800 transition">Đăng nhập</button>`;
     }
+    loadProducts('tai-khoan');
+    loadProducts('dich-vu');
+    loadUserGameGrid();
 });
 
-function toggleUserMenu() {
-    document.getElementById('user-dropdown')?.classList.toggle('hidden');
-}
-document.addEventListener('click', e => {
-    const wrap = document.getElementById('user-menu-wrap');
-    if(wrap && !wrap.contains(e.target)) document.getElementById('user-dropdown')?.classList.add('hidden');
-});
+function toggleUserMenu() { document.getElementById('user-dropdown')?.classList.toggle('hidden'); }
+document.addEventListener('click', () => document.getElementById('user-dropdown')?.classList.add('hidden'));
 
 async function authAction() {
     const e = document.getElementById('login-email').value;
@@ -639,103 +538,70 @@ async function authAction() {
 function showSubPage(name) {
     document.querySelectorAll('.sub-page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
-    document.getElementById('sub-' + name)?.classList.add('active');
-    const links = document.querySelectorAll('.sidebar-link');
-    links.forEach(l => { if(l.getAttribute('onclick')?.includes(name)) l.classList.add('active'); });
+    document.getElementById('sub-'+name)?.classList.add('active');
+    document.querySelectorAll('.sidebar-link').forEach(l => { if(l.getAttribute('onclick')?.includes(name)) l.classList.add('active'); });
     if(name==='lich-su-mua') loadLichSuMua();
     if(name==='bien-dong') loadBienDong();
 }
 
-// ===== LOAD PRODUCTS =====
+// ===== PRODUCTS TAI KHOAN / DICH VU =====
 function loadProducts(type) {
-    const gridId = type === 'tai-khoan' ? 'grid-tai-khoan' : 'grid-dich-vu';
+    const gridId = type==='tai-khoan' ? 'grid-tai-khoan' : 'grid-dich-vu';
     const grid = document.getElementById(gridId);
     if(!grid) return;
-    grid.innerHTML = '<div class="col-span-4 text-center text-gray-400 py-8">Đang tải...</div>';
+    grid.innerHTML = '<div class="col-span-4 text-center text-gray-400 py-8 text-sm">Đang tải...</div>';
     db.collection("SanPhamV2").where("loai","==",type).onSnapshot(snap => {
-        if(snap.empty) { grid.innerHTML = '<div class="col-span-4 text-center text-gray-400 py-8 text-sm">Chưa có sản phẩm</div>'; return; }
-        grid.innerHTML = '';
+        if(snap.empty){grid.innerHTML='<div class="col-span-4 text-center text-gray-400 py-8 text-sm">Chưa có sản phẩm</div>';return;}
+        grid.innerHTML='';
         snap.forEach(doc => {
             const sp = doc.data();
-            const isAuto = sp.mode === 'auto';
-            const stock = sp.listAcc ? sp.listAcc.length : 0;
-            const stockBadge = isAuto
-                ? (stock > 0 ? `<span class="text-xs text-green-600 font-semibold">Còn ${stock} acc</span>` : `<span class="text-xs text-red-500 font-semibold">Hết hàng</span>`)
-                : '';
-            const modeBadge = isAuto
-                ? '<span class="text-xs text-green-600 font-semibold bg-green-50 px-2 py-0.5 rounded-full">⚡ Tự động</span>'
-                : '<span class="text-xs text-yellow-600 font-semibold bg-yellow-50 px-2 py-0.5 rounded-full">✋ Thủ công</span>';
-            const adminBtns = isAdmin ? `
-                <div class="flex gap-1 mt-2">
-                    <button onclick="xoaSanPhamV2('${doc.id}')" class="flex-1 text-xs bg-red-100 text-red-600 py-1 rounded-lg font-bold hover:bg-red-200">🗑️ Xóa</button>
-                </div>` : '';
+            const isAuto = sp.mode==='auto';
+            const stock = sp.listAcc?sp.listAcc.length:0;
+            const stockBadge = isAuto?(stock>0?`<span class="text-xs text-green-600 font-semibold">Còn ${stock} acc</span>`:`<span class="text-xs text-red-500 font-semibold">Hết hàng</span>`):'';
+            const modeBadge = isAuto?'<span class="text-xs text-green-600 bg-green-50 px-2 py-0.5 rounded-full font-semibold">⚡ Tự động</span>':'<span class="text-xs text-yellow-600 bg-yellow-50 px-2 py-0.5 rounded-full font-semibold">✋ Thủ công</span>';
             grid.innerHTML += `
                 <div class="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-md hover:-translate-y-1 transition cursor-pointer">
-                    ${adminBtns && isAdmin ? `<div class="absolute top-2 right-2 z-10">${adminBtns}</div>` : ''}
-                    <img src="${sp.anh||'https://via.placeholder.com/200x130?text=No+Image'}" class="w-full h-32 object-cover" onerror="this.src='https://via.placeholder.com/200x130?text=No+Image'">
+                    <img src="${sp.anh||'https://via.placeholder.com/200x130'}" class="w-full h-32 object-cover" onerror="this.src='https://via.placeholder.com/200x130'">
                     <div class="p-3">
                         <div class="text-sm font-black text-gray-800 mb-1 truncate">${sp.ten}</div>
-                        <div class="flex items-center justify-between mb-2">
-                            ${modeBadge}
-                            ${stockBadge}
-                        </div>
+                        <div class="flex items-center justify-between mb-2">${modeBadge}${stockBadge}</div>
                         <div class="text-red-500 font-black text-base mb-2">${Number(sp.gia).toLocaleString()}đ</div>
-                        <button onclick="buyProduct('${doc.id}','${sp.ten}',${sp.gia},'${sp.mode}')" class="w-full bg-blue-700 text-white py-2 rounded-lg text-sm font-bold hover:bg-blue-800 transition">
-                            ${isAuto ? 'Mua Ngay' : 'Mua (Chờ duyệt)'}
-                        </button>
-                        ${isAdmin ? `<button onclick="xoaSanPhamV2('${doc.id}')" class="w-full mt-1 bg-red-100 text-red-600 py-1.5 rounded-lg text-xs font-bold hover:bg-red-200 transition">🗑️ Xóa</button>` : ''}
+                        <button onclick="buyProduct('${doc.id}','${sp.ten}',${sp.gia},'${sp.mode}')" class="w-full bg-blue-700 text-white py-2 rounded-lg text-sm font-bold hover:bg-blue-800 transition">${isAuto?'Mua Ngay':'Mua (Chờ duyệt)'}</button>
+                        ${isAdmin?`<button onclick="xoaSP('${doc.id}')" class="w-full mt-1 bg-red-100 text-red-600 py-1.5 rounded-lg text-xs font-bold hover:bg-red-200">🗑️ Xóa</button>`:''}
                     </div>
                 </div>`;
         });
     });
 }
 
-// ===== MUA SẢN PHẨM =====
 async function buyProduct(id, ten, gia, mode) {
     if(!currentUser) return openModal('loginModal');
     const userRef = db.collection("users").doc(currentUser.email);
-    const userData = (await userRef.get()).data() || {vnd:0};
+    const userData = (await userRef.get()).data()||{vnd:0};
     if(userData.vnd < gia) return alert("Không đủ tiền! Vui lòng nạp thêm.");
-
     const spRef = db.collection("SanPhamV2").doc(id);
     const spData = (await spRef.get()).data();
-
-    if(mode === 'auto') {
-        if(!spData.listAcc || spData.listAcc.length === 0) return alert("Sản phẩm đã hết hàng!");
+    if(mode==='auto') {
+        if(!spData.listAcc||spData.listAcc.length===0) return alert("Sản phẩm đã hết hàng!");
         const acc = spData.listAcc[0];
-        const newList = spData.listAcc.slice(1);
-        await spRef.update({listAcc: newList});
+        await spRef.update({listAcc: spData.listAcc.slice(1)});
         await userRef.update({vnd: userData.vnd - gia});
-        await db.collection("DonHangV2").add({
-            email: currentUser.email, tenSanPham: ten, gia, mode: 'auto',
-            accNhan: acc, ngayMua: firebase.firestore.FieldValue.serverTimestamp()
-        });
-        await ghiGiaoDich(currentUser.email, `Mua ${ten}`, gia, 'tru', userData.vnd, userData.vnd - gia);
+        await db.collection("DonHangV2").add({email:currentUser.email,tenSanPham:ten,gia,mode:'auto',accNhan:acc,ngayMua:firebase.firestore.FieldValue.serverTimestamp()});
+        await ghiGiaoDich(currentUser.email,`Mua ${ten}`,gia,'tru',userData.vnd,userData.vnd-gia);
         document.getElementById('auto-acc-info').innerText = acc;
         openModal('autoModal');
     } else {
         await userRef.update({vnd: userData.vnd - gia});
-        const donRef = await db.collection("DonHangV2").add({
-            email: currentUser.email, tenSanPham: ten, gia, mode: 'manual',
-            status: 'Đang xét duyệt', category: 'tai-khoan',
-            ngayMua: firebase.firestore.FieldValue.serverTimestamp()
-        });
-        await ghiGiaoDich(currentUser.email, `Mua ${ten}`, gia, 'tru', userData.vnd, userData.vnd - gia);
-        alert("✅ Đơn hàng đã gửi! Admin sẽ xử lý sớm. Mã đơn: " + donRef.id.substring(0,8).toUpperCase());
+        await db.collection("DonHangV2").add({email:currentUser.email,tenSanPham:ten,gia,mode:'manual',status:'Đang xét duyệt',category:'tai-khoan',ngayMua:firebase.firestore.FieldValue.serverTimestamp()});
+        await ghiGiaoDich(currentUser.email,`Mua ${ten}`,gia,'tru',userData.vnd,userData.vnd-gia);
+        alert("✅ Đơn hàng đã gửi! Admin sẽ xử lý sớm.");
     }
 }
 
-// ===== ĐĂNG SẢN PHẨM (ADMIN) =====
-function togglePostForm() {
-    const form = document.getElementById('admin-post-form');
-    form.classList.toggle('hidden');
-}
-
-function updatePostType() {}
 function togglePostMode() {
     const mode = document.getElementById('post-mode').value;
-    document.getElementById('auto-section').classList.toggle('hidden', mode === 'manual');
-    document.getElementById('manual-section').classList.toggle('hidden', mode === 'auto');
+    document.getElementById('auto-section').classList.toggle('hidden', mode==='manual');
+    document.getElementById('manual-section').classList.toggle('hidden', mode==='auto');
 }
 
 async function adminPostProduct() {
@@ -746,80 +612,360 @@ async function adminPostProduct() {
     const mode = document.getElementById('post-mode').value;
     if(!ten||!gia||!anh) return alert("Nhập đủ thông tin!");
     let listAcc = [];
-    if(mode === 'auto') {
-        const raw = document.getElementById('post-acc-list').value.trim();
-        listAcc = raw.split('\n').filter(l => l.trim() !== '');
-    }
-    await db.collection("SanPhamV2").add({ten, gia, anh, loai, mode, listAcc, ngayDang: firebase.firestore.FieldValue.serverTimestamp()});
-    alert("✅ Đã đăng sản phẩm!");
-    ['post-name','post-price','post-img','post-acc-list'].forEach(id => {const el=document.getElementById(id); if(el) el.value='';});
+    if(mode==='auto') listAcc = document.getElementById('post-acc-list').value.trim().split('\n').filter(l=>l.trim()!=='');
+    await db.collection("SanPhamV2").add({ten,gia,anh,loai,mode,listAcc,ngayDang:firebase.firestore.FieldValue.serverTimestamp()});
+    alert("✅ Đã đăng!");
+    ['post-name','post-price','post-img','post-acc-list'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
 }
 
-async function xoaSanPhamV2(id) {
-    if(!confirm("Xác nhận xóa sản phẩm?")) return;
+async function xoaSP(id) {
+    if(!confirm("Xác nhận xóa?")) return;
     await db.collection("SanPhamV2").doc(id).delete();
     alert("✅ Đã xóa!");
 }
 
-// ===== NẠP GAME =====
-async function submitGameTopup() {
-    if(!currentUser) return openModal('loginModal');
-    const uid = document.getElementById('game-uid').value.trim();
-    const server = document.getElementById('game-server').value;
-    const packVal = document.getElementById('game-pack').value;
-    const game = document.getElementById('game-select').value;
-    if(!uid||!game) return alert("Nhập đầy đủ thông tin!");
-    const [packName, packPrice] = packVal.split('|');
-    const gia = parseInt(packPrice);
-    const userRef = db.collection("users").doc(currentUser.email);
-    const userData = (await userRef.get()).data() || {vnd:0};
-    if(userData.vnd < gia) return alert("Không đủ tiền!");
-    await userRef.update({vnd: userData.vnd - gia});
-    await db.collection("DonNapGame").add({
-        email: currentUser.email, game, uid, server, goi: packName, gia,
-        status: 'Đang xét duyệt', category: 'nap-game',
-        ngayNap: firebase.firestore.FieldValue.serverTimestamp()
+// ==================== HỆ THỐNG NẠP GAME 3 CẤP ====================
+
+// --- ADMIN: Quản lý Game ---
+function renderAdminGameList() {
+    const container = document.getElementById('admin-game-list');
+    if(!container) return;
+    container.innerHTML = '<div class="text-center text-gray-400 text-sm py-3">Đang tải...</div>';
+    db.collection("NapGameV3").orderBy("ngayTao","asc").get().then(snap => {
+        container.innerHTML = '';
+        if(snap.empty){container.innerHTML='<div class="text-center text-gray-400 text-sm py-3">Chưa có game nào</div>';return;}
+        snap.forEach(doc => {
+            const game = doc.data();
+            container.innerHTML += `
+                <div class="border border-gray-200 rounded-xl p-4 bg-gray-50">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-3">
+                            <img src="${game.thumb}" class="w-12 h-12 object-cover rounded-lg" onerror="this.src='https://via.placeholder.com/48'">
+                            <span class="font-bold text-gray-800">${game.ten}</span>
+                        </div>
+                        <button onclick="adminDeleteGame('${doc.id}')" class="text-red-500 hover:text-red-700 text-sm"><i class="fas fa-trash"></i></button>
+                    </div>
+                    <div class="bg-white border border-gray-200 rounded-lg p-3 space-y-3">
+                        <p class="text-xs font-bold text-gray-500">➕ Thêm gói nạp cho game này:</p>
+                        <div class="grid grid-cols-4 gap-2">
+                            <input type="text" id="pkg-name-${doc.id}" placeholder="Tên gói vật phẩm" class="border border-gray-200 rounded-lg p-2 text-xs outline-none focus:border-blue-400">
+                            <input type="text" id="pkg-img-${doc.id}" placeholder="URL ảnh gói" class="border border-gray-200 rounded-lg p-2 text-xs outline-none focus:border-blue-400">
+                            <input type="number" id="pkg-price-${doc.id}" placeholder="Giá (VNĐ)" class="border border-gray-200 rounded-lg p-2 text-xs outline-none focus:border-blue-400">
+                            <select id="pkg-type-${doc.id}" class="border border-gray-200 rounded-lg p-2 text-xs outline-none focus:border-blue-400">
+                                <option value="auto">Tự động (Nạp UID)</option>
+                                <option value="log">Log Đăng Nhập (LOGIN)</option>
+                            </select>
+                        </div>
+                        <button onclick="adminAddPackage('${doc.id}')" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-4 py-2 rounded-lg transition">Đăng Gói Nạp</button>
+                    </div>
+                    <div id="pkg-list-${doc.id}" class="mt-3 space-y-2"></div>
+                </div>`;
+            loadAdminPackages(doc.id);
+        });
     });
-    await ghiGiaoDich(currentUser.email, `Nạp game ${game} - ${packName}`, gia, 'tru', userData.vnd, userData.vnd - gia);
-    alert("✅ Đã gửi đơn nạp game! Admin sẽ xử lý sớm.");
-    loadUserNapGameOrders();
 }
 
-function loadUserNapGameOrders() {
-    if(!currentUser) return;
-    const container = document.getElementById('user-napgame-orders');
-    container.innerHTML = '<div class="text-center text-gray-400 text-sm py-4">Đang tải...</div>';
-    db.collection("DonNapGame").where("email","==",currentUser.email).orderBy("ngayNap","desc").limit(10).get().then(snap => {
-        if(snap.empty){container.innerHTML='<div class="text-center text-gray-400 text-sm py-6">Chưa có đơn nạp game</div>';return;}
+function loadAdminPackages(gameId) {
+    const container = document.getElementById(`pkg-list-${gameId}`);
+    if(!container) return;
+    db.collection("NapGameV3").doc(gameId).collection("GoiNap").orderBy("ngayTao","asc").get().then(snap => {
         container.innerHTML = '';
+        if(snap.empty) return;
         snap.forEach(doc => {
-            const d = doc.data();
-            const statusColor = d.status==='Thành công' ? 'text-green-600' : d.status==='Thất bại' ? 'text-red-600' : d.status==='Đang thực hiện' ? 'text-blue-600' : 'text-yellow-600';
-            const statusBg = d.status==='Thành công' ? 'bg-green-50' : d.status==='Thất bại' ? 'bg-red-50' : 'bg-yellow-50';
+            const pkg = doc.data();
+            const typeBadge = pkg.type==='auto'?'<span class="text-xs text-green-600 bg-green-50 px-2 py-0.5 rounded-full font-semibold">⚡ UID</span>':'<span class="text-xs text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full font-semibold">🔐 LOGIN</span>';
             container.innerHTML += `
-                <div class="border border-gray-100 rounded-xl p-4 ${statusBg}">
-                    <div class="flex justify-between items-start">
+                <div class="flex items-center justify-between bg-white border border-gray-100 rounded-lg p-2">
+                    <div class="flex items-center gap-2">
+                        <img src="${pkg.anh||'https://via.placeholder.com/32'}" class="w-8 h-8 object-contain rounded" onerror="this.src='https://via.placeholder.com/32'">
                         <div>
-                            <div class="font-bold text-gray-800 text-sm">${d.game} - ${d.goi}</div>
-                            <div class="text-xs text-gray-500 mt-1">UID: ${d.uid} | Server: ${d.server}</div>
-                            <div class="text-xs text-gray-500">Mã: ${doc.id.substring(0,8).toUpperCase()}</div>
+                            <div class="text-xs font-semibold text-gray-700">${pkg.ten}</div>
+                            <div class="text-xs text-red-500 font-bold">${Number(pkg.gia).toLocaleString()}đ</div>
                         </div>
-                        <div class="text-right">
-                            <div class="font-black text-gray-800 text-sm">${Number(d.gia).toLocaleString()}đ</div>
-                            <span class="text-xs font-bold ${statusColor}">${d.status}</span>
-                            ${d.timeEstimate ? `<div class="text-xs text-gray-400">~${d.timeEstimate} phút</div>` : ''}
-                        </div>
+                    </div>
+                    <div class="flex items-center gap-2">${typeBadge}<button onclick="adminDeletePackage('${gameId}','${doc.id}')" class="text-red-400 hover:text-red-600 text-xs"><i class="fas fa-trash"></i></button></div>
+                </div>`;
+        });
+    });
+}
+
+async function adminAddGame() {
+    if(!isAdmin) return alert("Bạn không có quyền!");
+    const ten = document.getElementById('admin-game-name').value.trim();
+    const thumb = document.getElementById('admin-game-thumb').value.trim() || 'https://via.placeholder.com/150';
+    if(!ten) return alert("Nhập tên game!");
+    await db.collection("NapGameV3").add({ten, thumb, ngayTao: firebase.firestore.FieldValue.serverTimestamp()});
+    document.getElementById('admin-game-name').value='';
+    document.getElementById('admin-game-thumb').value='';
+    alert("✅ Đã thêm game!");
+    renderAdminGameList();
+    loadUserGameGrid();
+}
+
+async function adminAddPackage(gameId) {
+    if(!isAdmin) return;
+    const ten = document.getElementById(`pkg-name-${gameId}`).value.trim();
+    const anh = document.getElementById(`pkg-img-${gameId}`).value.trim() || 'https://via.placeholder.com/60';
+    const gia = parseInt(document.getElementById(`pkg-price-${gameId}`).value);
+    const type = document.getElementById(`pkg-type-${gameId}`).value;
+    if(!ten||isNaN(gia)) return alert("Nhập đủ tên gói và giá!");
+    let finalName = ten;
+    if(type==='auto' && !ten.includes('(Nạp UID)')) finalName += ' (Nạp UID)';
+    if(type==='log' && !ten.includes('(LOGIN)')) finalName += ' (LOGIN)';
+    await db.collection("NapGameV3").doc(gameId).collection("GoiNap").add({ten:finalName, anh, gia, type, ngayTao: firebase.firestore.FieldValue.serverTimestamp()});
+    document.getElementById(`pkg-name-${gameId}`).value='';
+    document.getElementById(`pkg-img-${gameId}`).value='';
+    document.getElementById(`pkg-price-${gameId}`).value='';
+    alert("✅ Đã thêm gói nạp!");
+    loadAdminPackages(gameId);
+    if(ngCurrentGameId===gameId) ngLoadPackages(gameId);
+}
+
+async function adminDeleteGame(gameId) {
+    if(!confirm("Xóa game này và tất cả gói nạp?")) return;
+    await db.collection("NapGameV3").doc(gameId).delete();
+    renderAdminGameList();
+    loadUserGameGrid();
+    backToStage1();
+}
+
+async function adminDeletePackage(gameId, pkgId) {
+    if(!confirm("Xóa gói nạp này?")) return;
+    await db.collection("NapGameV3").doc(gameId).collection("GoiNap").doc(pkgId).delete();
+    loadAdminPackages(gameId);
+    if(ngCurrentGameId===gameId) ngLoadPackages(gameId);
+}
+
+// --- USER: Danh sách game ---
+function loadUserGameGrid() {
+    const grid = document.getElementById('user-game-grid');
+    if(!grid) return;
+    grid.innerHTML = '<div class="col-span-4 text-center text-gray-400 py-8 text-sm">Đang tải...</div>';
+    db.collection("NapGameV3").orderBy("ngayTao","asc").onSnapshot(snap => {
+        if(snap.empty){grid.innerHTML='<div class="col-span-4 text-center text-gray-400 py-8 text-sm">Chưa có game nào. Admin hãy thêm game!</div>';return;}
+        grid.innerHTML='';
+        snap.forEach(doc => {
+            const game = doc.data();
+            grid.innerHTML += `
+                <div onclick="ngSelectGame('${doc.id}', ${JSON.stringify(game).replace(/'/g,"&#39;")})" class="bg-white border border-gray-100 rounded-xl overflow-hidden cursor-pointer hover:shadow-md hover:border-blue-200 transition group">
+                    <div class="overflow-hidden">
+                        <img src="${game.thumb}" class="w-full h-32 object-cover group-hover:scale-105 transition duration-300" onerror="this.src='https://via.placeholder.com/200x128?text=Game'">
+                    </div>
+                    <div class="p-3 text-center">
+                        <p class="text-sm font-black text-gray-800 group-hover:text-blue-700 transition">${game.ten}</p>
                     </div>
                 </div>`;
         });
-    }).catch(()=>{container.innerHTML='<div class="text-center text-gray-400 text-sm py-4">Lỗi tải dữ liệu</div>';});
+    });
 }
 
-// ===== BUFF MXH =====
-let selectedPlatformName = 'facebook';
+// --- USER: Chọn game → Stage 2 ---
+function ngSelectGame(id, gameData) {
+    ngCurrentGameId = id;
+    ngCurrentGameData = gameData;
+    ngSelectedPackage = null;
+    document.getElementById('ng-stage-1').classList.add('hidden');
+    document.getElementById('ng-stage-2').classList.remove('hidden');
+
+    // Render game header
+    document.getElementById('ng-game-header').innerHTML = `
+        <div class="relative h-36 overflow-hidden">
+            <img src="${gameData.thumb}" class="w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/800x144'">
+            <div class="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent flex items-center p-5">
+                <div>
+                    <p class="text-xs text-white/70 mb-1">Đang nạp cho game</p>
+                    <h2 class="text-xl font-black text-white">${gameData.ten}</h2>
+                </div>
+            </div>
+        </div>`;
+
+    ngSwitchTab('auto');
+    ngResetSidebar();
+}
+
+function backToStage1() {
+    document.getElementById('ng-stage-2').classList.add('hidden');
+    document.getElementById('ng-stage-1').classList.remove('hidden');
+    ngCurrentGameId = null;
+    ngCurrentGameData = null;
+    ngSelectedPackage = null;
+    ngResetSidebar();
+}
+
+// --- Tab UID / LOGIN ---
+function ngSwitchTab(type) {
+    ngCurrentTab = type;
+    ngSelectedPackage = null;
+    ngResetSidebar();
+    const tabAuto = document.getElementById('ng-tab-auto');
+    const tabLog = document.getElementById('ng-tab-log');
+    const fUid = document.getElementById('ng-form-uid');
+    const fLog = document.getElementById('ng-form-log');
+    if(type==='auto') {
+        tabAuto.className = 'flex-1 py-2.5 text-center text-sm font-bold rounded-lg bg-blue-700 text-white transition';
+        tabLog.className = 'flex-1 py-2.5 text-center text-sm font-semibold rounded-lg text-gray-500 hover:bg-gray-50 transition';
+        fUid.classList.remove('hidden');
+        fLog.classList.add('hidden');
+    } else {
+        tabLog.className = 'flex-1 py-2.5 text-center text-sm font-bold rounded-lg bg-blue-700 text-white transition';
+        tabAuto.className = 'flex-1 py-2.5 text-center text-sm font-semibold rounded-lg text-gray-500 hover:bg-gray-50 transition';
+        fLog.classList.remove('hidden');
+        fUid.classList.add('hidden');
+    }
+    ngLoadPackages(ngCurrentGameId);
+}
+
+// --- Load gói nạp ---
+function ngLoadPackages(gameId) {
+    const container = document.getElementById('ng-package-grid');
+    if(!container) return;
+    container.innerHTML = '<div class="col-span-3 text-center text-gray-400 text-sm py-6">Đang tải gói nạp...</div>';
+    db.collection("NapGameV3").doc(gameId).collection("GoiNap")
+        .where("type","==",ngCurrentTab)
+        .orderBy("ngayTao","asc")
+        .get().then(snap => {
+            if(snap.empty){container.innerHTML=`<div class="col-span-3 text-center text-gray-400 text-sm py-8">Hiện chưa có gói nạp nào ở hình thức này.</div>`;return;}
+            container.innerHTML='';
+            snap.forEach(doc => {
+                const pkg = doc.data();
+                const pkgObj = {...pkg, id: doc.id};
+                container.innerHTML += `
+                    <div id="pkg-card-${doc.id}" onclick="ngSelectPackage(${JSON.stringify(pkgObj).replace(/'/g,"&#39;")})" class="pkg-card bg-white border-2 border-gray-200 rounded-xl p-3 cursor-pointer hover:border-blue-400 transition flex flex-col items-center gap-2">
+                        <img src="${pkg.anh||'https://via.placeholder.com/60'}" class="w-14 h-14 object-contain" onerror="this.src='https://via.placeholder.com/56'">
+                        <p class="text-xs font-bold text-gray-700 text-center line-clamp-2">${pkg.ten}</p>
+                        <p class="text-sm font-black text-blue-700">${Number(pkg.gia).toLocaleString()}đ</p>
+                    </div>`;
+            });
+        }).catch(err => {
+            container.innerHTML=`<div class="col-span-3 text-center text-gray-400 text-sm py-6">Cần tạo index Firestore cho subcollection GoiNap</div>`;
+        });
+}
+
+// --- Chọn gói ---
+function ngSelectPackage(pkg) {
+    ngSelectedPackage = pkg;
+    // Xóa active cũ
+    document.querySelectorAll('.pkg-card').forEach(el => el.classList.remove('active-pkg'));
+    // Active mới
+    const activeEl = document.getElementById(`pkg-card-${pkg.id}`);
+    if(activeEl) activeEl.classList.add('active-pkg');
+    document.getElementById('ng-checkout-qty').value = 1;
+    ngUpdateSidebar();
+}
+
+function ngUpdateQty(val) {
+    if(!ngSelectedPackage) return alert("Vui lòng chọn gói nạp trước!");
+    const qtyInput = document.getElementById('ng-checkout-qty');
+    let qty = parseInt(qtyInput.value) + val;
+    if(qty < 1) qty = 1;
+    qtyInput.value = qty;
+    ngUpdateSidebar();
+}
+
+function ngUpdateSidebar() {
+    const detail = document.getElementById('ng-checkout-detail');
+    const total = document.getElementById('ng-total-price');
+    const qty = parseInt(document.getElementById('ng-checkout-qty').value);
+    if(!ngSelectedPackage){ngResetSidebar();return;}
+    const totalCost = ngSelectedPackage.gia * qty;
+    detail.innerHTML = `
+        <div class="flex items-center gap-3 text-left">
+            <img src="${ngSelectedPackage.anh||'https://via.placeholder.com/40'}" class="w-12 h-12 object-contain rounded-lg flex-shrink-0">
+            <div>
+                <p class="text-xs font-bold text-gray-800 line-clamp-2">${ngSelectedPackage.ten}</p>
+                <p class="text-sm font-black text-blue-700 mt-0.5">${Number(ngSelectedPackage.gia).toLocaleString()}đ / gói</p>
+            </div>
+        </div>`;
+    total.innerText = totalCost.toLocaleString('vi-VN') + 'đ';
+}
+
+function ngResetSidebar() {
+    document.getElementById('ng-checkout-detail').innerHTML = '<p class="text-xs text-gray-400 py-2">Chưa chọn gói nạp nào</p>';
+    document.getElementById('ng-total-price').innerText = '0đ';
+    document.getElementById('ng-checkout-qty').value = 1;
+}
+
+// --- ĐẶT HÀNG ---
+async function ngProcessCheckout() {
+    if(!currentUser) return openModal('loginModal');
+    if(!ngCurrentGameId||!ngCurrentGameData) return alert("Lỗi: Không tìm thấy game!");
+    if(!ngSelectedPackage) return alert("Vui lòng chọn gói nạp!");
+
+    const qty = parseInt(document.getElementById('ng-checkout-qty').value);
+    const totalCost = ngSelectedPackage.gia * qty;
+
+    // Thu thập form
+    let formData = {};
+    if(ngCurrentTab==='auto') {
+        const uid = document.getElementById('ng-input-uid').value.trim();
+        const server = document.getElementById('ng-input-server-uid').value;
+        if(!uid) return alert("Vui lòng điền UID nhân vật!");
+        formData = {uid, server};
+    } else {
+        const username = document.getElementById('ng-input-username').value.trim();
+        const password = document.getElementById('ng-input-password').value.trim();
+        const serverLog = document.getElementById('ng-input-server-log').value.trim();
+        if(!username||!password||!serverLog) return alert("Vui lòng nhập đầy đủ Tài khoản, Mật khẩu và Máy chủ!");
+        formData = {account: username, password, login_via_server: serverLog};
+    }
+
+    // Kiểm tra số dư (Anti-cheat từ DB)
+    const userRef = db.collection("users").doc(currentUser.email);
+    const userData = (await userRef.get()).data() || {vnd:0};
+    if(userData.vnd < totalCost) {
+        return alert(`❌ Không đủ số dư!\nSố dư hiện tại: ${userData.vnd.toLocaleString()}đ\nCần thêm: ${(totalCost - userData.vnd).toLocaleString()}đ`);
+    }
+
+    if(!confirm(`Xác nhận thanh toán?\n\nGói: ${ngSelectedPackage.ten}\nSố lượng: ${qty}\nTổng tiền: ${totalCost.toLocaleString()}đ`)) return;
+
+    // Trừ tiền
+    await userRef.update({vnd: userData.vnd - totalCost});
+
+    // Đẩy đơn vào orders với status=pending
+    const orderDoc = {
+        order_id: "ORD_" + Date.now(),
+        email: currentUser.email,
+        game_id: ngCurrentGameId,
+        game_name: ngCurrentGameData.ten,
+        package_id: ngSelectedPackage.id,
+        package_name: ngSelectedPackage.ten,
+        quantity: qty,
+        total_price: totalCost,
+        type: ngCurrentTab,
+        account_info: formData,
+        status: "pending",
+        category: "nap-game",
+        created_at: firebase.firestore.FieldValue.serverTimestamp()
+    };
+    const orderRef = await db.collection("orders").add(orderDoc);
+    await ghiGiaoDich(currentUser.email, `Nạp game ${ngCurrentGameData.ten} - ${ngSelectedPackage.ten}`, totalCost, 'tru', userData.vnd, userData.vnd - totalCost);
+
+    // Hiển thị modal thành công
+    const detailEl = document.getElementById('order-success-detail');
+    const infoText = ngCurrentTab==='auto' ? `UID: ${formData.uid} | Server: ${formData.server}` : `Tài khoản: ${formData.account} | Server: ${formData.login_via_server}`;
+    detailEl.innerHTML = `
+        <div class="flex justify-between"><span class="text-gray-500">Game:</span><span class="font-bold">${ngCurrentGameData.ten}</span></div>
+        <div class="flex justify-between"><span class="text-gray-500">Gói nạp:</span><span class="font-bold text-xs">${ngSelectedPackage.ten}</span></div>
+        <div class="flex justify-between"><span class="text-gray-500">Số lượng:</span><span class="font-bold">${qty}</span></div>
+        <div class="flex justify-between"><span class="text-gray-500">Tổng tiền:</span><span class="font-black text-blue-700">${totalCost.toLocaleString()}đ</span></div>
+        <div class="flex justify-between"><span class="text-gray-500">Thông tin:</span><span class="font-semibold text-xs">${infoText}</span></div>
+        <div class="flex justify-between"><span class="text-gray-500">Mã đơn:</span><span class="font-mono text-xs text-gray-600">${orderRef.id.substring(0,12).toUpperCase()}</span></div>`;
+    openModal('orderSuccessModal');
+
+    // Reset
+    document.getElementById('ng-input-uid').value='';
+    document.getElementById('ng-input-username').value='';
+    document.getElementById('ng-input-password').value='';
+    document.getElementById('ng-input-server-log').value='';
+    ngSelectedPackage = null;
+    document.querySelectorAll('.pkg-card').forEach(el=>el.classList.remove('active-pkg'));
+    ngResetSidebar();
+}
+
+// ==================== BUFF MXH ====================
 function selectPlatform(name, btn) {
-    document.querySelectorAll('.platform-btn').forEach(b => { b.classList.remove('active','bg-blue-700','text-white','border-blue-700'); b.classList.add('bg-white','text-gray-600','border-gray-200'); });
-    btn.classList.add('active','bg-blue-700','text-white','border-blue-700');
+    document.querySelectorAll('.platform-btn').forEach(b => {b.classList.remove('bg-blue-700','text-white','border-blue-700');b.classList.add('bg-white','text-gray-600','border-gray-200');});
+    btn.classList.add('bg-blue-700','text-white','border-blue-700');
     btn.classList.remove('bg-white','text-gray-600','border-gray-200');
     selectedPlatformName = name;
 }
@@ -831,13 +977,8 @@ async function submitBuff() {
     const link = document.getElementById('buff-link').value.trim();
     const amount = document.getElementById('buff-amount').value;
     if(!link||!amount) return alert("Nhập đủ Link và Số lượng!");
-    await db.collection("DonBuff").add({
-        email: currentUser.email, platform: selectedPlatformName,
-        type, quality, link, amount: parseInt(amount),
-        status: 'Đang xét duyệt', category: 'buff-mxh',
-        ngayTao: firebase.firestore.FieldValue.serverTimestamp()
-    });
-    alert("✅ Tạo đơn Buff thành công! Admin sẽ xét duyệt sớm.");
+    await db.collection("DonBuff").add({email:currentUser.email,platform:selectedPlatformName,type,quality,link,amount:parseInt(amount),status:'Đang xét duyệt',category:'buff-mxh',ngayTao:firebase.firestore.FieldValue.serverTimestamp()});
+    alert("✅ Tạo đơn Buff thành công!");
     document.getElementById('buff-link').value='';
     document.getElementById('buff-amount').value='';
     loadUserBuffOrders();
@@ -846,144 +987,63 @@ async function submitBuff() {
 function loadUserBuffOrders() {
     if(!currentUser) return;
     const container = document.getElementById('user-buff-orders');
-    container.innerHTML = '<div class="text-center text-gray-400 text-sm py-4">Đang tải...</div>';
     db.collection("DonBuff").where("email","==",currentUser.email).orderBy("ngayTao","desc").limit(15).get().then(snap => {
-        if(snap.empty){container.innerHTML='<div class="text-center text-gray-400 text-sm py-8">Chưa có đơn hàng nào</div>';return;}
-        container.innerHTML = '';
+        if(snap.empty){container.innerHTML='<div class="text-center text-gray-400 text-sm py-8">Chưa có đơn hàng</div>';return;}
+        container.innerHTML='';
         snap.forEach(doc => {
             const d = doc.data();
-            const statusColor = d.status==='Thành công'?'text-green-600':d.status==='Thất bại'?'text-red-600':d.status==='Đang thực hiện'?'text-blue-600':'text-yellow-600';
-            const statusBg = d.status==='Thành công'?'bg-green-50 border-green-200':d.status==='Thất bại'?'bg-red-50 border-red-200':d.status==='Đang thực hiện'?'bg-blue-50 border-blue-200':'bg-yellow-50 border-yellow-200';
-            const platformIcon = d.platform==='facebook'?'🔵':d.platform==='tiktok'?'⚫':'🔴';
-            container.innerHTML += `
-                <div class="border rounded-xl p-3 ${statusBg}">
-                    <div class="flex justify-between items-start">
-                        <div class="flex-1 min-w-0">
-                            <div class="font-bold text-gray-800 text-sm">${platformIcon} Đơn #${doc.id.substring(0,6).toUpperCase()}</div>
-                            <div class="text-xs text-gray-600 mt-0.5">${d.type} × ${Number(d.amount).toLocaleString()}</div>
-                            <div class="text-xs text-gray-400 truncate">${d.quality}</div>
-                        </div>
-                        <div class="text-right ml-2">
-                            <span class="text-xs font-black ${statusColor}">${d.status}</span>
-                            ${d.timeEstimate ? `<div class="text-xs text-gray-400">~${d.timeEstimate} phút</div>` : ''}
-                        </div>
-                    </div>
-                </div>`;
+            const sc = d.status==='Thành công'?'text-green-600 bg-green-50':d.status==='Thất bại'?'text-red-600 bg-red-50':d.status==='Đang thực hiện'?'text-blue-600 bg-blue-50':'text-yellow-600 bg-yellow-50';
+            const pi = d.platform==='facebook'?'🔵':d.platform==='tiktok'?'⚫':'🔴';
+            container.innerHTML+=`<div class="border rounded-xl p-3 ${sc.split(' ')[1]} border-gray-100"><div class="flex justify-between"><div><div class="font-bold text-gray-800 text-sm">${pi} #${doc.id.substring(0,6).toUpperCase()}</div><div class="text-xs text-gray-600">${d.type} × ${Number(d.amount).toLocaleString()}</div><div class="text-xs text-gray-400">${d.quality}</div></div><span class="text-xs font-black ${sc.split(' ')[0]}">${d.status}</span></div></div>`;
         });
-    }).catch(()=>{container.innerHTML='<div class="text-center text-gray-400 text-sm py-4">Lỗi tải</div>';});
+    }).catch(()=>{});
 }
 
-// ===== ADMIN PANEL =====
-function switchAdminTab(name) {
-    document.querySelectorAll('.admin-inbox-content').forEach(el => el.classList.add('hidden'));
-    document.querySelectorAll('.admin-tab').forEach(el => el.classList.remove('active'));
-    document.getElementById('admin-inbox-' + name).classList.remove('hidden');
-    event.target.classList.add('active');
-    loadAdminInbox(name);
-}
-
-function loadAdminInbox(category) {
-    const container = document.getElementById('admin-inbox-' + category);
-    if(!container) return;
-    container.innerHTML = '<div class="text-center text-gray-400 py-6">Đang tải...</div>';
-
-    let collectionName = 'DonBuff';
-    if(category === 'nap-game') collectionName = 'DonNapGame';
-    if(category === 'tai-khoan' || category === 'dich-vu') collectionName = 'DonHangV2';
-
-    let query = db.collection(collectionName).where("status","==","Đang xét duyệt").orderBy("ngayTao","desc").limit(20);
-    if(category === 'tai-khoan' || category === 'dich-vu') query = db.collection(collectionName).where("status","==","Đang xét duyệt").orderBy("ngayMua","desc").limit(20);
-
-    query.get().then(snap => {
-        if(snap.empty){container.innerHTML='<div class="text-center text-gray-400 py-8 text-sm">Không có đơn mới ✅</div>';return;}
-        container.innerHTML = '';
+// ==================== LỊCH SỬ ====================
+function loadLichSuMua() {
+    if(!currentUser) return;
+    const container = document.getElementById('list-lich-su-mua');
+    container.innerHTML='<div class="text-center text-gray-400 py-6 text-sm">Đang tải...</div>';
+    db.collection("DonHangV2").where("email","==",currentUser.email).orderBy("ngayMua","desc").limit(20).get().then(snap => {
+        if(snap.empty){container.innerHTML='<div class="text-center text-gray-400 py-8 text-sm">Chưa có lịch sử mua hàng</div>';return;}
+        container.innerHTML='';
         snap.forEach(doc => {
             const d = doc.data();
-            let details = '';
-            if(category === 'buff-mxh') details = `<div class="text-sm text-gray-600">${d.platform?.toUpperCase()} | ${d.type} × ${Number(d.amount||0).toLocaleString()}</div><div class="text-xs text-gray-400">${d.quality}</div><div class="text-xs text-blue-600 truncate max-w-xs">${d.link}</div>`;
-            if(category === 'nap-game') details = `<div class="text-sm text-gray-600">${d.game} - ${d.goi}</div><div class="text-xs text-gray-400">UID: ${d.uid} | Server: ${d.server}</div><div class="font-bold text-gray-800">${Number(d.gia||0).toLocaleString()}đ</div>`;
-            if(category === 'tai-khoan' || category === 'dich-vu') details = `<div class="text-sm text-gray-600">${d.tenSanPham}</div><div class="font-bold text-gray-800">${Number(d.gia||0).toLocaleString()}đ</div>`;
-
-            container.innerHTML += `
-                <div class="border border-gray-200 rounded-xl p-4 bg-gray-50">
-                    <div class="flex justify-between items-start mb-3">
-                        <div>
-                            <div class="font-black text-gray-800">Đơn #${doc.id.substring(0,8).toUpperCase()}</div>
-                            <div class="text-xs text-gray-500">${d.email}</div>
-                            ${details}
-                        </div>
-                        <span class="text-xs font-bold text-yellow-600 bg-yellow-50 border border-yellow-200 px-2 py-1 rounded-full">Đang xét duyệt</span>
-                    </div>
-                    <div class="flex items-center gap-2 flex-wrap">
-                        <input type="number" id="time-${doc.id}" placeholder="Phút ước lượng" class="border border-gray-200 rounded-lg px-3 py-1.5 text-sm w-36 outline-none focus:border-blue-400">
-                        <button onclick="adminAcceptOrder('${doc.id}','${collectionName}','${d.email}',${d.gia||0})" class="bg-green-600 text-white px-4 py-1.5 rounded-lg text-sm font-bold hover:bg-green-700 transition">✅ Thành công</button>
-                        <button onclick="adminRejectOrder('${doc.id}','${collectionName}','${d.email}',${d.gia||0})" class="bg-red-600 text-white px-4 py-1.5 rounded-lg text-sm font-bold hover:bg-red-700 transition">❌ Thất bại</button>
-                    </div>
-                </div>`;
+            container.innerHTML+=`<div class="border border-gray-100 rounded-xl p-4 mb-3 flex justify-between items-center"><div><div class="font-bold text-gray-800 text-sm">${d.tenSanPham}</div><div class="text-xs text-gray-400">Mã: ${doc.id.substring(0,12).toUpperCase()}</div>${d.accNhan?`<div class="text-xs text-blue-600 font-semibold mt-1">Acc: ${d.accNhan}</div>`:''}</div><div class="text-right"><div class="font-black text-gray-800">${Number(d.gia||0).toLocaleString()}đ</div><span class="text-xs font-bold px-2 py-0.5 rounded-full text-green-600 bg-green-50">${d.status||'Hoàn thành'}</span></div></div>`;
         });
-    }).catch(err => {container.innerHTML=`<div class="text-center text-gray-400 py-6 text-sm">Cần tạo index Firestore: ${err.message}</div>`;});
+    }).catch(()=>{container.innerHTML='<div class="text-center text-gray-400 py-4 text-sm">Lỗi tải dữ liệu</div>';});
 }
 
-async function adminAcceptOrder(id, collection, email, gia) {
-    const timeInput = document.getElementById('time-'+id);
-    const minutes = parseInt(timeInput?.value);
-    if(!minutes||minutes <= 0) return alert("Nhập thời gian ước lượng (phút)!");
-
-    await db.collection(collection).doc(id).update({status:'Đang thực hiện', timeEstimate: minutes, thoiGianBatDau: firebase.firestore.FieldValue.serverTimestamp()});
-
-    // Sau X phút => tự đổi sang Thành công
-    setTimeout(async () => {
-        await db.collection(collection).doc(id).update({status:'Thành công'});
-    }, minutes * 60 * 1000);
-
-    alert(`✅ Đã duyệt! Đơn sẽ hoàn thành sau ${minutes} phút.`);
-    loadAdminInbox(collection === 'DonBuff' ? 'buff-mxh' : collection === 'DonNapGame' ? 'nap-game' : 'tai-khoan');
+function loadBienDong() {
+    if(!currentUser) return;
+    const container = document.getElementById('list-bien-dong');
+    container.innerHTML='<div class="text-center text-gray-400 py-6 text-sm">Đang tải...</div>';
+    db.collection("GiaoDich").where("email","==",currentUser.email).orderBy("thoiGian","desc").limit(20).get().then(snap => {
+        if(snap.empty){container.innerHTML='<div class="text-center text-gray-400 py-8 text-sm">Chưa có giao dịch</div>';return;}
+        container.innerHTML='';
+        snap.forEach(doc => {
+            const d = doc.data();
+            const isPlus = d.loai==='cong';
+            const ngay = d.thoiGian?new Date(d.thoiGian.toDate()).toLocaleString('vi-VN'):'-';
+            container.innerHTML+=`<div class="border border-gray-100 rounded-xl p-4 mb-3"><div class="flex justify-between mb-2"><div class="font-semibold text-gray-700 text-sm">${d.moTa}</div><div class="text-right"><div class="font-black ${isPlus?'text-green-600':'text-red-600'}">${isPlus?'+':'-'}${Number(d.soTien||0).toLocaleString()}đ</div></div></div><div class="text-xs text-gray-400 mb-2">⏰ ${ngay}</div><div class="flex gap-4 bg-gray-50 rounded-lg p-3 text-center"><div class="flex-1"><div class="text-xs text-gray-400">Trước</div><div class="font-bold text-sm">${Number(d.truoc||0).toLocaleString()}đ</div></div><div class="text-gray-300 self-center">→</div><div class="flex-1"><div class="text-xs text-gray-400">Sau</div><div class="font-bold text-sm">${Number(d.sau||0).toLocaleString()}đ</div></div></div></div>`;
+        });
+    }).catch(()=>{container.innerHTML='<div class="text-center text-gray-400 py-4 text-sm">Lỗi tải dữ liệu</div>';});
 }
 
-async function adminRejectOrder(id, collection, email, gia) {
-    if(!confirm("Thất bại sẽ hoàn tiền cho khách. Xác nhận?")) return;
-    await db.collection(collection).doc(id).update({status:'Thất bại'});
-    // Hoàn tiền
-    if(gia > 0 && email) {
-        const userRef = db.collection("users").doc(email);
-        const userData = (await userRef.get()).data() || {vnd:0};
-        await userRef.update({vnd: userData.vnd + gia});
-        await ghiGiaoDich(email, 'Hoàn tiền đơn thất bại', gia, 'cong', userData.vnd, userData.vnd + gia);
-    }
-    alert("✅ Đã đánh dấu thất bại và hoàn tiền cho khách.");
-    loadAdminInbox(collection === 'DonBuff' ? 'buff-mxh' : collection === 'DonNapGame' ? 'nap-game' : 'tai-khoan');
-}
-
-// ===== ADMIN GAME PACK =====
-async function adminAddGamePack() {
-    const game = document.getElementById('ng-game').value.trim();
-    const pack = document.getElementById('ng-pack').value.trim();
-    const price = parseInt(document.getElementById('ng-price').value);
-    if(!game||!pack||!price) return alert("Nhập đủ thông tin!");
-    // Thêm vào select
-    const select = document.getElementById('game-pack');
-    const opt = document.createElement('option');
-    opt.value = pack + '|' + price;
-    opt.text = `${pack} - ${Number(price).toLocaleString()}đ`;
-    select.appendChild(opt);
-    alert("✅ Đã thêm gói nạp!");
-    ['ng-game','ng-pack','ng-price'].forEach(id => document.getElementById(id).value='');
-}
-
-// ===== NẠP THẺ =====
+// ==================== NẠP THẺ ====================
 function selectCarrierAcc(el, name) {
-    document.querySelectorAll('#carrier-grid-acc .carrier-btn').forEach(b => b.classList.remove('selected','border-blue-700','bg-blue-50','text-blue-700'));
+    document.querySelectorAll('#carrier-grid-acc .carrier-btn').forEach(b=>{b.classList.remove('selected','border-blue-700','bg-blue-50','text-blue-700');b.classList.add('border-gray-200','text-gray-600');});
     el.classList.add('selected','border-blue-700','bg-blue-50','text-blue-700');
     el.classList.remove('border-gray-200','text-gray-600');
     selectedCarrierAcc = name;
 }
 
 function selectDenomAcc(el, amount) {
-    document.querySelectorAll('#denom-grid-acc .denom-btn').forEach(b => { b.classList.remove('selected','border-blue-700','bg-blue-50','text-blue-700'); b.classList.add('border-gray-200','text-gray-600'); });
+    document.querySelectorAll('#denom-grid-acc .denom-btn').forEach(b=>{b.classList.remove('selected','border-blue-700','bg-blue-50','text-blue-700');b.classList.add('border-gray-200','text-gray-600');});
     el.classList.add('selected','border-blue-700','bg-blue-50','text-blue-700');
     el.classList.remove('border-gray-200','text-gray-600');
     selectedDenomAcc = amount;
-    document.getElementById('acc-amount-display').innerText = Math.round(amount * 0.8).toLocaleString() + 'đ';
+    document.getElementById('acc-amount-display').innerText=Math.round(amount*0.8).toLocaleString()+'đ';
 }
 
 async function submitTheCao() {
@@ -992,84 +1052,19 @@ async function submitTheCao() {
     const pin = document.getElementById('acc-pin').value.trim();
     if(!selectedDenomAcc) return alert("Chọn mệnh giá!");
     if(!seri||!pin) return alert("Nhập Seri và Mã thẻ!");
-    await db.collection("napthe").add({
-        email: currentUser.email, nhamang: selectedCarrierAcc,
-        menhgia: selectedDenomAcc, seri, pin,
-        status: "Chờ duyệt",
-        thoiGian: firebase.firestore.FieldValue.serverTimestamp()
-    });
+    await db.collection("napthe").add({email:currentUser.email,nhamang:selectedCarrierAcc,menhgia:selectedDenomAcc,seri,pin,status:"Chờ duyệt",thoiGian:firebase.firestore.FieldValue.serverTimestamp()});
     alert("✅ Thẻ đã gửi! Chờ hệ thống duyệt.");
     document.getElementById('acc-seri').value='';
     document.getElementById('acc-pin').value='';
 }
 
-// ===== LỊCH SỬ =====
-function loadLichSuMua() {
-    if(!currentUser) return;
-    const container = document.getElementById('list-lich-su-mua');
-    container.innerHTML = '<div class="text-center text-gray-400 py-6 text-sm">Đang tải...</div>';
-    db.collection("DonHangV2").where("email","==",currentUser.email).orderBy("ngayMua","desc").limit(20).get().then(snap => {
-        if(snap.empty){container.innerHTML='<div class="text-center text-gray-400 py-8 text-sm">Chưa có lịch sử mua hàng</div>';return;}
-        container.innerHTML='';
-        snap.forEach(doc => {
-            const d = doc.data();
-            const sc = d.status==='Thành công'?'text-green-600 bg-green-50':d.status==='Thất bại'?'text-red-600 bg-red-50':'text-yellow-600 bg-yellow-50';
-            container.innerHTML += `
-                <div class="border border-gray-100 rounded-xl p-4 mb-3 flex justify-between items-center">
-                    <div>
-                        <div class="font-bold text-gray-800 text-sm">${d.tenSanPham}</div>
-                        <div class="text-xs text-gray-400">Mã: ${doc.id.substring(0,12).toUpperCase()}</div>
-                        ${d.accNhan ? `<div class="text-xs text-blue-600 font-semibold mt-1">Acc: ${d.accNhan}</div>` : ''}
-                    </div>
-                    <div class="text-right">
-                        <div class="font-black text-gray-800">${Number(d.gia||0).toLocaleString()}đ</div>
-                        <span class="text-xs font-bold px-2 py-0.5 rounded-full ${sc}">${d.status||'Hoàn thành'}</span>
-                    </div>
-                </div>`;
-        });
-    }).catch(()=>{container.innerHTML='<div class="text-center text-gray-400 py-4 text-sm">Lỗi tải dữ liệu</div>';});
-}
-
-function loadBienDong() {
-    if(!currentUser) return;
-    const container = document.getElementById('list-bien-dong');
-    container.innerHTML = '<div class="text-center text-gray-400 py-6 text-sm">Đang tải...</div>';
-    db.collection("GiaoDich").where("email","==",currentUser.email).orderBy("thoiGian","desc").limit(20).get().then(snap => {
-        if(snap.empty){container.innerHTML='<div class="text-center text-gray-400 py-8 text-sm">Chưa có giao dịch</div>';return;}
-        container.innerHTML='';
-        snap.forEach(doc => {
-            const d = doc.data();
-            const isPlus = d.loai==='cong';
-            const ngay = d.thoiGian ? new Date(d.thoiGian.toDate()).toLocaleString('vi-VN') : '-';
-            container.innerHTML += `
-                <div class="border border-gray-100 rounded-xl p-4 mb-3">
-                    <div class="flex justify-between items-start mb-2">
-                        <div class="font-semibold text-gray-700 text-sm">${d.moTa}</div>
-                        <div class="text-right">
-                            <div class="font-black ${isPlus?'text-green-600':'text-red-600'}">${isPlus?'+':'-'}${Number(d.soTien||0).toLocaleString()}đ</div>
-                            <span class="text-xs font-bold px-2 py-0.5 rounded-full ${isPlus?'text-green-600 bg-green-50':'text-red-600 bg-red-50'}">${isPlus?'CỘNG TIỀN':'TRỪ TIỀN'}</span>
-                        </div>
-                    </div>
-                    <div class="text-xs text-gray-400 mb-2">⏰ ${ngay}</div>
-                    <div class="flex gap-4 bg-gray-50 rounded-lg p-3 text-center">
-                        <div class="flex-1"><div class="text-xs text-gray-400">Trước</div><div class="font-bold text-sm">${Number(d.truoc||0).toLocaleString()}đ</div></div>
-                        <div class="text-gray-300 self-center">→</div>
-                        <div class="flex-1"><div class="text-xs text-gray-400">Sau</div><div class="font-bold text-sm">${Number(d.sau||0).toLocaleString()}đ</div></div>
-                    </div>
-                </div>`;
-        });
-    }).catch(()=>{container.innerHTML='<div class="text-center text-gray-400 py-4 text-sm">Lỗi tải dữ liệu</div>';});
-}
-
-// ===== GHI GIAO DỊCH =====
+// ==================== UTILS ====================
 async function ghiGiaoDich(email, moTa, soTien, loai, truoc, sau) {
-    await db.collection("GiaoDich").add({email, moTa, soTien, loai, truoc, sau, thoiGian: firebase.firestore.FieldValue.serverTimestamp()});
+    await db.collection("GiaoDich").add({email,moTa,soTien,loai,truoc,sau,thoiGian:firebase.firestore.FieldValue.serverTimestamp()});
 }
 
-// ===== COPY =====
 function copyText(text) { navigator.clipboard.writeText(text).then(()=>alert("✅ Đã copy!")); }
 
-// ===== ĐỔI MẬT KHẨU =====
 async function doiMatKhau() {
     const cur = document.getElementById('pwd-current').value;
     const nw = document.getElementById('pwd-new').value;
@@ -1084,7 +1079,7 @@ async function doiMatKhau() {
         alert("✅ Đổi mật khẩu thành công!");
         ['pwd-current','pwd-new','pwd-confirm'].forEach(id=>document.getElementById(id).value='');
     } catch(e) {
-        alert("❌ " + (e.code==='auth/wrong-password'?'Mật khẩu hiện tại không đúng!':e.message));
+        alert("❌ "+(e.code==='auth/wrong-password'?'Mật khẩu hiện tại không đúng!':e.message));
     }
 }
 </script>
